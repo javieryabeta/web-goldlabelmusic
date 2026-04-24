@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Invitación Gold Label Music</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-main: #d4a84f;
+            --blue-link: #58A6FF;
+        }
+
+        /* Reset y estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Evitar selección global pero permitirla en interactivos */
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden; 
+            background-color: #000;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
+        }
+
+        /* CORRECCIÓN PARA COMPATIBILIDAD UNIVERSAL (ANDROID/REALME/IOS) */
+        a, .btn, .email {
+            display: flex !important;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            user-select: auto !important;
+            -webkit-user-select: auto !important;
+            touch-action: auto !important;
+            position: relative;
+            z-index: 500 !important; 
+            -webkit-appearance: none;
+            outline: none;
+        }
+
+        /* Contenedor Principal */
+        .main-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; 
+            background-image: url('https://i.postimg.cc/0Qqh3tGS/Background-invitacion.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 8% 5% 15% 5%;
+            transition: padding-top 0.3s ease;
+        }
+
+        /* Cabecera / Logo */
+        .header-section {
+            margin-bottom: 2vh;
+        }
+
+        .logo-wrapper {
+            width: 18vw;
+            max-width: 75px;
+            min-width: 55px;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Contenido de Texto */
+        .content-section {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 1vh;
+        }
+
+        .guest-name {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: bold;
+            font-size: clamp(24px, 6vw, 32px);
+            color: var(--gold-main);
+            line-height: 1.1;
+            margin-bottom: 0.5vh;
+        }
+
+        .invitation-label {
+            font-size: clamp(0.75rem, 3.5vw, 0.9rem);
+            color: var(--blue-link);
+            font-weight: 400;
+            margin-bottom: 2.5vh;
+        }
+
+        .description-text {
+            font-size: clamp(0.75rem, 3.8vw, 0.95rem);
+            line-height: 1.5;
+            color: #ffffff;
+            max-width: 90%;
+            margin: 0 auto 2.5vh auto;
+        }
+
+        .instruction-text {
+            font-size: clamp(0.65rem, 3.2vw, 0.8rem);
+            color: #ffffff;
+            max-width: 85%;
+            margin: 0 auto;
+        }
+
+        /* Botones de Navegación */
+        .nav-section {
+            width: 100%;
+            max-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 1vh;
+            margin-top: 2vh; 
+            margin-bottom: 4vh;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            align-items: center;
+            justify-content: center;
+            height: clamp(32px, 8.5vw, 38px);
+            border-radius: 6px;
+            font-size: clamp(0.65rem, 3vw, 0.75rem);
+            text-decoration: none;
+            font-weight: 600;
+            background-color: var(--gold-main);
+            color: #000;
+            transition: opacity 0.2s;
+        }
+
+        .btn:active {
+            opacity: 0.7;
+            transform: scale(0.98); 
+        }
+
+        /* Pie de página / Firmas */
+        .footer-section {
+            position: absolute;
+            bottom: 8.5%; 
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 0.8vh;
+            padding: 0 5%;
+        }
+
+        .sig-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .name {
+            font-size: clamp(0.55rem, 2.6vw, 0.68rem);
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1px;
+            line-height: 1.1;
+        }
+
+        .role {
+            font-size: clamp(0.45rem, 2.1vw, 0.52rem);
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.1;
+        }
+
+        .email {
+            color: var(--blue-link);
+            font-size: clamp(0.65rem, 3vw, 0.8rem);
+            text-decoration: none;
+            margin-top: 14px; 
+        }
+
+        /* REAJUSTE DE DISEÑO PARA TABLETS (Proporciones altas) */
+        @media (min-width: 600px) and (min-height: 800px) {
+            .main-container {
+                padding-top: 16%; 
+            }
+            .footer-section {
+                bottom: 11%; 
+            }
+            .nav-section {
+                margin-top: 3vh;
+            }
+        }
+
+        /* AJUSTE FINAL PARA ESCRITORIO */
+        @media (min-width: 1024px) {
+            .main-container {
+                padding-top: 7%; /* Sube un poco más que el anterior 10% */
+            }
+            /* Separamos el logo del título */
+            .header-section {
+                margin-bottom: 5vh; 
+            }
+            /* Bajamos un poco el correo electrónico */
+            .email {
+                margin-top: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        
+        <header class="header-section">
+            <div class="logo-wrapper">
+                <img src="https://i.postimg.cc/J7drPcSV/Gold-Label-Music-transp.png" alt="Logo Gold Label Music" class="logo-img">
+            </div>
+        </header>
+
+        <main class="content-section">
+            <h1 class="guest-name">Fher</h1>
+            <p class="invitation-label">Invitación a entrevista</p>
+            
+            <p class="description-text">
+                Queremos invitarte a una conversación<br>
+                íntima en <b>Gold Label Music Radio</b>.<br>
+                Emisión internacional en ocho países.
+            </p>
+
+            <p class="instruction-text">
+                Si te parece bien, escríbeme por WhatsApp<br>
+                o elige tu fecha en "Agendar".
+            </p>
+        </main>
+
+        <nav class="nav-section">
+            <div class="btn-row">
+                <a href="https://wa.me/34616714443?text=%C2%A1Hola!%20Acepto%20encantado%20la%20invitaci%C3%B3n%20para%20la%20entrevista%20en%20Gold%20Label%20Music." target="_blank" class="btn">WhatsApp</a>
+                <a href="https://calendly.com/javieryabetajustiniano/30min" target="_blank" class="btn">Agendar</a>
+            </div>
+            <div class="btn-row">
+                <a href="https://open.spotify.com/show/3BOJcxcovJtaD7oEBZlDit?si=9a5b9e8d10c04584" target="_blank" class="btn">Entrevistas</a>
+                <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="btn">Web</a>
+            </div>
+        </nav>
+
+        <footer class="footer-section">
+            <div class="signatures">
+                <div class="sig-item">
+                    <div class="name">José Luis Fauli Contelles</div>
+                    <div class="role">Enlace Artístico</div>
+                </div>
+                <div class="sig-item">
+                    <div class="name">Javier Yabeta Justiniano</div>
+                    <div class="role">Director — Gold Label Music</div>
+                </div>
+            </div>
+            <a href="mailto:info@goldlabelmusic.com" class="email">info@goldlabelmusic.com</a>
+        </footer>
+
+    </div>
+
+</body>
+</html>
