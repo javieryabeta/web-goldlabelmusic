@@ -1372,8 +1372,6 @@ document.addEventListener('keydown', function(e){
 
 </script>
 
-<base target="_top">
-
 <!-- ============================================================
      VIDEO BANNERS (CABECERAS) — ADAPTADOS A BOOKING
 ============================================================ -->
@@ -1472,15 +1470,23 @@ document.addEventListener('keydown', function(e){
 
     <!-- TARJETA 1 -->
     <div class="artista-card">
-      <a href="https://www.goldlabelmusic.com/ray-rosario" class="artista-portada">
-        <img src="https://i.postimg.cc/g211jT9t/Ray_Rosario_booking_cover.png" alt="Ray Rosario">
-      </a>
-      <h4 class="artista-nombre">Ray Rosario</h4>
-      <div class="artista-footer">
-        <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/ray-rosario" class="boton-reservar">Reservar</a>
-      </div>
-    </div>
+  <a href="https://www.goldlabelmusic.com/ray-rosario" 
+     target="_top" 
+     onclick="window.top.location.href='https://www.goldlabelmusic.com/ray-rosario'; return true;" 
+     class="artista-portada">
+    <img src="https://i.postimg.cc/g211jT9t/Ray_Rosario_booking_cover.png" alt="Ray Rosario">
+  </a>
+  
+  <h4 class="artista-nombre">Ray Rosario</h4>
+  
+  <div class="artista-footer">
+    <span class="ver-dossier">Ver Dossier</span>
+    <a href="https://www.goldlabelmusic.com/ray-rosario" 
+       target="_top" 
+       onclick="window.top.location.href='https://www.goldlabelmusic.com/ray-rosario'; return true;" 
+       class="boton-reservar">Reservar</a>
+  </div>
+</div>
 
     <!-- TARJETA 2 -->
     <div class="artista-card">
@@ -2263,27 +2269,4 @@ document.addEventListener('keydown', function(e){
 
 </div>
 
-
-<script>
-(function() {
-    // Escuchamos el clic en todo el documento para máxima compatibilidad
-    document.addEventListener('click', function(e) {
-        // Buscamos si el clic fue en un enlace (o dentro de uno)
-        var el = e.target.closest('a');
-        
-        if (el) {
-            var url = el.getAttribute('href');
-            
-            // Si el enlace apunta a tu web, forzamos la apertura en la ventana principal
-            if (url && url.indexOf('goldlabelmusic.com') !== -1) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // window.open con _top es el comando más potente para saltar el iframe
-                window.open(url, '_top');
-            }
-        }
-    }, true); // El 'true' asegura que este script sea el primero en reaccionar
-})();
-</script>
 
