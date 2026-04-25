@@ -1370,6 +1370,25 @@ document.addEventListener('keydown', function(e){
   window.focusAndScrollTo = focusAndScrollTo;
 })();
 
+/* ============================================================
+   SOLUCIÓN DEFINITIVA: NAVEGACIÓN GLOBAL GOOGLE SITES
+   Este código busca todas las tarjetas y arregla los enlaces
+============================================================ */
+document.addEventListener('click', function(e) {
+  // Detectamos si el clic fue en un enlace dentro de cualquier tarjeta
+  const cardLink = e.target.closest('.artista-card a, .orquesta-card a, .tributo-card a, .dj-card a');
+  
+  if (cardLink) {
+    const destination = cardLink.getAttribute('href');
+    
+    // Si el enlace es real (no es ####), forzamos la salida al "top"
+    if (destination && destination.startsWith('http')) {
+      e.preventDefault(); // Detenemos el clic normal que falla
+      window.top.location.href = destination; // Saltamos fuera del iframe
+    }
+  }
+}, true); // El 'true' es vital: hace que el clic se capture antes que nada
+
 </script>
 
 <!-- ============================================================
