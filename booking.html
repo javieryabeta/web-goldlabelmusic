@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ===== BLOQUE 1 (OPTIMIZADO): HEAD + CSS GLOBAL ===== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gold Label Music</title>
+
+  <!-- Fuentes e iconos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- ===== ESTILOS GLOBALES ===== -->
+  <style>
+    :root {
+      --gold:#f7b500;
+      --blue:#5794ff;
+      --bg1:#0b1630;
+      --bg2:#071227;
+      --text:#ffffff;
+      --muted:#9aa3b8;
+      --accent:#f7b500;
+      --accent-light:#ffd84d;
+    }
+
+    /* Base */
+    html,body {
+      margin:0;
+      padding:0;
+      background:#000;
+      overflow-x:hidden;
+    }
+    body {
+      font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+    }
+    #app-container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:0 20px 20px;
+      background:linear-gradient(180deg,var(--bg1),var(--bg2) 70%);
+      border-radius:16px;
+    }
+
+    /* Ocultar logo y foto por defecto */
+    .logo-wrapper{display:none;}
+    .brand-logo{display:none;}
+    .profile-img{display:none;}
+
+    /* Títulos principales */
+    h1{
+      font-size:28px;
+      color:var(--gold);
+      text-align:center;
+      margin:10px 0 6px;
+      text-transform:none;
+    }
+    h2{
+      font-size:16px;
+      color:var(--blue);
+      text-align:center;
+      margin:0 0 22px;
+    }
+
+    /* ===== BANNERS DE VÍDEO ===== */
+    .video-banner{
+      width:100vw;
+      max-width:100vw;
+      margin:0;
+      border-radius:0;
+      overflow:hidden;
+      display:none;
+      position:relative;
+      left:50%;
+      transform:translateX(-50%);
+      top:0;
+    }
+    .video-banner.show{display:block;}
+
+    .video-banner video{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:0;
+      aspect-ratio:16/9;
+      object-fit:cover;
+      z-index:1;
+    }
+
+    .video-banner::after{
+      content:"";
+      position:absolute;
+      bottom:0;
+      left:0;
+      width:100%;
+      height:60%;
+      background:linear-gradient(
+        to bottom,
+        rgba(11,22,48,0) 0%,
+        rgba(11,22,48,0.6) 50%,
+        rgba(7,18,39,0.9) 85%,
+        #071227 100%
+      );
+      pointer-events:none;
+      z-index:2;
+    }
+
+    @media(max-width:768px){
+      .video-banner{
+        margin-top:0;
+      }
+    }
+
+    /* ===== TABS PRINCIPALES ===== */
+    .tabs{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      margin-bottom:20px;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      overflow-y:visible;
+      padding:10px 0;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .tabs::-webkit-scrollbar{display:none;}
+
+    .tab{
+      flex:0 0 auto;
+      padding:10px 22px;
+      background:rgba(255,255,255,0.07);
+      border-radius:30px;
+      border:1px solid rgba(255,255,255,0.12);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:14px;
+      color:#cdd3e1;
+      transition:background .25s ease, box-shadow .25s ease, border-color .25s ease;
+      position:relative;
+    }
+    .tab i{color:var(--blue);}
+
+    .tab:hover{
+      background:rgba(255,255,255,0.15);
+      border-color:rgba(255,255,255,0.25);
+      box-shadow:0 6px 14px rgba(0,0,0,0.18);
+    }
+
+    .tab.active{
+      background:var(--gold);
+      color:#0b1630;
+      font-weight:600;
+      border-color:rgba(0,0,0,0.12);
+      box-shadow:0 8px 18px rgba(0,0,0,0.22);
+    }
+
+    @media(max-width:768px){
+      .tabs{justify-content:flex-start;}
+    }
+    @media(max-width:480px){
+      .tabs{
+        margin-bottom:4px !important;
+        padding:4px 0 !important;
+      }
+      .tab{
+        padding:8px 18px !important;
+        font-size:13px !important;
+      }
+    }
+
+    /* ===== SECCIONES ===== */
+    .section{
+      display:none;
+      animation:fadeIn 0.6s ease;
+      padding-top:0;
+      overflow:hidden;
+      border-top:0.1px solid transparent;
+    }
+    .section.active{display:block;}
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(10px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    /* ===== TARJETAS RADIO/PODCAST ===== */
+    .card{
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(87,148,255,0.45);
+      border-radius:20px;
+      padding:16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+      transition:all 0.25s ease;
+      max-width:780px;
+      margin:0 auto 16px;
+    }
+    .card:hover{
+      background:rgba(255,255,255,0.12);
+      transform:translateY(-4px) scale(1.01);
+    }
+    .left{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .radio-logo{
+      width:72px;
+      height:72px;
+      border-radius:12px;
+      object-fit:contain;
+      border:2px solid var(--gold);
+      background:transparent;
+    }
+    .radio-title{
+      font-size:18px;
+      font-weight:600;
+    }
+    .radio-sub{
+      font-size:13px;
+      opacity:0.85;
+      margin-top:4px;
+      color:#cdd3e1;
+    }
+
+    .listen-btn{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:14px;
+      font-weight:700;
+      color:var(--gold);
+      background:rgba(255,255,255,0.08);
+      padding:8px 14px;
+      border-radius:24px;
+      border:none;
+      cursor:pointer;
+      transition:all 0.25s ease;
+    }
+    .listen-btn i{
+      color:var(--blue);
+      font-size:18px;
+    }
+    .card:hover .listen-btn{
+      background:var(--gold);
+      color:#0b1630;
+    }
+    .card:hover .listen-btn i{
+      color:#0b1630;
+    }
+
+    /* Botones radio estados */
+    .listen-btn.radio-btn{
+      transition:background-color 0.2s ease, color 0.2s ease;
+    }
+    .listen-btn.radio-btn.is-playing{
+      background:var(--accent);
+      color:#fff;
+    }
+    .listen-btn.radio-btn.is-loading{
+      background:var(--accent-light);
+      color:#fff;
+      opacity:0.8;
+      cursor:wait;
+    }
+
+    /* ===== ESTUDIO ===== */
+    .estudio-wrap{
+      max-width:800px;
+      margin:0 auto;
+      text-align:left;
+    }
+    .estudio-button{
+      display:block;
+      width:auto;
+      max-width:300px;
+      margin:1rem auto;
+      padding:12px 20px;
+      background-color:#f7c948;
+      color:#000;
+      font-size:1.1rem;
+      font-weight:bold;
+      text-align:center;
+      text-decoration:none;
+      border:none;
+      border-radius:8px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.2);
+      transition:background-color 0.3s ease;
+    }
+    .estudio-button:hover{
+      background-color:#e0b03f;
+    }
+    .estudio-banner{
+      display:block;
+      width:100%;
+      max-width:300px;
+      margin:0 auto 1.5rem auto;
+      height:auto;
+    }
+    .estudio-grid{
+      display:block;
+    }
+    .estudio-instrucciones{
+      padding:0 2rem;
+      max-width:800px;
+      margin:0 auto;
+    }
+    @media(max-width:768px){
+      .estudio-button{
+        font-size:1rem;
+        padding:10px 16px;
+        max-width:260px;
+      }
+      .estudio-banner{
+        max-width:260px;
+      }
+      .estudio-instrucciones{
+        padding:0 1rem;
+      }
+    }
+
+    /* ===== PODCAST: PORTADAS ESCALONADAS ===== */
+    .podcast-carousel{
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+      gap:12px;
+      width:100%;
+      max-width:780px;
+      margin:0 auto;
+      overflow-x:auto;
+      overflow-y:visible;
+      scroll-behavior:smooth;
+      position:relative;
+      padding-block:24px;
+      -ms-overflow-style:none;
+      scrollbar-width:none;
+    }
+    .podcast-carousel::-webkit-scrollbar{display:none;}
+
+    .carousel-item{
+      width:160px;
+      height:160px;
+      object-fit:cover;
+      border-radius:12px;
+      transition:transform 0.6s ease, opacity 0.6s ease;
+      opacity:0.45;
+      flex-shrink:0;
+      transform-origin:center;
+      cursor:pointer;
+      text-align:left;
+      scroll-snap-align:start;
+    }
+    .carousel-item.active{
+      transform:scale(1.22);
+      opacity:1;
+      z-index:2;
+    }
+
+    /* ===== PODCAST: DESTACADOS & IFRAME ===== */
+    .podcast-international{
+      color:var(--gold);
+      margin-top:12px;
+      font-size:16px;
+      font-weight:600;
+      text-align:center;
+    }
+    .podcast-frame{
+      width:100%;
+      max-width:780px;
+      margin:12px auto;
+      border-radius:12px;
+      overflow:hidden;
+      background:transparent;
+    }
+    .podcast-frame h3{
+      text-align:center;
+      color:var(--gold);
+      margin-bottom:8px;
+    }
+
+    /* ===== SLIDER YOUTUBE PODCASTS ===== */
+    .youtube-slider{
+      display:flex;
+      gap:14px;
+      margin:20px auto;
+      padding:10px;
+      max-width:980px;
+      overflow:hidden;
+      position:relative;
+    }
+    .youtube-slider .slide{
+      position:relative;
+      flex:0 0 auto;
+      width:240px;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 8px 24px rgba(0,0,0,0.18);
+      transition:transform 0.25s ease;
+    }
+    .youtube-slider .slide:hover{
+      transform:translateY(-2px);
+    }
+    .youtube-slider img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+    .youtube-btn-wrap{
+      display:flex;
+      justify-content:flex-end;
+      margin-top:-36px;
+      margin-right:12px;
+    }
+    .youtube-btn{
+      background:rgba(0,0,0,0.15);
+      border:2px solid rgba(255,255,255,0.85);
+      border-radius:999px;
+      color:#fff;
+      font-size:18px;
+      padding:8px 12px;
+      cursor:pointer;
+      transition:transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    }
+    .youtube-btn:hover{
+      transform:translateY(-1px);
+      border-color:#fff;
+      background-color:rgba(255,255,255,0.12);
+    }
+
+    .youtube-modal{
+      display:none;
+      position:fixed;
+      z-index:9999;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      justify-content:center;
+      align-items:center;
+      padding:16px;
+    }
+    .youtube-content{
+      position:relative;
+      width:min(920px,92vw);
+      border-radius:16px;
+    }
+    .video-aspect{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 12px 36px rgba(0,0,0,0.35);
+      background:#000;
+    }
+    .video-aspect iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+    .close-btn{
+      position:absolute;
+      top:-48px;
+      right:0;
+      font-size:32px;
+      line-height:1;
+      color:#fff;
+      background:transparent;
+      border:none;
+      cursor:pointer;
+    }
+
+/* ===== CARRUSELES BLOG Y REDES ===== */
+.carousel-wrapper{
+  position:relative;
+  margin-bottom:2px;
+}
+
+.ver-mas{
+  text-align:right;
+  font-size:0.75rem;
+  font-weight:400;
+  color:var(--muted);
+  margin-bottom:2px;
+  opacity:0.8;
+  pointer-events:none;
+  letter-spacing:0.3px;
+}
+
+.carousel-container{
+  position:relative;
+  margin-bottom:0;
+}
+
+.blog-carousel{
+  display:flex;
+  overflow-x:auto;
+  gap:8px;
+  scroll-behavior:smooth;
+  scroll-snap-type:x mandatory;
+  padding:0;
+  height:auto;
+  min-height:160px;
+}
+
+.blog-carousel .carousel-item{
+  flex:0 0 auto;
+  scroll-snap-align:start;
+}
+
+/* Scrollbar oculto en Blog y Redes */
+.blog-carousel::-webkit-scrollbar,
+.redes-carousel::-webkit-scrollbar{
+  display:none;
+}
+
+/* Imágenes de las portadas del BLOG */
+.blog-carousel .carousel-item img{
+  width:160px;
+  height:160px;
+  object-fit:cover;
+  border-radius:12px;
+}
+
+/* Texto bajo la portada del BLOG */
+.blog-carousel .carousel-item span{
+  display:block;
+  margin-top:4px;
+  font-size:0.9rem;
+  color:var(--muted);
+  text-decoration:none;
+  pointer-events:none;
+}
+
+/* ===== BLOG — Corrección FUERTE de opacidad ===== */
+/* Aquí es donde nos aseguramos de que nada apague las portadas */
+#section-blog .blog-carousel .carousel-item,
+#section-blog .blog-carousel .carousel-item img{
+  opacity:1 !important;
+  filter:none !important;
+}
+
+/* ===== Responsive Blog ===== */
+@media(max-width:900px){
+  .blog-carousel{
+    gap:6px;
+  }
+}
+
+@media(max-width:600px){
+  .carousel-wrapper{
+    margin-bottom:0;
+  }
+
+  .carousel-container{
+    margin-bottom:0;
+  }
+
+  .blog-carousel{
+    gap:6px;
+    padding:0;
+    height:auto;
+    min-height:140px;
+  }
+
+  .blog-carousel .carousel-item{
+    flex:0 0 calc(100%/2.6);
+  }
+
+  .blog-carousel .carousel-item img{
+    width:100%;
+    height:auto;
+  }
+}
+
+/* Carrusel horizontal Redes con foco activo centrado */
+.redes-carousel{
+  display:flex;
+  flex-direction:row; /* ← horizontal */
+  justify-content:flex-start;
+  align-items:center;
+  gap:12px;
+  max-width:100%;
+  margin:0 auto;
+  overflow-x:auto; /* ← scroll horizontal */
+  padding-block:32px;
+  height:auto;
+  scroll-snap-type:x mandatory; /* ← snap horizontal */
+}
+
+#redes-carousel .carousel-item{
+  width:160px;
+  height:240px;
+  object-fit:cover;
+  border-radius:12px;
+  transition:transform 0.6s ease, opacity 0.6s ease;
+  opacity:0.45;
+  flex-shrink:0;
+  transform-origin:center center; /* ← zoom desde el centro */
+  scroll-snap-align:center;       /* ← centrado en scroll */
+  margin-inline:auto;             /* ← mantiene centrado al crecer */
+}
+
+#redes-carousel .carousel-item.active{
+  transform:scale(1.22);
+  opacity:1;
+  position:relative;
+  z-index:5;
+  transform-origin:center center;
+}
+
+    /* Carrusel nav botones */
+    .carousel-nav{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      background:var(--accent);
+      color:#fff;
+      border:none;
+      padding:12px 16px;
+      cursor:pointer;
+      border-radius:50%;
+      font-size:1.4rem;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3);
+      z-index:10;
+    }
+    .carousel-nav.prev{left:-26px;}
+    .carousel-nav.next{right:-26px;}
+
+    @media(max-width:900px){
+      .ver-mas{font-size:0.85rem;}
+    }
+    @media(max-width:600px){
+      .ver-mas{
+        font-size:0.8rem;
+        margin-bottom:1px;
+      }
+      .carousel-wrapper{margin-bottom:4px;}
+      .carousel-container{margin-bottom:2px;}
+      .blog-carousel{
+        padding:4px 0;
+        gap:8px;
+        height:190px;
+      }
+      .blog-carousel .carousel-item{flex:0 0 calc(100%/2.5);}
+      .blog-carousel .carousel-item img{
+        width:110px;
+        height:110px;
+      }
+      .blog-carousel .carousel-item span{
+        margin-top:2px;
+        font-size:0.8rem;
+      }
+      .redes-carousel{
+        min-height:300px;
+        padding-block:28px;
+      }
+      #redes-carousel .carousel-item{
+        width:140px;
+        height:210px;
+      }
+    }
+
+    /* ===== BLOG SLIDER CABECERA ===== */
+    .glm-slider{
+      position:relative;
+      width:100%;
+      height:clamp(260px,40vw,480px);
+      margin:1rem 0 2rem;
+      overflow:hidden;
+      border-radius:8px;
+      background:#111;
+    }
+    .glm-slider-track{
+      display:flex;
+      width:100%;
+      height:100%;
+      transition:transform 600ms ease;
+      will-change:transform;
+    }
+    .glm-slide{
+      flex:0 0 100%;
+      width:100%;
+      height:100%;
+      position:relative;
+    }
+    .glm-slide img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .glm-nav{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:2;
+      background:rgba(0,0,0,0.45);
+      color:#C9A94E;
+      border:none;
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      cursor:pointer;
+    }
+    .glm-nav.prev{left:12px;}
+    .glm-nav.next{right:12px;}
+    .glm-nav:hover{background:rgba(0,0,0,0.6);}
+    .glm-pagination{
+      position:absolute;
+      bottom:12px;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:8px;
+      z-index:2;
+    }
+    .glm-pagination button{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      border:none;
+      background:rgba(255,255,255,0.4);
+      cursor:pointer;
+    }
+    .glm-pagination button.active{background:#C9A94E;}
+
+    /* ===== REDES EMBEDS ===== */
+    .redes-grid{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      align-items:center;
+      margin-top:40px;
+    }
+    .redes-block{
+      width:100%;
+      max-width:480px;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 4px 12px rgba(0,0,0,0.25);
+      background:#fff;
+    }
+    .portada-fb iframe,
+    .cartel-fb iframe{
+      width:100%;
+      border:none;
+    }
+    .portada-fb iframe{height:295px;}
+    .cartel-fb iframe{height:738px;}
+    .reel-ig{
+      background:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:12px;
+      box-sizing:border-box;
+    }
+    .reel-ig blockquote.instagram-media{
+      display:block !important;        /* añadido */
+      visibility:visible !important;   /* añadido */
+      width:100% !important;
+      max-width:100% !important;
+      margin:0 auto !important;
+      border-radius:12px !important;
+      box-shadow:none !important;
+    }
+    .instagram-media{margin:0 !important;}
+
+    /* ===== FOOTER ===== */
+    .footer{
+      text-align:center;
+      margin-top:48px;
+      padding-top:24px;
+      padding-bottom:100px;
+      border-top:1px solid rgba(255,255,255,0.1);
+    }
+    .social-icons{
+      display:flex;
+      justify-content:center;
+      gap:15px;
+      margin-bottom:8px;
+    }
+    .social-icons a{
+      color:var(--blue);
+      font-size:22px;
+      text-decoration:none;
+      transition:all 0.25s ease;
+    }
+    .social-icons a:hover{
+      color:var(--gold);
+      transform:translateY(-2px);
+    }
+    .footer-links{
+      margin-top:20px;
+    }
+    .footer-links a{
+      color:var(--blue);
+      text-decoration:none;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .footer-links a:hover{color:var(--gold);}
+    .footer-links a + a::before{
+      content:"|";
+      color:var(--blue);
+      margin:0 6px;
+    }
+    .footer p{
+      font-size:12px;
+      color:var(--muted);
+      margin:4px 0;
+    }
+
+    /* Botón compartir (footer) */
+    .share-trigger{
+      background-color:#fdd835;
+      color:#000;
+      font-weight:bold;
+      padding:10px 20px;
+      border:none;
+      border-radius:4px;
+      cursor:pointer;
+      margin-top:12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .share-trigger:hover{
+      background-color:#ffeb3b;
+    }
+
+    /* Overlay compartir */
+    .share-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.6);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    .share-modal{
+      width:92vw;
+      max-width:420px;
+      background:var(--bg1);
+      border:1px solid rgba(87,148,255,0.4);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    }
+    .share-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    }
+    .share-title{
+      font-size:16px;
+      color:var(--gold);
+      font-weight:700;
+    }
+    .share-close{
+      background:transparent;
+      border:none;
+      color:var(--muted);
+      font-size:20px;
+      cursor:pointer;
+    }
+    .share-grid{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:8px;
+    }
+    .share-grid a{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:#0b1630;
+      font-weight:700;
+      background:var(--gold);
+      padding:10px 12px;
+      border-radius:10px;
+    }
+    .share-grid a:hover{
+      background:#ffd84d;
+    }
+    .share-grid i{
+      color:#0b1630;
+    }
+
+    /* ===== SUBPÁGINAS POLÍTICAS ===== */
+    .section-policy{
+      padding-top:120px;
+      position:relative;
+      z-index:0;
+      overflow:visible;
+    }
+    .policy-container,
+    .cookies-container{
+      max-width:900px;
+      margin:20px auto;
+      color:#fff;
+      font-size:14px;
+      line-height:1.7;
+      background:var(--bg2);
+      padding:20px;
+      border-radius:8px;
+    }
+
+    .policy-mode .logo-wrapper{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      margin-top:12px;
+      background:transparent;
+    }
+    .policy-mode .brand-logo{
+      display:block;
+      width:140px;
+      height:auto;
+    }
+    .policy-mode .profile-img{display:none;}
+    .policy-mode .tabs,
+    .policy-mode #main-title,
+    .policy-mode #main-subtitle,
+    .policy-mode .video-banner{
+      display:none;
+    }
+
+    .logo-wrapper{
+      background:transparent !important;
+    }
+    .brand-logo{
+      display:block;
+      margin:0 auto;
+      max-width:200px;
+    }
+
+    /* ===== RESPONSIVE CONTENEDOR PRINCIPAL ===== */
+    @media(max-width:1200px){
+      #app-container{max-width:960px;}
+    }
+    @media(max-width:992px){
+      #app-container{max-width:840px;}
+    }
+    @media(max-width:768px){
+      #app-container{max-width:92vw;}
+      h1{font-size:24px;}
+      h2{font-size:14px;}
+      .card,.redes-block,.estudio-button{max-width:92vw;}
+      .estudio-button{padding:16px;font-size:17px;}
+      .youtube-slider{max-width:92vw;}
+      .youtube-slider .slide{width:68vw;}
+      .close-btn{top:-40px;}
+    }
+    @media(max-width:480px){
+      h1{font-size:22px;}
+      h2{font-size:13px;}
+      .radio-logo{
+        width:60px;
+        height:60px;
+      }
+      .radio-title{font-size:16px;}
+      .estudio-button{
+        padding:15px;
+        font-size:16px;
+        border-radius:36px;
+      }
+      .tab{
+        font-size:12px;
+        padding:8px 16px;
+      }
+    }
+
+    /* Accesibilidad */
+    .tab:focus,
+    .estudio-button:focus,
+    .listen-btn:focus,
+    a:focus,
+    .share-btn:focus,
+    .share-close:focus{
+      outline:2px solid var(--gold);
+      outline-offset:3px;
+    }
+
+/* ===== AJUSTE BLOG SOLO EN MÓVIL ===== */
+@media(max-width:600px){
+
+  /* Reducir separación vertical */
+  .carousel-wrapper{
+    margin-bottom:0 !important;
+  }
+
+  .carousel-container{
+    margin-bottom:0 !important;
+  }
+
+  /* Ajustar carrusel para que no quede tan separado */
+  .blog-carousel{
+    padding:0 !important;
+    gap:4px !important;       /* antes 8px */
+    height:auto !important;   /* elimina el hueco forzado */
+    min-height:0 !important;
+  }
+
+  /* Portadas más compactas */
+  .blog-carousel .carousel-item{
+    flex:0 0 calc(100%/2.3) !important; /* ligeramente más grandes */
+  }
+
+  .blog-carousel .carousel-item img{
+    width:100% !important;
+    height:auto !important;
+  }
+}
+/* ===== AJUSTE EXTRA BLOG SOLO EN MÓVIL ===== */
+@media(max-width:600px){
+
+  /* Marco estable para evitar tambaleo vertical */
+  .blog-carousel{
+    height:170px !important;      /* antes auto → ahora estable */
+    overflow-y:hidden !important; /* evita scroll vertical */
+    padding:0 !important;
+  }
+
+  /* Portadas ligeramente más grandes y sin recorte */
+  .blog-carousel .carousel-item{
+    flex:0 0 calc(100%/2.3) !important;
+    height:160px !important;      /* altura estable */
+  }
+
+  .blog-carousel .carousel-item img{
+    height:160px !important;      /* evita recorte */
+    object-fit:cover !important;
+  }
+}
+/* ===== AJUSTE ALTURA BLOG SOLO EN MÓVIL ===== */
+@media(max-width:600px){
+
+  /* Más altura para que no se corte el texto */
+  .blog-carousel{
+    height:200px !important;     /* antes 170px */
+    overflow-y:hidden !important;
+  }
+
+  .blog-carousel .carousel-item{
+    height:190px !important;     /* antes 160px */
+  }
+
+  .blog-carousel .carousel-item img{
+    height:150px !important;     /* portada más alta */
+    object-fit:cover !important;
+  }
+
+  /* Texto visible debajo de la portada */
+  .blog-carousel .carousel-item span{
+    font-size:0.8rem !important;
+    margin-top:4px !important;
+    display:block !important;
+  }
+}
+/* ===== AJUSTE ESPACIADO PODCAST: SEPARAR SPOTIFY E IVOOX ===== */ .podcast-frame iframe + iframe{ margin-top:24px !important; /* separación entre Spotify e Ivoox */ }
+
+  </style>
+</head>
+<body>
+  <div id="app-container">
+
+    <!-- ===== BANNERS DE VÍDEO PORTADA ===== -->
+    <div id="videoBanner" class="video-banner show">
+      <video autoplay muted loop playsinline>
+        <source src="https://videos.pexels.com/video-files/4285872/4285872-hd_1920_1080_30fps.mp4" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </div>
+
+    <div id="videoBannerRadio" class="video-banner">
+      <video autoplay muted loop playsinline>
+        <source src="https://assets.mixkit.co/videos/467/467-720.mp4" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </div>
+
+    <div id="videoBannerPodcast" class="video-banner">
+      <video autoplay muted loop playsinline>
+        <source src="https://assets.mixkit.co/videos/44049/44049-720.mp4" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </div>
+
+    <div id="videoBannerBlog" class="video-banner">
+      <video autoplay muted loop playsinline>
+        <source src="https://assets.mixkit.co/videos/49505/49505-720.mp4" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </div>
+
+    <div id="videoBannerRedes" class="video-banner">
+      <video autoplay muted loop playsinline>
+        <source src="https://assets.mixkit.co/videos/42283/42283-720.mp4" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </div>
+
+    <!-- ===== HEADER PRINCIPAL ===== -->
+    <h1 id="main-title">EL PODCAST CON JUAN BAU</h1>
+    <h2 id="main-subtitle">Gold Label Music Radio</h2>
+
+    <!-- ===== TABS PRINCIPALES ===== -->
+    <div class="tabs" role="tablist" aria-label="Secciones">
+      <button class="tab active" role="tab" aria-controls="section-estudio" onclick="showSection('estudio')">
+        <i class="fas fa-microphone"></i> Estudio
+      </button>
+      <button class="tab" role="tab" aria-controls="section-radio" onclick="showSection('radio')">
+        <i class="fas fa-broadcast-tower"></i> Radio
+      </button>
+      <button class="tab" role="tab" aria-controls="section-podcast" onclick="showSection('podcast')">
+        <i class="fas fa-podcast"></i> Podcasts
+      </button>
+      <button class="tab" role="tab" aria-controls="section-blog" onclick="showSection('blog')">
+        <i class="fas fa-pen-nib"></i> Blog
+      </button>
+      <button class="tab" role="tab" aria-controls="section-redes" onclick="showSection('redes')">
+        <i class="fas fa-share-alt"></i> Redes
+      </button>
+    </div>
+
+<!-- ===== BLOQUE 2: SECCIÓN ESTUDIO (OPTIMIZADO) ===== -->
+
+<section id="section-estudio" class="section active" role="tabpanel" aria-labelledby="Estudio">
+
+  <div class="estudio-wrap">
+
+    <a class="estudio-button" href="https://cleanfeed.net/k?4rGa7i226DkY" aria-label="Entrar al Estudio">
+      Entrar al Estudio
+    </a>
+
+    <img class="estudio-banner" src="https://i.postimg.cc/nrZjfpCT/cleanfeed-lite.png" alt="Cleanfeed TM Lite">
+
+    <div class="estudio-grid">
+      <div class="estudio-instrucciones">
+        <p><strong>Cleanfeed no necesita instalación.</strong> Se activa directamente al pinchar sobre el botón.</p>
+
+        <ul>
+          <li>Es importante colocarse los auriculares (no manos libre).</li>
+          <li>Utilice una buena conexión de wifi.</li>
+          <li>Por favor, coloque el móvil a 15 centímetros de la boca.</li>
+        </ul>
+
+        <p><strong>Pasos:</strong></p>
+
+        <p>Paso 1. Para empezar la conexión de audio colocar un nombre en el recuadro. Puede ser su nombre artístico.</p>
+        <p>Paso 2. Iniciar la conexión presionando el botón <strong>START</strong>.</p>
+        <p>Paso 3. Al activarse la aplicación pedirá permiso para acceder al micrófono del teléfono. Tiene que autorizar aceptando el permiso.</p>
+        <p>Paso 4. Pruebe la señal diciendo: "hola". Si la señal verde se mueve estamos listos para empezar.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Estudio -->
+  <div class="footer">
+    <div class="social-icons">
+      <a href="https://www.facebook.com/GoldLabelSelloDigital" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/goldlabelsellodigital" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@goldlabelmusicdigital" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://www.youtube.com/@goldlabelmusic" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.javieryabeta.com/" aria-label="Sitio web"><i class="fas fa-globe"></i></a>
+    </div>
+
+    <button class="share-trigger" type="button" onclick="openShareOverlay()" aria-label="Compartir todo">
+      <i class="fas fa-share-alt"></i> Compartir todo
+    </button>
+
+    <p><a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">info@goldlabelmusic.com</a></p>
+    <p>© 2026 Gold Label Music</p>
+
+    <div class="footer-links">
+      <a role="button" onclick="showSection('privacidad')">Política de Privacidad</a>
+      <a role="button" onclick="showSection('cookies')">Política de Cookies</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== BLOQUE 3: SECCIÓN RADIO (OPTIMIZADO) ===== -->
+
+<section id="section-radio" class="section" role="tabpanel" aria-labelledby="Radio">
+
+  <!-- Swing Latino Radio -->
+<div class="card" aria-label="Swing Latino Radio">
+  <div class="left">
+    <img class="radio-logo" src="https://i.postimg.cc/YSxM4Z2D/Swing_Latino_Logo.png" alt="Swing Latino Radio">
+    <div>
+      <div class="radio-title">Swing Latino Radio</div>
+      <div class="radio-sub">Sábado 10:00h · New York</div>
+    </div>
+  </div>
+
+  <button class="listen-btn radio-btn" type="button"
+    data-stream="https://long-art-20a8.javieryabetajustiniano.workers.dev"
+    aria-pressed="false">
+    <i class="fas fa-play-circle"></i> En Vivo
+  </button>
+</div>
+
+<!-- Tu Radio.NL -->
+  <div class="card" aria-label="Tu Radio.NL">
+    <div class="left">
+      <img class="radio-logo" src="https://i.postimg.cc/d1HKdt4j/Tu_Radio_NL_logo.png" alt="TopTuria">
+      <div>
+        <div class="radio-title">Tu Radio.NL</div>
+        <div class="radio-sub">Sábado 12:00h · Países Bajos</div>
+      </div>
+    </div>
+
+    <button class="listen-btn radio-btn" type="button"
+      data-stream="https://streaming.radio.co/s25f9d51ba/listen"
+      aria-pressed="false">
+      <i class="fas fa-play-circle"></i> En Vivo
+    </button>
+  </div>
+
+  <!-- Geneva Latina Radio -->
+  <div class="card" aria-label="Geneva Latina Radio">
+    <div class="left">
+      <img class="radio-logo" src="https://i.postimg.cc/k4RgZwFs/Geneva_Latina_Logo.png" alt="Geneva Latina Radio">
+      <div>
+        <div class="radio-title">Geneva Latina Radio</div>
+        <div class="radio-sub">Sábado 12:30h · Suiza</div>
+      </div>
+    </div>
+
+    <button class="listen-btn radio-btn" type="button"
+      data-stream="http://genevalatina.ice.infomaniak.ch/genevalatina-128.mp3"
+      aria-pressed="false">
+      <i class="fas fa-play-circle"></i> En Vivo
+    </button>
+  </div>
+
+  <!-- TopTuria -->
+  <div class="card" aria-label="TopTuria">
+    <div class="left">
+      <img class="radio-logo" src="https://i.postimg.cc/5t0C7pr1/Top_Turia_logo.png" alt="TopTuria">
+      <div>
+        <div class="radio-title">TopTuria</div>
+        <div class="radio-sub">Sábado 13:00h · España</div>
+      </div>
+    </div>
+
+    <button class="listen-btn radio-btn" type="button"
+      data-stream="https://streaming2.elitecomunicacion.es/proxy/topturia/stream?type=.mp3"
+      aria-pressed="false">
+      <i class="fas fa-play-circle"></i> En Vivo
+    </button>
+  </div>
+
+  <!-- Camargo FM -->
+  <div class="card" aria-label="Camargo FM">
+    <div class="left">
+      <img class="radio-logo" src="https://i.postimg.cc/y6SFCQ8K/Radio_Camargo_logo.png" alt="Camargo FM">
+      <div>
+        <div class="radio-title">Camargo FM</div>
+        <div class="radio-sub">Sábado 13:10h · Bolivia</div>
+      </div>
+    </div>
+
+    <button class="listen-btn radio-btn" type="button"
+      data-stream="https://stm27.xcast.com.br:10490/stream"
+      aria-pressed="false">
+      <i class="fas fa-play-circle"></i> En Vivo
+    </button>
+  </div>
+
+  <!-- Zeno FM -->
+  <div class="card" aria-label="Zeno FM">
+    <div class="left">
+      <img class="radio-logo" src="https://i.postimg.cc/T3cVHKY5/Gold_Label_Radio_logo.png" alt="Zeno FM">
+      <div>
+        <div class="radio-title">Zeno FM</div>
+        <div class="radio-sub">Gold Label Radio</div>
+      </div>
+    </div>
+
+    <button class="listen-btn radio-btn" type="button"
+      data-stream="https://stream.zeno.fm/i0bteyccwikuv"
+      aria-pressed="false">
+      <i class="fas fa-play-circle"></i> En Vivo
+    </button>
+  </div>
+
+  <!-- Reproductor oculto -->
+  <audio id="radio-player" preload="none" style="display:none;"></audio>
+
+  <!-- Footer Radio -->
+  <div class="footer">
+    <div class="social-icons">
+      <a href="https://www.facebook.com/GoldLabelSelloDigital" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/goldlabelsellodigital" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@goldlabelmusicdigital" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://www.youtube.com/@goldlabelmusic" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.javieryabeta.com/" aria-label="Sitio web"><i class="fas fa-globe"></i></a>
+    </div>
+
+    <button class="share-trigger" type="button" onclick="openShareOverlay()" aria-label="Compartir todo">
+      <i class="fas fa-share-alt"></i> Compartir todo
+    </button>
+
+    <p><a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">info@goldlabelmusic.com</a></p>
+    <p>© 2026 Gold Label Music</p>
+
+    <div class="footer-links">
+      <a role="button" onclick="showSection('privacidad')">Política de Privacidad</a>
+      <a role="button" onclick="showSection('cookies')">Política de Cookies</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== BLOQUE 4: SECCIÓN PODCASTS (OPTIMIZADO) ===== -->
+
+<section id="section-podcast" class="section" role="tabpanel" aria-labelledby="Podcast">
+
+  <!-- Carrusel Portadas Podcast -->
+  <div class="podcast-carousel" id="podcast-carousel">
+
+    <img src="https://i.postimg.cc/hGnDjKpX/Jey_González_cover.png" alt="Jey González" class="carousel-item active">   
+    <img src="https://i.postimg.cc/ZRcNN6ty/Mario_IAN_cover.png" alt="Mario IAN" class="carousel-item active">
+    <img src="https://i.postimg.cc/fRRmxym6/Lorenzo_Santamaría_cover.png" alt="Lorenzo Santamaría" class="carousel-item active"> 
+    <img src="https://i.postimg.cc/qvhLmCpc/Jorge_Pérez_cover.png" alt="Jorge Pérez" class="carousel-item active">
+    <img src="https://i.postimg.cc/T338CX9L/Alexander_Cortés_cover.png" alt="Alexander Cortés" class="carousel-item active">
+    <img src="https://i.postimg.cc/X7vLdcqq/Francisco_cover.png" alt="Francisco" class="carousel-item active">
+    <img src="https://i.postimg.cc/mkxHrNxn/Tamara_cover.png" alt="Tamara" class="carousel-item active">
+    <img src="https://i.postimg.cc/DzmZfYty/Olivier_Herrera_cover.jpg" alt="Olivier Herrera" class="carousel-item active">
+    <img src="https://i.postimg.cc/HxcVzPzW/Alfonso-Aguado-cover.jpg" alt="Alfonso Aguado" class="carousel-item">
+    <img src="https://i.postimg.cc/Jn4DZnWc/Amaya_Saizar_cover.jpg" alt="Amaya Saizar" class="carousel-item">
+    <img src="https://i.postimg.cc/Pf7pvTVN/Jeanette_cover.jpg" alt="Jeanette" class="carousel-item">
+    <img src="https://i.postimg.cc/MTFTBm5k/Eddu_Dai_z_cover.jpg" alt="Eddu Dai'z" class="carousel-item">
+    <img src="https://i.postimg.cc/jdNHsDqR/Serafín_Zubiri_cover.jpg" alt="Serafín Zubiri" class="carousel-item">
+    <img src="https://i.postimg.cc/k5BM3x2M/Juan_Bau_cover.png" alt="Juan Bau" class="carousel-item">
+    <img src="https://i.postimg.cc/N0NTNTDp/Maria_Saga_cover.jpg" alt="Maria Saga" class="carousel-item">
+    <img src="https://i.postimg.cc/QC7TxzDD/Xavier_Valverde_cover.jpg" alt="Xavier Valverde" class="carousel-item">
+    <img src="https://i.postimg.cc/gkvZC14J/Sylvia_Mund_cover.jpg" alt="Sylvia Mund" class="carousel-item">
+    <img src="https://i.postimg.cc/4xPhdtDy/Nacho_Maño_cover.jpg" alt="Nacho Maño" class="carousel-item">
+    <img src="https://i.postimg.cc/6327YPy8/Luis_Pinto_cover.jpg" alt="Luis Pinto" class="carousel-item">
+    <img src="https://i.postimg.cc/ZYNBNXG2/Janeth_Lujo_cover.jpg" alt="Janeth Lujo" class="carousel-item">
+    <img src="https://i.postimg.cc/3JCkSmJX/Jeff_Nuno_cover.jpg" alt="Jeff Nuño" class="carousel-item">
+    <img src="https://i.postimg.cc/YSjjCPNL/Julio_Montalvo_cover.jpg" alt="Julio Montalvo" class="carousel-item">
+    <img src="https://i.postimg.cc/nrfLTcym/Lucas_Jimenez_cover.jpg" alt="Lucas Jiménez" class="carousel-item">
+    <img src="https://i.postimg.cc/KctjjBTH/Los_Terrícolas_De_Naylet_Beatriz_cover.jpg" alt="Los Terrícolas de Naylet Beatriz" class="carousel-item">
+    <img src="https://i.postimg.cc/httt2Y5H/Javiera_La_Caimana_cover.jpg" alt="Javiera La Caimana" class="carousel-item">
+    <img src="https://i.postimg.cc/TPZ2Y33d/Josephine_Sweett_cover.jpg" alt="Josephine Sweett" class="carousel-item">
+    <img src="https://i.postimg.cc/fyswmqdg/Willy_Rivera_cover.jpg" alt="Willy Rivera" class="carousel-item">
+    <img src="https://i.postimg.cc/7YxHLcwC/Roxy_d_Cuba_cover.jpg" alt="Roxy d Cuba" class="carousel-item">
+    <img src="https://i.postimg.cc/t4cp24PJ/Bachat4Life_cover.jpg" alt="Bachat4Life" class="carousel-item">
+    <img src="https://i.postimg.cc/sxKRSjsM/Paloma_Grueso_cover.jpg" alt="Paloma Grueso" class="carousel-item">
+    <img src="https://i.postimg.cc/GhhRRyxD/Pepa_Blasco_cover.jpg" alt="Pepa Blasco" class="carousel-item">
+    <img src="https://i.postimg.cc/zG4YTPZp/David_El_Trovador_del_Sur_cover.jpg" alt="David El Trovador del Sur" class="carousel-item">
+    <img src="https://i.postimg.cc/HW3G6L1J/Kikin_Tapia_cover.jpg" alt="Kikin Tapia" class="carousel-item">
+    <img src="https://i.postimg.cc/FHMwYd3G/Lucy_Martinez_cover.jpg" alt="Lucy Martínez" class="carousel-item">
+    <img src="https://i.postimg.cc/d1BfN5Xm/Francis_Molina_cover.jpg" alt="Francis Molina" class="carousel-item">
+    <img src="https://i.postimg.cc/3rt6gb2B/Francis_Hernanis_cover.jpg" alt="Francis Hernanis" class="carousel-item">
+    <img src="https://i.postimg.cc/438LzY9d/Ray_Rosario_cover.jpg" alt="Ray Rosario" class="carousel-item">
+    <img src="https://i.postimg.cc/rmN6XVd4/Christian_Sailer_cover.jpg" alt="Christian Sailer" class="carousel-item">
+    <img src="https://i.postimg.cc/nLfwF8tt/Paul_Schnyder_cover.jpg" alt="Paul Schnyder" class="carousel-item">
+    <img src="https://i.postimg.cc/L5kj3Wbs/Coffe_King_cover.jpg" alt="Coffe King" class="carousel-item">
+    <img src="https://i.postimg.cc/BZ5Fydmj/Donis_Salvador_cover.jpg" alt="Donis Salvador" class="carousel-item">
+    <img src="https://i.postimg.cc/6QRqZvSG/V_Gastelu_cover.jpg" alt="V Gastelú" class="carousel-item">
+    <img src="https://i.postimg.cc/YqZtxSQ8/Drew_cover.png" alt="Drew" class="carousel-item">
+    <img src="https://i.postimg.cc/3w3VjMfC/Eiban_cover.jpg" alt="Eiban" class="carousel-item">
+    <img src="https://i.postimg.cc/K85xhDd5/JL._Fauli_cover.jpg" alt="JL. Fauli" class="carousel-item">
+
+  </div>
+
+  <div class="podcast-international">
+    Emisión internacional: New York · Suiza · España · Bolivia · Colombia · Perú · Ecuador
+  </div>
+
+  <!-- Spotify + Ivoox -->
+  <div class="podcast-frame">
+    <h3>Estreno del último episodio</h3>
+
+    <!-- Spotify -->
+    <iframe
+      src="https://open.spotify.com/embed/show/3BOJcxcovJtaD7oEBZlDit?utm_source=generator&t=0"
+      width="100%" height="352" frameborder="0" allowfullscreen=""
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"></iframe>
+
+    <!-- Ivoox -->
+    <iframe
+      src="https://www.ivoox.com/player_es_podcast_1855437_zp_1.html?c1=dfab17"
+      width="100%" height="400" frameborder="0" allowfullscreen="" scrolling="no" loading="lazy">
+    </iframe>
+  </div>
+
+  <!-- Slider YouTube -->
+  <div class="youtube-slider" id="youtube-slider" aria-label="Podcasts en YouTube">
+
+    <div class="slide" data-video="https://www.youtube-nocookie.com/embed/kCoJ_2a5lbU?playsinline=1&rel=0&modestbranding=1">
+      <img src="https://i.postimg.cc/2SKYcwGC/donis_salvador_banner_2.jpg" alt="Donis Salvador">
+      <button class="youtube-btn" aria-label="Ver Donis Salvador"><i class="fab fa-youtube"></i></button>
+    </div>
+
+    <div class="slide" data-video="https://www.youtube-nocookie.com/embed/qtH_xI4MHbs?playsinline=1&rel=0&modestbranding=1">
+      <img src="https://i.postimg.cc/fRpyPXjB/v_gastelu_podcast.jpg" alt="V Gastelú">
+      <button class="youtube-btn" aria-label="Ver V Gastelú"><i class="fab fa-youtube"></i></button>
+    </div>
+
+    <div class="slide" data-video="https://www.youtube-nocookie.com/embed/aTVhGKDzQVs?playsinline=1&rel=0&modestbranding=1">
+      <img src="https://i.postimg.cc/CKngWqrw/jl_fauli_podcast.jpg" alt="JL.Fauli">
+      <button class="youtube-btn" aria-label="Ver JL.Fauli"><i class="fab fa-youtube"></i></button>
+    </div>
+
+    <div class="slide" data-video="https://www.youtube-nocookie.com/embed/jIzJfIawC9U?playsinline=1&rel=0&modestbranding=1">
+      <img src="https://i.postimg.cc/R0JBjHpS/eibans_podcast.jpg" alt="Eibans">
+      <button class="youtube-btn" aria-label="Ver Eibans"><i class="fab fa-youtube"></i></button>
+    </div>
+
+    <div class="slide" data-video="https://www.youtube-nocookie.com/embed/ONL821m3l0k?playsinline=1&rel=0&modestbranding=1">
+      <img src="https://i.postimg.cc/pd5HgFcm/v_gastelu-jl_fauli_podcast.jpg" alt="V Gastelú & JL.Fauli">
+      <button class="youtube-btn" aria-label="Ver V Gastelú & JL.Fauli"><i class="fab fa-youtube"></i></button>
+    </div>
+
+    <div class="slide" data-video="https://www.youtube-nocookie.com/embed/oBAXAGwLBig?playsinline=1&rel=0&modestbranding=1">
+      <img src="https://i.postimg.cc/wjGzfV2g/coffe_king_podcast.jpg" alt="Coffe King">
+      <button class="youtube-btn" aria-label="Ver Coffe King"><i class="fab fa-youtube"></i></button>
+    </div>
+
+    <div class="slide" data-video="https://www.youtube-nocookie.com/embed/PdzwEN9Cauw?playsinline=1&rel=0&modestbranding=1">
+      <img src="https://i.postimg.cc/Sxv4Trdq/drew_podcast.jpg" alt="Drew">
+      <button class="youtube-btn" aria-label="Ver Drew"><i class="fab fa-youtube"></i></button>
+    </div>
+
+  </div>
+
+  <!-- Modal YouTube -->
+  <div id="youtube-modal" class="youtube-modal" aria-hidden="true" role="dialog" aria-label="Reproductor de video">
+    <div class="youtube-content">
+      <button class="close-btn" type="button" aria-label="Cerrar video">×</button>
+      <div class="video-aspect">
+        <iframe id="youtube-player" src="" title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Podcasts -->
+  <div class="footer">
+    <div class="social-icons">
+      <a href="https://www.facebook.com/GoldLabelSelloDigital" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/goldlabelsellodigital" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@goldlabelmusicdigital" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://www.youtube.com/@goldlabelmusic" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.javieryabeta.com/" aria-label="Sitio web"><i class="fas fa-globe"></i></a>
+    </div>
+
+    <button class="share-trigger" type="button" onclick="openShareOverlay()" aria-label="Compartir todo">
+      <i class="fas fa-share-alt"></i> Compartir todo
+    </button>
+
+    <p><a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">info@goldlabelmusic.com</a></p>
+    <p>© 2026 Gold Label Music</p>
+
+    <div class="footer-links">
+      <a role="button" onclick="showSection('privacidad')">Política de Privacidad</a>
+      <a role="button" onclick="showSection('cookies')">Política de Cookies</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== BLOQUE 5: SECCIÓN BLOG (OPTIMIZADO — PARTE A) ===== -->
+
+<section id="section-blog" class="section" role="tabpanel" aria-labelledby="Blog">
+
+  <!-- ===== SLIDER CABECERA ===== -->
+  <div class="glm-slider" aria-label="Slider de entrevistas">
+    <div class="glm-slider-track">
+
+	<div class="glm-slide"><img src="https://i.postimg.cc/wMnHdz1v/Jay_González_banner.png" alt="Jey González"></div>
+	<div class="glm-slide"><img src="https://i.postimg.cc/J7YDWr1q/Mario_IAN_banner.png" alt="Mario IAN"></div>
+	<div class="glm-slide"><img src="https://i.postimg.cc/9fv95BK3/Lorenzo_Santamaría_banner.png" alt="Lorenzo Santamaría"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/QtsJx41f/Jorge_Pérez_banner.png" alt="Jorge Pérez"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/8C3V7nLV/Alexander_Cortés_banner.png" alt="Alexander"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/RVq1NSpT/Francisco_banner.png" alt="Francisco"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/cLDt3Nyr/Tamara_banner_radio.png" alt="Tamara"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/PfyM0Cz2/Olivier_Herrera_banner_radio.png" alt="Olivier Herrera"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/WzDDGjDF/Alfonso_Aguado_radio.png" alt="Alfonso Aguado"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/kG5RSf1Z/Juan_Bau_banner_radio.png" alt="Juan Bau"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/PxjmCbkD/Amaya_Saizar_banner_radio.png" alt="Amaya Saizar"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/8kqTMZ06/Jeanette_banner_radio.png" alt="Jeanette"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/9Q5sFSnC/Eddu_Dai_z_banner_radio.png" alt="Eddu Daíz"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/63fpYn4Z/Serafín_Zubiri_banner_radio.png" alt="Serafín Zubiri"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/vBrckCkm/Maria_Saga_banner_radio.png" alt="María Saga"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/t44WPRfT/Xavier_Valverde_banner_radio.png" alt="Xavier Valverde"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/nzj1mVXg/Sylvia_Mund_banner_radio.png" alt="Sylvia Mund"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/2842T52c/Nacho_Maño_banner_radio.png" alt="Nacho Maño"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/3RVnf4st/Luis_Pinto_banner_radio.png" alt="Luis Pinto"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/fTXgFCTq/Janeth_Lujo_banner_radio.png" alt="Janeth Lujo"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/JtwZZjfs/Jeff_Nuno_banner_radio.png" alt="Jeff Nuño"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/T3MJDXGX/Julio_Montalvo_banner_radio.png" alt="Julio Montalvo"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/mD2wgN4k/Lucas_Jimenez_banner_radio.png" alt="Lucas Jiménez"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/Qd1S4dSr/Los_Terrícolas_De_Naylet_Beatriz_banner_radio.png" alt="Los Terrícolas de Naylet Beatriz"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/3Nq96yPW/Javiera_La_Caimana_banner_radio.png" alt="Javiera La Caimana"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/pT20nMDS/Josephine_Sweett_banner_radio.png" alt="Josephine Sweett"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/HW6NXnvX/Willy_Rivera_banner_radio.png" alt="Willy Rivera"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/8zJx1GHt/Roxy_d_Cuba_banner_radio.png" alt="Roxy d Cuba"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/KjGdFgq5/Bachat4Life_banner_radio.png" alt="Bachat4Life"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/zGyYVKJy/Paloma_Grueso_banner_radio.png" alt="Paloma Grueso"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/7PNkcqsL/Pepa_Blasco_banner_radio.png" alt="Pepa Blasco"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/G2FCbRcL/David_El_Trovador_del_Sur_banner_radio.png" alt="David El Trovador del Sur"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/sDVVDMQ0/Kikin_Tapia_banner_radio.png" alt="Kikin Tapia"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/cCWd3HDs/Lucy_Martínez_banner_radio.png" alt="Lucy Martínez"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/FHCF6hKC/Francis_Molina_banner_radio.png" alt="Francis Molina"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/8PHzhRgk/Francis_Hernani_banner_radio.png" alt="Francis Hernani"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/J7jnhwTh/Ray_Rosario_banner_radio.png" alt="Ray Rosario"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/5yW2mptt/Christian_Sailer_banner_radio.png" alt="Christian Sailer"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/JhgnsRVC/Paul_Schnyder_banner_radio.png" alt="Paul Schnyder"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/kgTDdxT8/Coffe_King_Agónica_banner_radio.png" alt="Coffe King Agónica"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/xTSXGjkM/Donis_Salvador_banner_radio.png" alt="Donis Salvador"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/Kzk1fRrz/V_Gastelu_banner_radio.png" alt="V. Gastelu"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/bwgSwXwD/Drew_banner_radio.png" alt="Drew"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/xTKbBNrN/Eibans_banner_radio.png" alt="Eibans"></div>
+      <div class="glm-slide"><img src="https://i.postimg.cc/bwh1vHHq/JL_Fauli_banner_radio.png" alt="JL Faulí"></div>
+
+    </div>
+
+    <button class="glm-nav prev" aria-label="Anterior">‹</button>
+    <button class="glm-nav next" aria-label="Siguiente">›</button>
+    <div class="glm-pagination" aria-label="Paginación"></div>
+  </div>
+
+  <!-- ===== BUSCADOR ===== -->
+  <div class="blog-search">
+    <input type="text" id="artist-search" placeholder="Buscar artista...">
+    <button id="search-btn" type="button">Buscar</button>
+  </div>
+
+  <!-- ===== CARRUSEL 1 — Quinta temporada ===== -->
+  <div class="carousel-wrapper">
+    <div class="ver-mas">VER MÁS</div>
+
+    <div class="carousel-container">
+      <button class="carousel-nav prev" aria-label="Anterior">‹</button>
+
+      <div class="blog-carousel" id="carousel-1">
+
+      <div class="carousel-item" data-artist="jey gonzález" onclick="window.open('https://genevalatina.ch/jey-gonzalez/', '_blank')">
+          <img src="https://i.postimg.cc/hGnDjKpX/Jey_González_cover.png" alt="Jey González">
+          <span>Jey González</span>
+        </div>
+
+      <div class="carousel-item" data-artist="mario ian" onclick="window.open('https://genevalatina.ch/mario-ian/', '_blank')">
+          <img src="https://i.postimg.cc/ZRcNN6ty/Mario_IAN_cover.png" alt="Mario IAN">
+          <span>Mario IAN</span>
+        </div>
+
+      <div class="carousel-item" data-artist="lorenzo santamaría" onclick="window.open('https://genevalatina.ch/lorenzo-santamaria/', '_blank')">
+          <img src="https://i.postimg.cc/fRRmxym6/Lorenzo_Santamaría_cover.png" alt="Lorenzo Santamaría">
+          <span>Lorenzo Santamaría</span>
+        </div>
+
+        <div class="carousel-item" data-artist="jorge pérez" onclick="window.open('https://genevalatina.ch/jorge-perez/', '_blank')">
+          <img src="https://i.postimg.cc/qvhLmCpc/Jorge_Pérez_cover.png" alt="Jorge Pérez">
+          <span>Jorge Pérez</span>
+        </div>
+
+        <div class="carousel-item" data-artist="alexander cortés" onclick="window.open('https://genevalatina.ch/alexander-cortes/', '_blank')">
+          <img src="https://i.postimg.cc/T338CX9L/Alexander_Cortés_cover.png" alt="Alexander Cortés">
+          <span>Alexander Cortés</span>
+        </div>
+
+        <div class="carousel-item" data-artist="francisco" onclick="window.open('https://genevalatina.ch/francisco/', '_blank')">
+          <img src="https://i.postimg.cc/X7vLdcqq/Francisco_cover.png" alt="Francisco">
+          <span>Francisco</span>
+        </div>
+
+<div class="carousel-item" data-artist="tamara" onclick="window.open('https://genevalatina.ch/31638-2/', '_blank')">
+          <img src="https://i.postimg.cc/mkxHrNxn/Tamara_cover.png" alt="Tamara">
+          <span>Tamara</span>
+        </div>
+
+        <div class="carousel-item" data-artist="olivier herrera" onclick="window.open('https://genevalatina.ch/olivier-herrera-marin/', '_blank')">
+          <img src="https://i.postimg.cc/DzmZfYty/Olivier_Herrera_cover.jpg" alt="Olivier Herrera">
+          <span>Olivier Herrera</span>
+        </div>
+
+        <div class="carousel-item" data-artist="alfonso aguado" onclick="window.open('https://genevalatina.ch/alfonso-aguado/', '_blank')">
+          <img src="https://i.postimg.cc/HxcVzPzW/Alfonso_Aguado_cover.jpg" alt="Alfonso Aguado">
+          <span>Alfonso Aguado</span>
+        </div>
+
+        <div class="carousel-item" data-artist="juan bau" onclick="window.open('https://genevalatina.ch/juan-bau/', '_blank')">
+          <img src="https://i.postimg.cc/k5BM3x2M/Juan_Bau_cover.png" alt="Juan Bau">
+          <span>Juan Bau</span>
+        </div>
+
+      </div>
+
+      <button class="carousel-nav next" aria-label="Siguiente">›</button>
+    </div>
+  </div>
+
+  <!-- ===== CARRUSEL 2 — Cuarta temporada ===== -->
+  <div class="carousel-wrapper">
+    <div class="ver-mas">VER MÁS</div>
+
+    <div class="carousel-container">
+      <button class="carousel-nav prev" aria-label="Anterior">‹</button>
+
+      <div class="blog-carousel" id="carousel-2">
+
+        <div class="carousel-item" data-artist="amaya saizar" onclick="window.open('https://genevalatina.ch/amaya-saizar/', '_blank')">
+          <img src="https://i.postimg.cc/Jn4DZnWc/Amaya_Saizar_cover.jpg" alt="Amaya Saizar">
+          <span>Amaya Saizar</span>
+        </div>
+
+        <div class="carousel-item" data-artist="jeanette" onclick="window.open('https://genevalatina.ch/jeanette-anne-dimech/', '_blank')">
+          <img src="https://i.postimg.cc/Pf7pvTVN/Jeanette_cover.jpg" alt="Jeanette">
+          <span>Jeanette</span>
+        </div>
+
+        <div class="carousel-item" data-artist="eddu dai'z" onclick="window.open('https://genevalatina.ch/eddu-daiz-2/', '_blank')">
+          <img src="https://i.postimg.cc/MTFTBm5k/Eddu_Dai_z_cover.jpg" alt="Eddu Dai'z">
+          <span>Eddu Dai'z</span>
+        </div>
+
+        <div class="carousel-item" data-artist="serafín zubiri" onclick="window.open('https://genevalatina.ch/serafin-zubiri/', '_blank')">
+          <img src="https://i.postimg.cc/jdNHsDqR/Serafín_Zubiri_cover.jpg" alt="Serafín Zubiri">
+          <span>Serafín Zubiri</span>
+        </div>
+
+        <div class="carousel-item" data-artist="maría saga" onclick="window.open('https://genevalatina.ch/maria-saga/', '_blank')">
+          <img src="https://i.postimg.cc/N0NTNTDp/Maria_Saga_cover.jpg" alt="María Saga">
+          <span>María Saga</span>
+        </div>
+
+        <div class="carousel-item" data-artist="xavier valverde" onclick="window.open('https://genevalatina.ch/xavier-valverde/', '_blank')">
+          <img src="https://i.postimg.cc/QC7TxzDD/Xavier_Valverde_cover.jpg" alt="Xavier Valverde">
+          <span>Xavier Valverde</span>
+        </div>
+
+        <div class="carousel-item" data-artist="sylvia mund" onclick="window.open('https://genevalatina.ch/sylvia-mund/', '_blank')">
+          <img src="https://i.postimg.cc/gkvZC14J/Sylvia_Mund_cover.jpg" alt="Sylvia Mund">
+          <span>Sylvia Mund</span>
+        </div>
+
+        <div class="carousel-item" data-artist="nacho maño" onclick="window.open('https://genevalatina.ch/31508-2/', '_blank')">
+          <img src="https://i.postimg.cc/4xPhdtDy/Nacho_Maño_cover.jpg" alt="Nacho Maño">
+          <span>Nacho Maño</span>
+        </div>
+
+        <div class="carousel-item" data-artist="luis pinto" onclick="window.open('https://genevalatina.ch/luis-pinto/', '_blank')">
+          <img src="https://i.postimg.cc/6327YPy8/Luis_Pinto_cover.jpg" alt="Luis Pinto">
+          <span>Luis Pinto</span>
+        </div>
+
+        <div class="carousel-item" data-artist="janeth lujo" onclick="window.open('https://genevalatina.ch/janeth-lujo/', '_blank')">
+          <img src="https://i.postimg.cc/ZYNBNXG2/Janeth_Lujo_cover.jpg" alt="Janeth Lujo">
+          <span>Janeth Lujo</span>
+        </div>
+
+      </div>
+
+      <button class="carousel-nav next" aria-label="Siguiente">›</button>
+    </div>
+  </div>
+
+  <!-- ===== CARRUSEL 3 — Tercera temporada ===== -->
+  <div class="carousel-wrapper">
+    <div class="ver-mas">VER MÁS</div>
+
+    <div class="carousel-container">
+      <button class="carousel-nav prev" aria-label="Anterior">‹</button>
+
+      <div class="blog-carousel" id="carousel-3">
+
+        <div class="carousel-item" data-artist="jeff nuño" onclick="window.open('https://genevalatina.ch/jeff-nuno/', '_blank')">
+          <img src="https://i.postimg.cc/3JCkSmJX/Jeff_Nuno_cover.jpg" alt="Jeff Nuño">
+          <span>Jeff Nuño</span>
+        </div>
+
+        <div class="carousel-item" data-artist="julio montalvo" onclick="window.open('https://genevalatina.ch/31466-2/', '_blank')">
+          <img src="https://i.postimg.cc/YSjjCPNL/Julio_Montalvo_cover.jpg" alt="Julio Montalvo">
+          <span>Julio Montalvo</span>
+        </div>
+
+        <div class="carousel-item" data-artist="lucas jiménez" onclick="window.open('https://genevalatina.ch/lucas-jimenez/', '_blank')">
+          <img src="https://i.postimg.cc/nrfLTcym/Lucas_Jimenez_cover.jpg" alt="Lucas Jiménez">
+          <span>Lucas Jiménez</span>
+        </div>
+
+        <div class="carousel-item" data-artist="naylet beatriz" onclick="window.open('https://genevalatina.ch/los-terricolas-de-naylet-beatriz/', '_blank')">
+          <img src="https://i.postimg.cc/KctjjBTH/Los_Terrícolas_De_Naylet_Beatriz_cover.jpg" alt="Naylet Beatriz">
+          <span>Naylet Beatriz</span>
+        </div>
+
+        <div class="carousel-item" data-artist="javiera la caimana" onclick="window.open('https://genevalatina.ch/javiera-la-caimana/', '_blank')">
+          <img src="https://i.postimg.cc/httt2Y5H/Javiera_La_Caimana_cover.jpg" alt="Javiera La Caimana">
+          <span>Javiera La Caimana</span>
+        </div>
+
+        <div class="carousel-item" data-artist="josephine sweett" onclick="window.open('https://genevalatina.ch/josephine-sweett/', '_blank')">
+          <img src="https://i.postimg.cc/TPZ2Y33d/Josephine_Sweett_cover.jpg" alt="Josephine Sweett">
+          <span>Josephine Sweett</span>
+        </div>
+
+        <div class="carousel-item" data-artist="willy rivera" onclick="window.open('https://genevalatina.ch/willy-rivery/', '_blank')">
+          <img src="https://i.postimg.cc/fyswmqdg/Willy_Rivera_cover.jpg" alt="Willy Rivera">
+          <span>Willy Rivera</span>
+        </div>
+
+        <div class="carousel-item" data-artist="roxy d cuba" onclick="window.open('https://genevalatina.ch/roxy-d-cuba/', '_blank')">
+          <img src="https://i.postimg.cc/7YxHLcwC/Roxy_d_Cuba_cover.jpg" alt="Roxy d Cuba">
+          <span>Roxy d Cuba</span>
+        </div>
+
+        <div class="carousel-item" data-artist="bachat4life" onclick="window.open('https://genevalatina.ch/bachat4life/', '_blank')">
+          <img src="https://i.postimg.cc/t4cp24PJ/Bachat4Life_cover.jpg" alt="Bachat4Life">
+          <span>Bachat4Life</span>
+        </div>
+
+        <div class="carousel-item" data-artist="paloma grueso" onclick="window.open('https://genevalatina.ch/paloma-grueso/', '_blank')">
+          <img src="https://i.postimg.cc/sxKRSjsM/Paloma_Grueso_cover.jpg" alt="Paloma Grueso">
+          <span>Paloma Grueso</span>
+        </div>
+
+      </div>
+
+      <button class="carousel-nav next" aria-label="Siguiente">›</button>
+    </div>
+  </div>
+
+  <!-- ===== CARRUSEL 4 — Segunda temporada ===== -->
+  <div class="carousel-wrapper">
+    <div class="ver-mas">VER MÁS</div>
+
+    <div class="carousel-container">
+      <button class="carousel-nav prev" aria-label="Anterior">‹</button>
+
+      <div class="blog-carousel" id="carousel-4">
+
+        <div class="carousel-item" data-artist="pepa blasco" onclick="window.open('https://genevalatina.ch/pepa-blasco/', '_blank')">
+          <img src="https://i.postimg.cc/GhhRRyxD/Pepa_Blasco_cover.jpg" alt="Pepa Blasco">
+          <span>Pepa Blasco</span>
+        </div>
+
+        <div class="carousel-item" data-artist="david el trovador" onclick="window.open('https://genevalatina.ch/david-el-trovador-del-sur/', '_blank')">
+          <img src="https://i.postimg.cc/zG4YTPZp/David_El_Trovador_del_Sur_cover.jpg" alt="David El Trovador">
+          <span>David El Trovador</span>
+        </div>
+
+        <div class="carousel-item" data-artist="kikin tapia" onclick="window.open('https://genevalatina.ch/kikin-tapia/', '_blank')">
+          <img src="https://i.postimg.cc/HW3G6L1J/Kikin_Tapia_cover.jpg" alt="Kikin Tapia">
+          <span>Kikin Tapia</span>
+        </div>
+
+        <div class="carousel-item" data-artist="lucy martínez" onclick="window.open('https://genevalatina.ch/lucy-martinez/', '_blank')">
+          <img src="https://i.postimg.cc/FHMwYd3G/Lucy_Martinez_cover.jpg" alt="Lucy Martínez">
+          <span>Lucy Martínez</span>
+        </div>
+
+        <div class="carousel-item" data-artist="francis hernani" onclick="window.open('https://genevalatina.ch/francis-hernani/', '_blank')">
+          <img src="https://i.postimg.cc/3rt6gb2B/Francis_Hernanis_cover.jpg" alt="Francis Hernani">
+          <span>Francis Hernani</span>
+        </div>
+
+        <div class="carousel-item" data-artist="francis molina" onclick="window.open('https://genevalatina.ch/francis-molina/', '_blank')">
+          <img src="https://i.postimg.cc/d1BfN5Xm/Francis_Molina_cover.jpg" alt="Francis Molina">
+          <span>Francis Molina</span>
+        </div>
+
+        <div class="carousel-item" data-artist="ray rosario" onclick="window.open('https://genevalatina.ch/ray-rosario-un-embajador-de-la-bachata-en-europa/', '_blank')">
+          <img src="https://i.postimg.cc/438LzY9d/Ray_Rosario_cover.jpg" alt="Ray Rosario">
+          <span>Ray Rosario</span>
+        </div>
+
+        <div class="carousel-item" data-artist="christian sailer" onclick="window.open('https://genevalatina.ch/christian-sailer/', '_blank')">
+          <img src="https://i.postimg.cc/rmN6XVd4/Christian_Sailer_cover.jpg" alt="Christian Sailer">
+          <span>Christian Sailer</span>
+        </div>
+
+        <div class="carousel-item" data-artist="paul schnyder" onclick="window.open('https://genevalatina.ch/paul-schnyder/', '_blank')">
+          <img src="https://i.postimg.cc/nLfwF8tt/Paul_Schnyder_cover.jpg" alt="Paul Schnyder">
+          <span>Paul Schnyder</span>
+        </div>
+
+        <div class="carousel-item" data-artist="coffe king" onclick="window.open('https://genevalatina.ch/coffe-king/', '_blank')">
+          <img src="https://i.postimg.cc/L5kj3Wbs/Coffe_King_cover.jpg" alt="Coffe King">
+          <span>Coffe King</span>
+        </div>
+
+      </div>
+
+      <button class="carousel-nav next" aria-label="Siguiente">›</button>
+    </div>
+  </div>
+
+  <!-- ===== CARRUSEL 5 — Primera temporada ===== -->
+  <div class="carousel-wrapper">
+    <div class="ver-mas">VER MÁS</div>
+
+    <div class="carousel-container">
+      <button class="carousel-nav prev" aria-label="Anterior">‹</button>
+
+      <div class="blog-carousel" id="carousel-5">
+
+        <div class="carousel-item" data-artist="donís salvador" onclick="window.open('https://genevalatina.ch/donis-salvador/', '_blank')">
+          <img src="https://i.postimg.cc/BZ5Fydmj/Donis_Salvador_cover.jpg" alt="Donís Salvador">
+          <span>Donís Salvador</span>
+        </div>
+
+        <div class="carousel-item" data-artist="v gastelu" onclick="window.open('https://genevalatina.ch/victor-gastelu-fino/', '_blank')">
+          <img src="https://i.postimg.cc/6QRqZvSG/V_Gastelu_cover.jpg" alt="V Gastelu">
+          <span>V Gastelu</span>
+        </div>
+
+        <div class="carousel-item" data-artist="drew" onclick="window.open('https://genevalatina.ch/drew/', '_blank')">
+          <img src="https://i.postimg.cc/YqZtxSQ8/Drew_cover.png" alt="Drew">
+          <span>Drew</span>
+        </div>
+
+        <div class="carousel-item" data-artist="eibans" onclick="window.open('https://genevalatina.ch/eibans/', '_blank')">
+          <img src="https://i.postimg.cc/3w3VjMfC/Eiban_cover.jpg" alt="Eibans">
+          <span>Eibans</span>
+        </div>
+
+        <div class="carousel-item" data-artist="jl.fauli" onclick="window.open('https://genevalatina.ch/jl-fauli/', '_blank')">
+          <img src="https://i.postimg.cc/K85xhDd5/JL._Fauli_cover.jpg" alt="JL.Fauli">
+          <span>JL.Fauli</span>
+        </div>
+
+      </div>
+
+      <button class="carousel-nav next" aria-label="Siguiente">›</button>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER BLOG ===== -->
+  <div class="footer">
+    <div class="social-icons">
+      <a href="https://www.facebook.com/GoldLabelSelloDigital" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/goldlabelsellodigital" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@goldlabelmusicdigital" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://www.youtube.com/@goldlabelmusic" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.javieryabeta.com/" aria-label="Sitio web"><i class="fas fa-globe"></i></a>
+    </div>
+
+    <button class="share-trigger" type="button" onclick="openShareOverlay()" aria-label="Compartir todo">
+      <i class="fas fa-share-alt"></i> Compartir todo
+    </button>
+
+    <p><a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">info@goldlabelmusic.com</a></p>
+    <p>© 2026 Gold Label Music</p>
+
+    <div class="footer-links">
+      <a role="button" onclick="showSection('privacidad')">Política de Privacidad</a>
+      <a role="button" onclick="showSection('cookies')">Política de Cookies</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== BLOQUE 6: SECCIÓN REDES (OPTIMIZADO) ===== -->
+
+<section id="section-redes" class="section" role="tabpanel" aria-labelledby="Redes">
+
+  <!-- ===== CARRUSEL VERTICAL DE FLYERS ===== -->
+  <div class="redes-carousel" id="redes-carousel">
+
+	<img src="https://i.postimg.cc/T3VxBZf8/Jey_González_flyer.png" alt="Jey González" class="carousel-item active">
+	<img src="https://i.postimg.cc/855pyvrg/Mario_IAN_flyer.png" alt="Mario IAN" class="carousel-item active">
+	<img src="https://i.postimg.cc/FsDJsv81/Lorenzo_Santamaría_flyer.png" alt="Lorenzo Santamaría" class="carousel-item active">
+    <img src="https://i.postimg.cc/gct8fkSR/Jorge_Pérez_flyer.png" alt="Jorge Pérez" class="carousel-item active">
+    <img src="https://i.postimg.cc/NF8hPsS6/Alexander_Cortés_flyer.png" alt="Alexander Cortés" class="carousel-item active">
+    <img src="https://i.postimg.cc/rmJGtKLx/Francisco_flyer.png" alt="Francisco" class="carousel-item active">
+    <img src="https://i.postimg.cc/D0d8y9PW/Tamara_flyer.png" alt="Tamara" class="carousel-item active">
+    <img src="https://i.postimg.cc/BQVZYCjk/Olivier_Herrera_flyer.png" alt="Olivier Herrera" class="carousel-item active">
+    <img src="https://i.postimg.cc/DyrGBvCH/Alfonso_Aguado_Flyer.png" alt="Alfonso Aguado" class="carousel-item">
+    <img src="https://i.postimg.cc/2y6qLHRV/Juan_Bau_Flyer.png" alt="Juan Bau" class="carousel-item">
+    <img src="https://i.postimg.cc/L65fJs2k/Amaya_Saizar_Flyer.png" alt="Amaya Saizar" class="carousel-item">
+    <img src="https://i.postimg.cc/9M2Z0tFv/Jeanette_poster_Flyer.png" alt="Jeanette" class="carousel-item">
+    <img src="https://i.postimg.cc/DywQ1gdf/Eddu_Dai_z_Flyer.png" alt="Eddu Dai'z" class="carousel-item">
+    <img src="https://i.postimg.cc/Kz77DpHF/Serafín_Zubiri_Flyer.png" alt="Serafín Zubiri" class="carousel-item">
+    <img src="https://i.postimg.cc/66LzrqkD/Maria_Saga_Flyer.png" alt="Maria Saga" class="carousel-item">
+    <img src="https://i.postimg.cc/vTLPDZys/Xavier_Valverde_Flyer.png" alt="Xavier Valverde" class="carousel-item">
+    <img src="https://i.postimg.cc/J7Jv9R9j/Sylvia_Mund_Flyer.png" alt="Sylvia Mund" class="carousel-item">
+    <img src="https://i.postimg.cc/4NRkdYzL/Nacho_Maño_Flyer.png" alt="Nacho Maño" class="carousel-item">
+    <img src="https://i.postimg.cc/2S3qS9dw/Luis_Pinto_Flyer.png" alt="Luis Pinto" class="carousel-item">
+    <img src="https://i.postimg.cc/nzq9ts40/Janeth_Lujo_Flyer.png" alt="Janeth Lujo" class="carousel-item">
+    <img src="https://i.postimg.cc/rsC45dzr/Jeff_Nuno_Flyer.png" alt="Jeff Nuño" class="carousel-item">
+    <img src="https://i.postimg.cc/Y0168nD8/Julio_Montalvo_Flyer.png" alt="Julio Montalvo" class="carousel-item">
+    <img src="https://i.postimg.cc/9MD1PBjf/Lucas_Jimenez_Flyer.png" alt="Lucas Jiménez" class="carousel-item">
+    <img src="https://i.postimg.cc/QtCcGN4B/Naylet_Beatriz_Flyer.png" alt="Naylet Beatriz" class="carousel-item">
+    <img src="https://i.postimg.cc/904PTXZt/Javier_La_Caimana_Flyer.png" alt="Javiera La Caimana" class="carousel-item">
+    <img src="https://i.postimg.cc/SQtDK3CD/Josephine_Sweett_Flyer.png" alt="Josephine Sweett" class="carousel-item">
+    <img src="https://i.postimg.cc/9FK8LKfh/Willy_Rivera_Flyer.png" alt="Willy Rivera" class="carousel-item">
+    <img src="https://i.postimg.cc/DzstQFdK/Bachat4Life_Flyer.png" alt="Bachat4Life" class="carousel-item">
+    <img src="https://i.postimg.cc/vHZFJJM3/Paloma_Grueso_Flyer.png" alt="Paloma Grueso" class="carousel-item">
+    <img src="https://i.postimg.cc/C5FTLt8V/Pepa_Blaco_Flyer.png" alt="Pepa Blasco" class="carousel-item">
+    <img src="https://i.postimg.cc/dVXYm4bx/David_El_Trovador_Flyer.png" alt="David El Trovador del Sur" class="carousel-item">
+    <img src="https://i.postimg.cc/kGcCQ9CD/Kikin_Tapia_Flyer.png" alt="Kikin Tapia" class="carousel-item">
+    <img src="https://i.postimg.cc/9QfmB4zv/Lucy_Martínez_Flyer.png" alt="Lucy Martínez" class="carousel-item">
+    <img src="https://i.postimg.cc/mD92F0hp/Francis_Molina_Flyer.png" alt="Francis Molina" class="carousel-item">
+    <img src="https://i.postimg.cc/x1sCrvWf/Francis_Hernani_Flyer.png" alt="Francis Hernani" class="carousel-item">
+    <img src="https://i.postimg.cc/fbLVk2x5/Christian_Sailer_Flyer.png" alt="Christian Sailer" class="carousel-item">
+    <img src="https://i.postimg.cc/0N2wD2q2/Paul_Schnyder_Flyer.png" alt="Paul Schnyder" class="carousel-item">
+    <img src="https://i.postimg.cc/g2yJM9Kf/Coffe_King_Flyer.png" alt="Coffe King" class="carousel-item">
+    <img src="https://i.postimg.cc/sXTGTF3F/Donis_Salvador_Flyer.png" alt="Donis Salvador" class="carousel-item">
+    <img src="https://i.postimg.cc/26GhgbF7/V_Gastelu_Flyer.png" alt="V Gastelú" class="carousel-item">
+    <img src="https://i.postimg.cc/j286nwD4/Drew_Flyer.png" alt="Drew" class="carousel-item">
+    <img src="https://i.postimg.cc/GtzKPg5G/Eibans_Flyer.png" alt="Eiban" class="carousel-item">
+    <img src="https://i.postimg.cc/6qxgbPcT/JL._Fauli_Flyer.png" alt="JL. Fauli" class="carousel-item">
+    <img src="https://i.postimg.cc/0rg33BC3/Ray_Rosario_Flyer.png" alt="Ray Rosario" class="carousel-item">
+
+  </div>
+
+  <!-- ===== FACEBOOK + INSTAGRAM GRID ===== -->
+  <div class="redes-grid">
+
+    <!-- Portada Facebook -->
+    <div class="redes-block portada-fb">
+      <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fphoto%2F%3Ffbid%3D935920855977314%26set%3Da.101045872798154&show_text=true&width=500" width="500" height="295" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+      </div>
+
+    <!-- Cartel Facebook -->
+    <div class="redes-block cartel-fb">
+      <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FGoldLabelSelloDigital%2Fposts%2Fpfbid02Qqu3Z5LJomhTEUpwrkFCfmUDuoiqARuFCpmcg6ZfHn2cy2FuR5jQqa7ypnfSgK7Dl&show_text=true&width=500" width="500" height="738" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+    </div>
+
+    <!-- Reel Instagram -->
+    <div class="redes-block reel-ig">
+      <blockquote class="instagram-media"
+        data-instgrm-permalink="https://www.instagram.com/reel/DWCx7yWiFna/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==">
+      </blockquote>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER REDES ===== -->
+  <div class="footer">
+    <div class="social-icons">
+      <a href="https://www.facebook.com/GoldLabelSelloDigital" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/goldlabelsellodigital" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@goldlabelmusicdigital" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://www.youtube.com/@goldlabelmusic" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.javieryabeta.com/" aria-label="Sitio web"><i class="fas fa-globe"></i></a>
+    </div>
+
+    <button class="share-trigger" type="button" onclick="openShareOverlay()" aria-label="Compartir todo">
+      <i class="fas fa-share-alt"></i> Compartir todo
+    </button>
+
+    <p><a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">info@goldlabelmusic.com</a></p>
+    <p>© 2026 Gold Label Music</p>
+
+    <div class="footer-links">
+      <a role="button" onclick="showSection('privacidad')">Política de Privacidad</a>
+      <a role="button" onclick="showSection('cookies')">Política de Cookies</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== BLOQUE 7: SUBPÁGINA PRIVACIDAD (OPTIMIZADO) ===== -->
+
+<section id="section-privacidad" class="section section-policy" role="tabpanel" aria-labelledby="Privacidad">
+
+  <div class="logo-wrapper">
+    <img class="brand-logo" src="https://i.postimg.cc/j29NzMYR/Gold_Label_Music_logo.png" alt="Gold Label Music">
+  </div>
+
+  <div class="policy-container">
+
+    <h1>POLÍTICA DE PRIVACIDAD</h1>
+    <h2>Protección de datos personales</h2>
+
+    <p>En Gold Label Music respetamos su privacidad y protegemos sus datos personales conforme a la normativa aplicable.</p>
+
+    <ul>
+      <li><strong>Responsable:</strong> Gold Label Music · contacto: info@goldlabelmusic.com</li>
+      <li><strong>Datos que tratamos:</strong> nombre, correo electrónico, información de navegación y uso del sitio.</li>
+      <li><strong>Finalidades:</strong> responder consultas, gestionar contenidos y comunicaciones, análisis estadístico y mejora del servicio.</li>
+      <li><strong>Legitimación:</strong> consentimiento del usuario y/o interés legítimo.</li>
+      <li><strong>Cesiones:</strong> no se ceden datos a terceros salvo obligación legal o proveedores necesarios (alojamiento, analítica, embeds de terceros como YouTube, Facebook, Instagram).</li>
+      <li><strong>Conservación:</strong> durante el tiempo necesario para las finalidades y según obligaciones legales.</li>
+      <li><strong>Derechos:</strong> acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad.</li>
+      <li><strong>Ejercicio de derechos:</strong> escribiendo a info@goldlabelmusic.com indicando su solicitud.</li>
+      <li><strong>Seguridad:</strong> aplicamos medidas técnicas y organizativas para proteger sus datos.</li>
+    </ul>
+
+    <p>Al usar este sitio, usted acepta esta Política de Privacidad.</p>
+
+    <!-- Footer Privacidad -->
+    <div class="footer">
+      <div class="footer-links">
+        <a role="button" onclick="showSection('radio')">Cerrar y volver a inicio</a>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ===== BLOQUE 8: SUBPÁGINA COOKIES (OPTIMIZADO) ===== -->
+
+<section id="section-cookies" class="section section-policy" role="tabpanel" aria-labelledby="Cookies">
+
+  <div class="logo-wrapper">
+    <img class="brand-logo" src="https://i.postimg.cc/j29NzMYR/Gold_Label_Music_logo.png" alt="Gold Label Music">
+  </div>
+
+  <div class="cookies-container">
+
+    <h1>POLÍTICA DE COOKIES</h1>
+    <h2>Uso de cookies en este sitio</h2>
+
+    <p>Este sitio utiliza cookies y tecnologías similares para mejorar la experiencia del usuario, analizar el uso y mostrar contenidos embebidos.</p>
+
+    <ul>
+      <li><strong>Qué son:</strong> archivos que se guardan en su dispositivo al visitar el sitio.</li>
+      <li><strong>Tipos que usamos:</strong> técnicas (funcionamiento del sitio), analíticas (estadísticas de uso), y de terceros (YouTube, Facebook, Instagram) que pueden establecer sus propias cookies.</li>
+      <li><strong>Gestión:</strong> puede desactivar o eliminar las cookies desde la configuración de su navegador. Algunas funciones pueden verse afectadas.</li>
+      <li><strong>Consentimiento:</strong> al continuar navegando, usted consiente el uso de cookies según esta política.</li>
+      <li><strong>Más información:</strong> puede contactarnos en info@goldlabelmusic.com.</li>
+    </ul>
+
+    <p>Las cookies de terceros se rigen por las políticas de dichos proveedores.</p>
+
+    <!-- Footer Cookies -->
+    <div class="footer">
+      <div class="footer-links">
+        <a role="button" onclick="showSection('radio')">Cerrar y volver a inicio</a>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ===== BLOQUE 9: OVERLAY COMPARTIR (OPTIMIZADO) ===== -->
+
+<div id="share-overlay" class="share-overlay" aria-hidden="true">
+
+  <div class="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-title">
+
+    <div class="share-header">
+      <div id="share-title" class="share-title">Compartir Gold Label Music</div>
+      <button class="share-close" aria-label="Cerrar" onclick="closeShareOverlay()">&times;</button>
+    </div>
+
+    <div class="share-grid">
+
+      <!-- Todos los enlaces apuntan SIEMPRE a la página de Radio -->
+      <a id="share-fb"
+         href="https://www.facebook.com/sharer/sharer.php?u=https://www.goldlabelmusic.com/radio"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i> Facebook
+      </a>
+
+      <a id="share-x"
+         href="https://twitter.com/intent/tweet?url=https://www.goldlabelmusic.com/radio&text=Escucha%20Gold%20Label%20Radio"
+         target="_blank" rel="noopener">
+        <i class="fab fa-x-twitter"></i> X (Twitter)
+      </a>
+
+      <a id="share-wa"
+         href="https://api.whatsapp.com/send?text=Escucha%20Gold%20Label%20Radio%20https://www.goldlabelmusic.com/radio"
+         target="_blank" rel="noopener">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </a>
+
+      <a id="share-li"
+         href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.goldlabelmusic.com/radio"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i> LinkedIn
+      </a>
+
+      <a id="share-mail"
+         href="mailto:?subject=Gold%20Label%20Radio&body=Escucha%20Gold%20Label%20Radio%20en%20https://www.goldlabelmusic.com/radio">
+        <i class="fas fa-envelope"></i> Email
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ===== BLOQUE 10: SCRIPTS EXTERNOS Y FUNCIONES GLOBALES (OPTIMIZADO) ===== -->
+
+<script async src="//www.instagram.com/embed.js"></script>
+
+<script>
+/* ============================================================
+   MODAL YOUTUBE (PODCASTS)
+============================================================ */
+(function(){
+  const slider = document.getElementById('youtube-slider');
+  if(!slider) return;
+
+  const slides = Array.from(slider.querySelectorAll('.slide'));
+  const modal = document.getElementById('youtube-modal');
+  const player = document.getElementById('youtube-player');
+  const closeBtn = modal.querySelector('.close-btn');
+
+  slides.forEach(slide => {
+    const btn = slide.querySelector('.youtube-btn');
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const videoUrl = slide.getAttribute('data-video');
+      player.src = videoUrl;
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeModal(){
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    player.src = '';
+    document.body.style.overflow = '';
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+})();
+
+/* ============================================================
+   SLIDER BLOG (CABECERA)
+============================================================ */
+(function(){
+  const slider = document.querySelector('.glm-slider');
+  if(!slider) return;
+
+  const track = slider.querySelector('.glm-slider-track');
+  const slides = Array.from(track.children);
+  const prevBtn = slider.querySelector('.glm-nav.prev');
+  const nextBtn = slider.querySelector('.glm-nav.next');
+  const pagination = slider.querySelector('.glm-pagination');
+
+  let index = 0;
+  let autoplayId = null;
+  const AUTOPLAY_MS = 4000;
+
+  slides.forEach((_, i) => {
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'Ir al slide ' + (i+1));
+    b.addEventListener('click', () => goTo(i, true));
+    pagination.appendChild(b);
+  });
+
+  function updateUI(){
+    track.style.transform = `translateX(-${index * 100}%)`;
+    const bullets = Array.from(pagination.children);
+    bullets.forEach((b, i) => b.classList.toggle('active', i === index));
+  }
+
+  function goTo(i, stopAutoplay = false){
+    index = (i + slides.length) % slides.length;
+    updateUI();
+    if(stopAutoplay) restartAutoplay();
+  }
+
+  function next(){ goTo(index + 1, true); }
+  function prev(){ goTo(index - 1, true); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  function startAutoplay(){
+    stopAutoplay();
+    autoplayId = setInterval(() => goTo(index + 1), AUTOPLAY_MS);
+  }
+  function stopAutoplay(){
+    if(autoplayId) clearInterval(autoplayId);
+    autoplayId = null;
+  }
+  function restartAutoplay(){ startAutoplay(); }
+
+  slider.addEventListener('mouseenter', stopAutoplay);
+  slider.addEventListener('mouseleave', startAutoplay);
+
+  let startX = null;
+  slider.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+  slider.addEventListener('touchmove', e => {
+    if(startX === null) return;
+    const dx = e.touches[0].clientX - startX;
+    if(Math.abs(dx) > 40){
+      dx > 0 ? prev() : next();
+      startX = null;
+    }
+  }, {passive:true});
+
+  updateUI();
+  startAutoplay();
+})();
+
+/* ============================================================
+   SLIDER YOUTUBE (AUTOSCROLL)
+============================================================ */
+(function(){
+  const slider = document.getElementById('youtube-slider');
+  if(!slider) return;
+
+  let direction = 1;
+  setInterval(() => {
+    slider.scrollLeft += 2 * direction;
+    if(slider.scrollLeft >= slider.scrollWidth - slider.clientWidth) direction = -1;
+    if(slider.scrollLeft <= 0) direction = 1;
+  }, 30);
+})();
+
+/* ============================================================
+   FUNCIÓN GENERAL PARA CARRUSELES ESCALONADOS
+============================================================ */
+function initSteppedCarousel(id){
+  const carousel = document.getElementById(id);
+  if(!carousel) return;
+
+  const items = Array.from(carousel.querySelectorAll('.carousel-item'));
+  if(items.length === 0) return;
+
+  let current = 0;
+
+  function centerActive(){
+    items.forEach(el => el.classList.remove('active'));
+    const active = items[current];
+    active.classList.add('active');
+
+    const target = active.offsetLeft - (carousel.clientWidth - active.clientWidth) / 2;
+    carousel.scrollTo({ left: Math.max(target, 0), behavior: 'smooth' });
+  }
+
+  centerActive();
+
+  setInterval(() => {
+    current = (current + 1) % items.length;
+    centerActive();
+  }, 4000);
+}
+
+initSteppedCarousel('podcast-carousel');
+initSteppedCarousel('redes-carousel');
+
+/* ============================================================
+   CARRUSELES MANUALES DEL BLOG + BUSCADOR
+============================================================ */
+(function(){
+  const containers = document.querySelectorAll('#section-blog .carousel-wrapper');
+
+  containers.forEach(container => {
+    const carousel = container.querySelector('.blog-carousel');
+    const prevBtn = container.querySelector('.carousel-nav.prev');
+    const nextBtn = container.querySelector('.carousel-nav.next');
+
+    if(prevBtn && nextBtn){
+      prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -200, behavior: 'smooth' });
+      });
+      nextBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: 200, behavior: 'smooth' });
+      });
+    }
+
+    const items = carousel.querySelectorAll('.carousel-item');
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        const link = item.getAttribute('onclick');
+        if(link) eval(link);
+      });
+    });
+  });
+
+  const searchBtn = document.getElementById('search-btn');
+  const searchInput = document.getElementById('artist-search');
+
+  if(searchBtn && searchInput){
+    searchBtn.addEventListener('click', () => {
+      const term = searchInput.value.toLowerCase();
+      document.querySelectorAll('#section-blog .carousel-item').forEach(item => {
+        const artist = item.dataset.artist || '';
+        item.style.display = artist.includes(term) ? 'block' : 'none';
+      });
+    });
+  }
+})();
+
+/* ============================================================
+   NAVEGACIÓN ENTRE SECCIONES
+============================================================ */
+function showSection(name){
+  const app = document.getElementById('app-container');
+  const tabs = document.querySelectorAll('.tab');
+  const sections = document.querySelectorAll('.section');
+  const title = document.getElementById('main-title');
+  const subtitle = document.getElementById('main-subtitle');
+
+  const banners = {
+    estudio: document.getElementById('videoBanner'),
+    radio: document.getElementById('videoBannerRadio'),
+    podcast: document.getElementById('videoBannerPodcast'),
+    blog: document.getElementById('videoBannerBlog'),
+    redes: document.getElementById('videoBannerRedes')
+  };
+
+  tabs.forEach(t => t.classList.remove('active'));
+  sections.forEach(s => s.classList.remove('active'));
+
+  if(name === 'privacidad' || name === 'cookies'){
+    document.body.classList.add('policy-mode');
+  } else {
+    document.body.classList.remove('policy-mode');
+  }
+
+  const order = ['estudio','radio','podcast','blog','redes'];
+  const idx = order.indexOf(name);
+  if(idx >= 0) tabs[idx].classList.add('active');
+
+  const target = document.getElementById('section-' + name);
+  if(target) target.classList.add('active');
+
+  Object.values(banners).forEach(b => b.classList.remove('show'));
+  if(banners[name]) banners[name].classList.add('show');
+
+  const titles = {
+    estudio: ['Estudio', 'Grabación de Entrevista'],
+    radio: ['Gold Label Music Radio', 'Emisión en Directo'],
+    podcast: ['Podcasts', 'Una Entrevista de Oro'],
+    blog: ['Blog', 'Entrevistas Destacadas'],
+    redes: ['Redes', 'Publicación en Redes Sociales'],
+    privacidad: ['Privacidad', 'Política de Protección de Datos'],
+    cookies: ['Cookies', 'Uso y Gestión de Cookies']
+  };
+
+  if(titles[name]){
+    title.textContent = titles[name][0];
+    subtitle.textContent = titles[name][1];
+  }
+
+  if(name === 'redes' && window.instgrm && window.instgrm.Embeds){
+    window.instgrm.Embeds.process();
+  }
+
+  if(app) app.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+showSection('estudio');
+
+/* ============================================================
+   REPRODUCTOR DE RADIO
+============================================================ */
+(function(){
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initRadio);
+  } else {
+    initRadio();
+  }
+
+  function initRadio(){
+    const player = document.getElementById('radio-player');
+    if(!player) return;
+
+    let currentStream = null;
+    let isPlaying = false;
+
+    document.addEventListener('click', async e => {
+      const btn = e.target.closest('.radio-btn');
+      if(!btn) return;
+
+      e.preventDefault();
+      const stream = btn.getAttribute('data-stream');
+
+      if(!stream || !/^https?:\/\//.test(stream)){
+        setUnavailable(btn);
+        return;
+      }
+
+      if(isPlaying && currentStream === stream && !player.paused){
+        stop(player, btn);
+        currentStream = null;
+        isPlaying = false;
+        return;
+      }
+
+      try{
+        setLoading(btn);
+        player.src = stream;
+        await player.play();
+        setActive(btn);
+
+        document.querySelectorAll('.radio-btn').forEach(b => {
+          if(b !== btn) setInactive(b);
+        });
+
+        currentStream = stream;
+        isPlaying = true;
+
+      } catch(err){
+        setUnavailable(btn);
+        player.pause();
+        player.src = '';
+        currentStream = null;
+        isPlaying = false;
+      }
+    });
+
+    function setActive(btn){
+      btn.classList.remove('is-loading');
+      btn.classList.add('is-playing');
+      btn.setAttribute('aria-pressed', 'true');
+      btn.innerHTML = '<i class="fas fa-stop-circle"></i> Detener';
+    }
+
+    function setInactive(btn){
+      btn.classList.remove('is-playing', 'is-loading');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.innerHTML = '<i class="fas fa-play-circle"></i> En Vivo';
+    }
+
+    function setLoading(btn){
+      btn.classList.add('is-loading');
+      btn.setAttribute('aria-pressed', 'true');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando';
+    }
+
+    function setUnavailable(btn){
+      btn.classList.remove('is-playing', 'is-loading');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> No disponible';
+      setTimeout(() => setInactive(btn), 2500);
+    }
+
+    function stop(player, btn){
+      player.pause();
+      player.src = '';
+      setInactive(btn);
+    }
+  }
+})();
+
+/* ============================================================
+   COMPARTIR
+============================================================ */
+function shareAll(){
+  const shareUrl = window.location.href;
+  const shareTitle = 'Gold Label Music · Radio, Podcasts, Blog y Estudio';
+  const shareText = 'Descubre Gold Label Music: emisiones internacionales, podcasts y estudio de entrevistas.';
+
+  if(navigator.share){
+    navigator.share({ title: shareTitle, text: shareText, url: shareUrl }).catch(() => {});
+    return;
+  }
+
+  document.getElementById('share-fb').href =
+    'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
+
+  document.getElementById('share-x').href =
+    'https://twitter.com/intent/tweet?url=' + encodeURIComponent(shareUrl) +
+    '&text=' + encodeURIComponent(shareTitle);
+
+  document.getElementById('share-wa').href =
+    'https://api.whatsapp.com/send?text=' + encodeURIComponent(shareTitle + ' ' + shareUrl);
+
+  document.getElementById('share-li').href =
+    'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(shareUrl) +
+    '&title=' + encodeURIComponent(shareTitle) +
+    '&summary=' + encodeURIComponent(shareText);
+
+  document.getElementById('share-mail').href =
+    'mailto:?subject=' + encodeURIComponent(shareTitle) +
+    '&body=' + encodeURIComponent(shareText + '\n\n' + shareUrl);
+
+  openShareOverlay();
+}
+
+function openShareOverlay(){
+  const overlay = document.getElementById('share-overlay');
+  overlay.setAttribute('aria-hidden', 'false');
+  overlay.style.display = 'flex';
+}
+
+function closeShareOverlay(){
+  const overlay = document.getElementById('share-overlay');
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.style.display = 'none';
+}
+
+document.getElementById('share-overlay')?.addEventListener('click', e => {
+  if(e.target.id === 'share-overlay') closeShareOverlay();
+});
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeShareOverlay();
+});
+</script>
+
+</body>
+</html>
