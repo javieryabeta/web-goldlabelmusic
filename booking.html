@@ -1,5 +1,4 @@
 <style>
-<base target="_top">
 /* ============================================================
    CSS GLOBAL — VARIABLES, BASE, FONDOS, CABECERAS, FOOTER
    (Modelo modular — sin estilos de Radio, Podcast, Blog, Redes)
@@ -1307,104 +1306,81 @@ document.addEventListener('keydown', function(e){
     observer.observe(tabsContainer, { attributes: true, subtree: true, attributeFilter: ['class'] });
   });
 })();
-
 /* ============================================================
-   FOCO Y SCROLL AL ACTIVAR TABS SUPERIORES (FUNCIONALIDAD AÑADIDA)
-   - Mantiene accesibilidad y centra la tab en contenedores scrollables
-   - Desplaza la página hacia el título principal (o el selector que prefieras)
-   - Esta versión fuerza el scroll arriba (inicio) y centra la tab,
-     de modo que al pinchar cualquier tab el usuario ve la cabecera.
+   FOCO Y SCROLL AL ACTIVAR TABS SUPERIORES (FUNCIONALIDAD AÑADIDA)
+   - Mantiene accesibilidad y centra la tab en contenedores scrollables
+   - Desplaza la página hacia el título principal (o el selector que prefieras)
+   - Esta versión fuerza el scroll arriba (inicio) y centra la tab,
+     de modo que al pinchar cualquier tab el usuario ve la cabecera.
 ============================================================ */
 (function () {
-  // Selector del contenedor de tabs y del objetivo de scroll en la portada
-  const tabsContainer = document.querySelector('.tabs');
-  const scrollTargetSelector = '#main-title'; // cambiar si quieres otro objetivo (ej. '#videoBannerArtistas')
+  // Selector del contenedor de tabs y del objetivo de scroll en la portada
+  const tabsContainer = document.querySelector('.tabs');
+  const scrollTargetSelector = '#main-title'; // cambiar si quieres otro objetivo (ej. '#videoBannerArtistas')
 
-  function focusAndScrollTo(section) {
-    if (!tabsContainer) return;
-    const tab = tabsContainer.querySelector(`.tab[data-section="${section}"]`);
-    if (!tab) return;
+  function focusAndScrollTo(section) {
+    if (!tabsContainer) return;
+    const tab = tabsContainer.querySelector(`.tab[data-section="${section}"]`);
+    if (!tab) return;
 
-    // Asegurar que la tab sea focusable y poner foco sin provocar scroll inmediato
-    tab.setAttribute('tabindex', '0');
-    try {
-      tab.focus({ preventScroll: true });
-    } catch (e) {
-      tab.focus();
-    }
+    // Asegurar que la tab sea focusable y poner foco sin provocar scroll inmediato
+    tab.setAttribute('tabindex', '0');
+    try {
+      tab.focus({ preventScroll: true });
+    } catch (e) {
+      tab.focus();
+    }
 
-    // Centrar la tab en el contenedor (útil en móvil si las tabs son scrollables)
-    if (typeof tab.offsetLeft !== 'undefined' && tabsContainer.scrollTo) {
-      const margin = 20;
-      const targetLeft = Math.max(0, tab.offsetLeft - margin);
-      tabsContainer.scrollTo({ left: targetLeft, behavior: 'smooth' });
-    } else {
-      try {
-        tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      } catch (e) { /* ignore */ }
-    }
+    // Centrar la tab en el contenedor (útil en móvil si las tabs son scrollables)
+    if (typeof tab.offsetLeft !== 'undefined' && tabsContainer.scrollTo) {
+      const margin = 20;
+      const targetLeft = Math.max(0, tab.offsetLeft - margin);
+      tabsContainer.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    } else {
+      try {
+        tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      } catch (e) { /* ignore */ }
+    }
 
-    // Forzar scroll al inicio/portada (prioritario sobre el banner)
-    const target = document.querySelector(scrollTargetSelector);
-    if (target) {
-      const offset = 8; // px, ajustar si hay navbar fija
-      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top, behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
+    // Forzar scroll al inicio/portada (prioritario sobre el banner)
+    const target = document.querySelector(scrollTargetSelector);
+    if (target) {
+      const offset = 8; // px, ajustar si hay navbar fija
+      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
 
-  // Observador: cuando cambie .tab.active, actualizamos foco y scroll
-  if (tabsContainer) {
-    const mo = new MutationObserver(() => {
-      const active = tabsContainer.querySelector('.tab.active');
-      if (active) {
-        const section = active.getAttribute('data-section');
-        focusAndScrollTo(section);
-      }
-    });
-    mo.observe(tabsContainer, { subtree: true, attributes: true, attributeFilter: ['class'] });
-  }
+  // Observador: cuando cambie .tab.active, actualizamos foco y scroll
+  if (tabsContainer) {
+    const mo = new MutationObserver(() => {
+      const active = tabsContainer.querySelector('.tab.active');
+      if (active) {
+        const section = active.getAttribute('data-section');
+        focusAndScrollTo(section);
+      }
+    });
+    mo.observe(tabsContainer, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  }
 
-  // Exponer la función globalmente por si quieres llamarla manualmente desde showSection
-  window.focusAndScrollTo = focusAndScrollTo;
+  // Exponer la función globalmente por si quieres llamarla manualmente desde showSection
+  window.focusAndScrollTo = focusAndScrollTo;
 })();
-/* ============================================================
-   SISTEMA DE NAVEGACIÓN DE ALTA PRIORIDAD
-   Este script ignora la carga y vigila el clic global
-============================================================ */
-(function() {
-    var navHandler = function(e) {
-        var el = e.target.closest('a');
-        if (!el) return;
 
-        var url = el.getAttribute('href');
-        
-        // Solo actuamos si es un enlace real a tu dominio
-        if (url && url.indexOf('goldlabelmusic.com') !== -1) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Forzamos la apertura en la ventana superior con un fallback
-            try {
-                window.top.location.replace(url);
-            } catch (err) {
-                window.top.location.href = url;
-            }
-        }
-    };
-
-    // Escuchamos el clic en la fase de captura (antes que cualquier otra cosa)
-    document.addEventListener('click', navHandler, true);
-    
-    // Backup para dispositivos táctiles
-    document.addEventListener('touchstart', function(e) {
-        // Solo para prevenir retrasos, el handler de click se encargará del resto
-    }, {passive: true});
-})();
+/* AJUSTE DE NAVEGACIÓN PARA GOOGLE SITES */
+document.addEventListener('click', function(e) {
+    var el = e.target.closest('a');
+    if (el && el.getAttribute('href') && el.getAttribute('href').indexOf('goldlabelmusic.com') !== -1) {
+        e.preventDefault();
+        window.top.location.href = el.getAttribute('href');
+    }
+}, true);
 
 </script>
+
+<base target="_top">
 
 <!-- ============================================================
      VIDEO BANNERS (CABECERAS) — ADAPTADOS A BOOKING
