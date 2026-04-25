@@ -1371,29 +1371,31 @@ document.addEventListener('keydown', function(e){
 })();
 
 /* ============================================================
-   SOLUCIÓN MAESTRA PARA GOOGLE SITES (CLICS FORZADOS)
+   SOLUCIÓN MAESTRA: CARGA DIFERIDA
+   Este código se queda "esperando" a que el HTML de abajo aparezca
 ============================================================ */
-document.addEventListener('click', function(e) {
-  // 1. Buscamos si el clic ocurrió en un enlace o dentro de una tarjeta
-  var el = e.target.closest('a');
-  
-  // 2. Si no hay enlace, no hacemos nada
-  if (!el) return;
+window.addEventListener('load', function() {
+  document.body.addEventListener('click', function(e) {
+    // Buscamos el enlace
+    var el = e.target.closest('a');
+    if (!el) return;
 
-  // 3. Obtenemos la URL
-  var url = el.getAttribute('href');
-
-  // 4. Si la URL es de goldlabelmusic (nuestras subpáginas), forzamos el salto
-  if (url && url.indexOf('goldlabelmusic.com') !== -1) {
-    e.preventDefault(); // Detenemos el intento de carga interna (que da error)
-    e.stopPropagation(); // Evitamos que otros scripts interfieran
+    var url = el.getAttribute('href');
     
-    console.log("Forzando navegación a: " + url); // Esto es para que veas en consola que funciona
-    
-    // El truco definitivo: abrimos en el nivel más alto del navegador
-    window.top.location.href = url;
-  }
-}, true); // El 'true' hace que este código tenga prioridad absoluta
+    // Si es un enlace a tu web, forzamos el salto al nivel superior
+    if (url && url.indexOf('goldlabelmusic.com') !== -1 && url.indexOf('####') === -1) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (window.top) {
+        window.top.location.href = url;
+      } else {
+        window.location.href = url;
+      }
+    }
+  }, true);
+  console.log("Sistema de navegación activado y esperando al HTML...");
+});
 
 </script>
 
