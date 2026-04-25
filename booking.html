@@ -1306,6 +1306,7 @@ document.addEventListener('keydown', function(e){
     observer.observe(tabsContainer, { attributes: true, subtree: true, attributeFilter: ['class'] });
   });
 })();
+
 /* ============================================================
    FOCO Y SCROLL AL ACTIVAR TABS SUPERIORES (FUNCIONALIDAD AÑADIDA)
    - Mantiene accesibilidad y centra la tab en contenedores scrollables
@@ -1369,12 +1370,19 @@ document.addEventListener('keydown', function(e){
   window.focusAndScrollTo = focusAndScrollTo;
 })();
 
-/* AJUSTE DE NAVEGACIÓN PARA GOOGLE SITES */
+/* ============================================================
+   AJUSTE DE NAVEGACIÓN PARA GOOGLE SITES (VERSIÓN AGRESIVA)
+============================================================ */
 document.addEventListener('click', function(e) {
     var el = e.target.closest('a');
-    if (el && el.getAttribute('href') && el.getAttribute('href').indexOf('goldlabelmusic.com') !== -1) {
-        e.preventDefault();
-        window.top.location.href = el.getAttribute('href');
+    if (el) {
+        var url = el.getAttribute('href');
+        if (url && url.indexOf('goldlabelmusic.com') !== -1) {
+            e.preventDefault();
+            e.stopPropagation();
+            // window.open con _top es lo que mejor rompe el sandbox de Google
+            window.open(url, '_top');
+        }
     }
 }, true);
 
