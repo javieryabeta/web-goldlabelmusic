@@ -1371,23 +1371,29 @@ document.addEventListener('keydown', function(e){
 })();
 
 /* ============================================================
-   SOLUCIÓN DEFINITIVA: NAVEGACIÓN GLOBAL GOOGLE SITES
-   Este código busca todas las tarjetas y arregla los enlaces
+   SOLUCIÓN MAESTRA PARA GOOGLE SITES (CLICS FORZADOS)
 ============================================================ */
 document.addEventListener('click', function(e) {
-  // Detectamos si el clic fue en un enlace dentro de cualquier tarjeta
-  const cardLink = e.target.closest('.artista-card a, .orquesta-card a, .tributo-card a, .dj-card a');
+  // 1. Buscamos si el clic ocurrió en un enlace o dentro de una tarjeta
+  var el = e.target.closest('a');
   
-  if (cardLink) {
-    const destination = cardLink.getAttribute('href');
+  // 2. Si no hay enlace, no hacemos nada
+  if (!el) return;
+
+  // 3. Obtenemos la URL
+  var url = el.getAttribute('href');
+
+  // 4. Si la URL es de goldlabelmusic (nuestras subpáginas), forzamos el salto
+  if (url && url.indexOf('goldlabelmusic.com') !== -1) {
+    e.preventDefault(); // Detenemos el intento de carga interna (que da error)
+    e.stopPropagation(); // Evitamos que otros scripts interfieran
     
-    // Si el enlace es real (no es ####), forzamos la salida al "top"
-    if (destination && destination.startsWith('http')) {
-      e.preventDefault(); // Detenemos el clic normal que falla
-      window.top.location.href = destination; // Saltamos fuera del iframe
-    }
+    console.log("Forzando navegación a: " + url); // Esto es para que veas en consola que funciona
+    
+    // El truco definitivo: abrimos en el nivel más alto del navegador
+    window.top.location.href = url;
   }
-}, true); // El 'true' es vital: hace que el clic se capture antes que nada
+}, true); // El 'true' hace que este código tenga prioridad absoluta
 
 </script>
 
