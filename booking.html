@@ -451,9 +451,11 @@ a:focus{
 .orquestas-grid,
 .djs-grid,
 .tributos-grid {
-  display: grid;
+  display: grid !important; /* Forzamos el renderizado de grid */
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ----- Tarjeta base (escritorio) ----- */
@@ -470,6 +472,8 @@ a:focus{
   flex-direction: column;
   justify-content: space-between;
   transition: 0.3s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .artista-card:hover,
