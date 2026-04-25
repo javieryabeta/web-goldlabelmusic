@@ -1,4 +1,5 @@
 <style>
+<base target="_top">
 /* ============================================================
    CSS GLOBAL — VARIABLES, BASE, FONDOS, CABECERAS, FOOTER
    (Modelo modular — sin estilos de Radio, Podcast, Blog, Redes)
@@ -1369,33 +1370,39 @@ document.addEventListener('keydown', function(e){
   // Exponer la función globalmente por si quieres llamarla manualmente desde showSection
   window.focusAndScrollTo = focusAndScrollTo;
 })();
-
 /* ============================================================
-   SOLUCIÓN MAESTRA: CARGA DIFERIDA
-   Este código se queda "esperando" a que el HTML de abajo aparezca
+   SISTEMA DE NAVEGACIÓN DE ALTA PRIORIDAD
+   Este script ignora la carga y vigila el clic global
 ============================================================ */
-window.addEventListener('load', function() {
-  document.body.addEventListener('click', function(e) {
-    // Buscamos el enlace
-    var el = e.target.closest('a');
-    if (!el) return;
+(function() {
+    var navHandler = function(e) {
+        var el = e.target.closest('a');
+        if (!el) return;
 
-    var url = el.getAttribute('href');
+        var url = el.getAttribute('href');
+        
+        // Solo actuamos si es un enlace real a tu dominio
+        if (url && url.indexOf('goldlabelmusic.com') !== -1) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Forzamos la apertura en la ventana superior con un fallback
+            try {
+                window.top.location.replace(url);
+            } catch (err) {
+                window.top.location.href = url;
+            }
+        }
+    };
+
+    // Escuchamos el clic en la fase de captura (antes que cualquier otra cosa)
+    document.addEventListener('click', navHandler, true);
     
-    // Si es un enlace a tu web, forzamos el salto al nivel superior
-    if (url && url.indexOf('goldlabelmusic.com') !== -1 && url.indexOf('####') === -1) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      if (window.top) {
-        window.top.location.href = url;
-      } else {
-        window.location.href = url;
-      }
-    }
-  }, true);
-  console.log("Sistema de navegación activado y esperando al HTML...");
-});
+    // Backup para dispositivos táctiles
+    document.addEventListener('touchstart', function(e) {
+        // Solo para prevenir retrasos, el handler de click se encargará del resto
+    }, {passive: true});
+})();
 
 </script>
 
