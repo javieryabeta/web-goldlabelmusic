@@ -451,11 +451,9 @@ a:focus{
 .orquestas-grid,
 .djs-grid,
 .tributos-grid {
-  display: grid !important; /* Forzamos el renderizado de grid */
+  display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 /* ----- Tarjeta base (escritorio) ----- */
@@ -472,8 +470,6 @@ a:focus{
   flex-direction: column;
   justify-content: space-between;
   transition: 0.3s;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .artista-card:hover,
@@ -582,6 +578,59 @@ a:focus{
 
 .boton-reservar:hover {
   background: #f5d76e;
+}
+
+/* ============================================================
+   ESTILOS PARA ARTISTAS/ITEMS DESHABILITADOS — NUEVO
+============================================================ */
+
+/* Portada deshabilitada */
+.artista-portada.disabled,
+.performance-portada.disabled,
+.orquesta-portada.disabled,
+.dj-portada.disabled,
+.tributo-portada.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  filter: grayscale(40%);
+  position: relative;
+}
+
+.artista-portada.disabled::before,
+.performance-portada.disabled::before,
+.orquesta-portada.disabled::before,
+.dj-portada.disabled::before,
+.tributo-portada.disabled::before {
+  content: "🔒 Próximamente";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.9rem;
+  z-index: 10;
+}
+
+/* Botón deshabilitado */
+.boton-reservar.disabled {
+  background-color: #999 !important;
+  color: #ddd !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.boton-reservar.disabled:hover {
+  background-color: #999 !important;
+}
+
+/* Texto "Próximamente" en footer */
+.ver-dossier.upcoming {
+  font-style: italic;
+  color: #aaa;
 }
 
 /* ============================================================
@@ -1472,117 +1521,111 @@ document.addEventListener('keydown', function(e){
 
   <div class="artistas-grid">
 
- <section id="section-artistas" class="section" role="tabpanel" aria-labelledby="Artistas">
-
-  <h3 class="section-title">Artistas Disponibles</h3>
-
-  <div class="artistas-grid">
-     
-     <!-- TARJETA 1 -->
+    <!-- TARJETA 1 — RAY ROSARIO ✅ CON URL -->
     <div class="artista-card">
-      <a href="https://www.goldlabelmusic.com/ray-rosario" target="_blank" class="artista-portada">
+      <a href="https://www.goldlabelmusic.com/ray-rosario" target="_blank" rel="noopener noreferrer" class="artista-portada">
         <img src="https://i.postimg.cc/g211jT9t/Ray_Rosario_booking_cover.png" alt="Ray Rosario">
       </a>
       <h4 class="artista-nombre">Ray Rosario</h4>
       <div class="artista-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/ray-rosario" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/ray-rosario" target="_blank" rel="noopener noreferrer" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 2 -->
+    <!-- TARJETA 2 — MARIO IAN ✅ CON URL -->
     <div class="artista-card">
-      <a href="https://www.goldlabelmusic.com/mario-ian" target="_blank" class="artista-portada">
+      <a href="https://www.goldlabelmusic.com/mario-ian" target="_blank" rel="noopener noreferrer" class="artista-portada">
         <img src="https://i.postimg.cc/c1Q1Sfnp/Mario_IAN_booking_cover.png" alt="Mario IAN">
       </a>
       <h4 class="artista-nombre">Mario IAN</h4>
       <div class="artista-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/mario-ian" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/mario-ian" target="_blank" rel="noopener noreferrer" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 3 -->
+    <!-- TARJETA 3 — JL.FAULI ✅ CON URL -->
     <div class="artista-card">
-      <a href="https://www.goldlabelmusic.com/jl-fauli" target="_blank" class="artista-portada">
+      <a href="https://www.goldlabelmusic.com/jl-fauli" target="_blank" rel="noopener noreferrer" class="artista-portada">
         <img src="https://i.postimg.cc/mZYcwPT0/JL_Fauli_booking_cover.png" alt="JL.Fauli">
       </a>
       <h4 class="artista-nombre">JL.Fauli</h4>
       <div class="artista-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/jl-fauli" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/jl-fauli" target="_blank" rel="noopener noreferrer" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 4 -->
+    <!-- TARJETA 4 — V GASTELU ❌ SIN URL AÚN -->
     <div class="artista-card">
-      <a href="####" target="_blank" class="artista-portada">
+      <div class="artista-portada disabled">
         <img src="https://i.postimg.cc/RVxDkD5Z/V_Gastelu_booking_cover.png" alt="V Gastelu">
-      </a>
+      </div>
       <h4 class="artista-nombre">V Gastelu</h4>
       <div class="artista-footer">
-        <span class="ver-dossier">Ver Dossier</span>
-        <a href="####" target="_blank" class="boton-reservar">Reservar</a>
+        <span class="ver-dossier upcoming">Próximamente</span>
+        <button class="boton-reservar disabled" disabled>Reservar</button>
       </div>
     </div>
 
-     <!-- TARJETA 5 -->
+    <!-- TARJETA 5 — EDDU DAI´Z ❌ SIN URL AÚN -->
     <div class="artista-card">
-      <a href="####" target="_blank" class="artista-portada">
+      <div class="artista-portada disabled">
         <img src="https://i.postimg.cc/HswqZCN9/Eddu_Dai_z_booking_cover.png" alt="Eddu Dai´z">
-      </a>
+      </div>
       <h4 class="artista-nombre">Eddu Dai´z</h4>
       <div class="artista-footer">
-        <span class="ver-dossier">Ver Dossier</span>
-        <a href="####" target="_blank" class="boton-reservar">Reservar</a>
+        <span class="ver-dossier upcoming">Próximamente</span>
+        <button class="boton-reservar disabled" disabled>Reservar</button>
       </div>
     </div>
 
-     <!-- TARJETA 6 -->
+    <!-- TARJETA 6 — AMAYA SAIZAR ❌ SIN URL AÚN -->
     <div class="artista-card">
-      <a href="####" target="_blank" class="artista-portada">
+      <div class="artista-portada disabled">
         <img src="https://i.postimg.cc/pTtGnsfw/Amaya_Saizar_booking_cover.png" alt="Amaya Saizar">
-      </a>
+      </div>
       <h4 class="artista-nombre">Amaya Saizar</h4>
       <div class="artista-footer">
-        <span class="ver-dossier">Ver Dossier</span>
-        <a href="####" target="_blank" class="boton-reservar">Reservar</a>
+        <span class="ver-dossier upcoming">Próximamente</span>
+        <button class="boton-reservar disabled" disabled>Reservar</button>
       </div>
     </div>
 
-     <!-- TARJETA 7 -->
+    <!-- TARJETA 7 — JAVIERA LA CAIMANA ❌ SIN URL AÚN -->
     <div class="artista-card">
-      <a href="####" target="_blank" class="artista-portada">
+      <div class="artista-portada disabled">
         <img src="https://i.postimg.cc/Wp0DnXMH/Javiera_La_Caimana_booking_cover.png" alt="Javiera La Caimana">
-      </a>
+      </div>
       <h4 class="artista-nombre">Javiera La Caimana</h4>
       <div class="artista-footer">
-        <span class="ver-dossier">Ver Dossier</span>
-        <a href="####" target="_blank" class="boton-reservar">Reservar</a>
+        <span class="ver-dossier upcoming">Próximamente</span>
+        <button class="boton-reservar disabled" disabled>Reservar</button>
       </div>
     </div>
 
-     <!-- TARJETA 8 -->
+    <!-- TARJETA 8 — BACHAT4LIFE ❌ SIN URL AÚN -->
     <div class="artista-card">
-      <a href="####" target="_blank" class="artista-portada">
+      <div class="artista-portada disabled">
         <img src="https://i.postimg.cc/h4J9LLjM/Bachat4Life_booking_cover.png" alt="Bachat4Life">
-      </a>
+      </div>
       <h4 class="artista-nombre">Bachat4Life</h4>
       <div class="artista-footer">
-        <span class="ver-dossier">Ver Dossier</span>
-        <a href="####" target="_blank" class="boton-reservar">Reservar</a>
+        <span class="ver-dossier upcoming">Próximamente</span>
+        <button class="boton-reservar disabled" disabled>Reservar</button>
       </div>
     </div>
 
-     <!-- TARJETA 9 -->
+    <!-- TARJETA 9 — DREW ❌ SIN URL AÚN -->
     <div class="artista-card">
-      <a href="####" target="_blank" class="artista-portada">
+      <div class="artista-portada disabled">
         <img src="https://i.postimg.cc/6ph62Px1/Drew_booking_cover.png" alt="Drew">
-      </a>
+      </div>
       <h4 class="artista-nombre">Drew</h4>
       <div class="artista-footer">
-        <span class="ver-dossier">Ver Dossier</span>
-        <a href="####" target="_blank" class="boton-reservar">Reservar</a>
+        <span class="ver-dossier upcoming">Próximamente</span>
+        <button class="boton-reservar disabled" disabled>Reservar</button>
       </div>
     </div>
 
@@ -1598,7 +1641,7 @@ document.addEventListener('keydown', function(e){
 
     <!-- TARJETA 1 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/cCSCf6Vm/Nuestra_Musica.png" alt="Nuestra Música Entre Amigos">
       </a>
       <h4 class="performance-nombre">Nuestra Música Entre Amigos</h4>
@@ -1606,13 +1649,13 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Auditorios / formato íntimo</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 2 -->
+    <!-- TARJETA 2 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/vmrMnMdV/Between_Friends.png" alt="Between Friends Ensemble">
       </a>
       <h4 class="performance-nombre">Between Friends Ensemble</h4>
@@ -1620,13 +1663,13 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Enfoque europeo / circuito jazz clubs</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 3 -->
+    <!-- TARJETA 3 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/VNLzQptk/Raíces_en_Escena.png" alt="Raíces en Escena">
       </a>
       <h4 class="performance-nombre">Raíces en Escena</h4>
@@ -1634,13 +1677,13 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Latinoamérica / música de raíz y fusión</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 4 -->
+    <!-- TARJETA 4 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/s2D3dqWX/The_Blue_Notes_Trio.png" alt="The Blue Notes Trio">
       </a>
       <h4 class="performance-nombre">The Blue Notes Trio</h4>
@@ -1648,13 +1691,13 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Internacional / jazz moderno</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 5 -->
+    <!-- TARJETA 5 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/LstRPRMZ/Sonidos_Compartidos.png" alt="Sonidos Compartidos">
       </a>
       <h4 class="performance-nombre">Sonidos Compartidos</h4>
@@ -1662,13 +1705,13 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Centroamérica / mestizaje latino</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 6 -->
+    <!-- TARJETA 6 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/YSqtKZFt/Midnight.png" alt="Midnight Sessions">
       </a>
       <h4 class="performance-nombre">Midnight Sessions</h4>
@@ -1676,13 +1719,13 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Mercado anglosajón / clubs nocturnos</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 7 -->
+    <!-- TARJETA 7 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/d0tJPpC0/Travesía_Musical.png" alt="Travesía Musical">
       </a>
       <h4 class="performance-nombre">Travesía Musical</h4>
@@ -1690,13 +1733,13 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Festivales culturales / Europa–LATAM</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 8 -->
+    <!-- TARJETA 8 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/9fFc5K9m/Urban_Roots.png" alt="Urban Roots Collective">
       </a>
       <h4 class="performance-nombre">Urban Roots Collective</h4>
@@ -1704,13 +1747,13 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Fusión contemporánea / internacional</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 9 -->
+    <!-- TARJETA 9 -->
     <div class="performance-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="performance-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="performance-portada">
         <img src="https://i.postimg.cc/R0Vv5ytM/Cuerdas_y_Ritmo.png" alt="Cuerdas y Ritmo">
       </a>
       <h4 class="performance-nombre">Cuerdas y Ritmo</h4>
@@ -1718,7 +1761,7 @@ document.addEventListener('keydown', function(e){
       <p class="performance-descripcion">→ Auditorios / formato íntimo</p>
       <div class="performance-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
@@ -1732,9 +1775,9 @@ document.addEventListener('keydown', function(e){
 
   <div class="orquestas-grid">
 
-     <!-- TARJETA 1 -->
-<div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+    <!-- TARJETA 1 -->
+    <div class="orquesta-card">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/SsWz0z9q/Caribe_Show_Cuba.png" alt="Caribe Show — Cuba">
       </a>
       <h4 class="orquesta-nombre">Caribe Show — Cuba</h4>
@@ -1742,13 +1785,13 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Fiestas populares / formato bailable</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 2 -->
+    <!-- TARJETA 2 -->
     <div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/sf4Zw7ym/Tropicália_Brasil.png" alt="Tropicália — Brasil">
       </a>
       <h4 class="orquesta-nombre">Tropicália — Brasil</h4>
@@ -1756,13 +1799,13 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Verbenas / escenarios abiertos</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 3 -->
+    <!-- TARJETA 3 -->
     <div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/050JcDxM/Orquesta_Sabor_Latino_Colombia.png" alt="Orquesta Sabor Latino — Colombia">
       </a>
       <h4 class="orquesta-nombre">Orquesta Sabor Latino — Colombia</h4>
@@ -1770,13 +1813,13 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Ferias / público familiar</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 4 -->
+    <!-- TARJETA 4 -->
     <div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/76gTvTz6/Orquesta_Azúcar_Puerto_Rico.png" alt="Orquesta Azúcar — Puerto Rico">
       </a>
       <h4 class="orquesta-nombre">Orquesta Azúcar — Puerto Rico</h4>
@@ -1784,13 +1827,13 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Fiestas patronales / formato completo</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 5 -->
+    <!-- TARJETA 5 -->
     <div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/MHqfzK05/Orquesta_Fiesta_Mayor_España.png" alt="Orquesta Fiesta Mayor — España">
       </a>
       <h4 class="orquesta-nombre">Orquesta Fiesta Mayor — España</h4>
@@ -1798,13 +1841,13 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Pueblos / formato versátil</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 6 -->
+    <!-- TARJETA 6 -->
     <div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/XJwyMy5Y/Orquesta_Alma_Mexicana_México.png" alt="Orquesta Alma Mexicana — México">
       </a>
       <h4 class="orquesta-nombre">Orquesta Alma Mexicana — México</h4>
@@ -1812,13 +1855,13 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Eventos municipales / plazas</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 7 -->
+    <!-- TARJETA 7 -->
     <div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/L5DY5KvG/Orquesta_Lisboa_Latina_Portugal.png" alt="Orquesta Lisboa Latina — Portugal">
       </a>
       <h4 class="orquesta-nombre">Orquesta Lisboa Latina — Portugal</h4>
@@ -1826,13 +1869,13 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Fiestas urbanas / formato joven</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 8 -->
+    <!-- TARJETA 8 -->
     <div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/tJkZJQDd/Orquesta_Habana_Mix_Cuba_España.png" alt="Orquesta Habana Mix — Cuba/España">
       </a>
       <h4 class="orquesta-nombre">Orquesta Habana Mix — Cuba/España</h4>
@@ -1840,13 +1883,13 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Fiestas de verano / formato dinámico</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 9 -->
+    <!-- TARJETA 9 -->
     <div class="orquesta-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="orquesta-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="orquesta-portada">
         <img src="https://i.postimg.cc/6qt4B5Vw/Orquesta_Andina_Party_Ecuador.png" alt="Orquesta Andina Party — Ecuador">
       </a>
       <h4 class="orquesta-nombre">Orquesta Andina Party — Ecuador</h4>
@@ -1854,7 +1897,7 @@ document.addEventListener('keydown', function(e){
       <p class="orquesta-descripcion">→ Ferias / público amplio</p>
       <div class="orquesta-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
@@ -1868,9 +1911,9 @@ document.addEventListener('keydown', function(e){
 
   <div class="djs-grid">
 
-     <!-- TARJETA 1 -->
+    <!-- TARJETA 1 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/q7C9T2GT/DJ_Caribe.png" alt="DJ Caribe">
       </a>
       <h4 class="dj-nombre">DJ Caribe</h4>
@@ -1878,13 +1921,13 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Fiestas populares</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 2 -->
+    <!-- TARJETA 2 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/k5tkmWyR/DJ_Nita4.png" alt="DJ Nita4">
       </a>
       <h4 class="dj-nombre">DJ Nita4</h4>
@@ -1892,13 +1935,13 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Circuito joven</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 3 -->
+    <!-- TARJETA 3 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/Zqy1S6Lm/DJ_Lisboa.png" alt="DJ Lisboa">
       </a>
       <h4 class="dj-nombre">DJ Lisboa</h4>
@@ -1906,13 +1949,13 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Clubs y plazas</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 4 -->
+    <!-- TARJETA 4 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/rptvk59t/DJ_Andina.png" alt="DJ Andina">
       </a>
       <h4 class="dj-nombre">DJ Andina</h4>
@@ -1920,13 +1963,13 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Escenarios culturales</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 5 -->
+    <!-- TARJETA 5 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/N0rWcRxM/DJ_Habana.png" alt="DJ Habana">
       </a>
       <h4 class="dj-nombre">DJ Habana</h4>
@@ -1934,13 +1977,13 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Verbenas / formato híbrido</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 6 -->
+    <!-- TARJETA 6 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/Pq8Bj1MC/DJ_Zuca.png" alt="DJ Zuca">
       </a>
       <h4 class="dj-nombre">DJ Zuca</h4>
@@ -1948,13 +1991,13 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Fiestas callejeras</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 7 -->
+    <!-- TARJETA 7 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/YSmJHQxC/DJ_San_Juan.png" alt="DJ San Juan">
       </a>
       <h4 class="dj-nombre">DJ San Juan</h4>
@@ -1962,13 +2005,13 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Fiestas urbanas</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 8 -->
+    <!-- TARJETA 8 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/zfR9rTkq/DJ_Sunset.png" alt="DJ Sunset">
       </a>
       <h4 class="dj-nombre">DJ Sunset</h4>
@@ -1976,13 +2019,13 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Terrazas / beach clubs</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 9 -->
+    <!-- TARJETA 9 -->
     <div class="dj-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="dj-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="dj-portada">
         <img src="https://i.postimg.cc/q7C9T2Gd/DJ_Indie_BCN.png" alt="DJ Indie BCN">
       </a>
       <h4 class="dj-nombre">DJ Indie BCN</h4>
@@ -1990,7 +2033,7 @@ document.addEventListener('keydown', function(e){
       <p class="dj-descripcion">→ Festivales boutique</p>
       <div class="dj-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
@@ -2004,9 +2047,9 @@ document.addEventListener('keydown', function(e){
 
   <div class="tributos-grid">
 
-     <!-- TARJETA 1 -->
+    <!-- TARJETA 1 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/25t4Mt0J/Juan_Gabriel.png" alt="Juan Gabriel Live">
       </a>
       <h4 class="tributo-nombre">Juan Gabriel Live</h4>
@@ -2014,13 +2057,13 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ México / formato romántico</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 2 -->
+    <!-- TARJETA 2 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/XvPwmPst/Celia_Cruz.png" alt="Celia Cruz Show">
       </a>
       <h4 class="tributo-nombre">Celia Cruz Show</h4>
@@ -2028,13 +2071,13 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ Cuba / formato festivo</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 3 -->
+    <!-- TARJETA 3 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/Pq7m976r/Mecano.png" alt="Mecano Tribute">
       </a>
       <h4 class="tributo-nombre">Mecano Tribute</h4>
@@ -2042,13 +2085,13 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ España / formato nostálgico</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 4 -->
+    <!-- TARJETA 4 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/0NjYtv0t/Amy_Winehouse.png" alt="Amy Winehouse Live">
       </a>
       <h4 class="tributo-nombre">Amy Winehouse Live</h4>
@@ -2056,13 +2099,13 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ Clubs / formato íntimo</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 5 -->
+    <!-- TARJETA 5 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/R0h7PmLb/Queen.png" alt="Queen Tribute">
       </a>
       <h4 class="tributo-nombre">Queen Tribute</h4>
@@ -2070,13 +2113,13 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ Teatros / plazas</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 6 -->
+    <!-- TARJETA 6 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/cJzQ2zFk/Luis_Miguel.png" alt="Luis Miguel Experience">
       </a>
       <h4 class="tributo-nombre">Luis Miguel Experience</h4>
@@ -2084,13 +2127,13 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ México / formato elegante</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 7 -->
+    <!-- TARJETA 7 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/9fkGKkL8/Soda_Stereo.png" alt="Soda Stereo Live">
       </a>
       <h4 class="tributo-nombre">Soda Stereo Live</h4>
@@ -2098,13 +2141,13 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ Argentina / formato joven</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 8 -->
+    <!-- TARJETA 8 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/d032WFjH/Camarón.png" alt="Camarón Flamenco">
       </a>
       <h4 class="tributo-nombre">Camarón Flamenco</h4>
@@ -2112,13 +2155,13 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ España / tablaos y plazas</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
-     <!-- TARJETA 9 -->
+    <!-- TARJETA 9 -->
     <div class="tributo-card">
-      <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="tributo-portada">
+      <a href="https://www.goldlabelmusic.com/radio" class="tributo-portada">
         <img src="https://i.postimg.cc/W4zG9VwY/Whitney_Houston.png" alt="Whitney Tribute">
       </a>
       <h4 class="tributo-nombre">Whitney Tribute</h4>
@@ -2126,7 +2169,7 @@ document.addEventListener('keydown', function(e){
       <p class="tributo-descripcion">→ Auditorios / formato vocal</p>
       <div class="tributo-footer">
         <span class="ver-dossier">Ver Dossier</span>
-        <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="boton-reservar">Reservar</a>
+        <a href="https://www.goldlabelmusic.com/radio" class="boton-reservar">Reservar</a>
       </div>
     </div>
 
@@ -2270,5 +2313,3 @@ document.addEventListener('keydown', function(e){
   </div>
 
 </div>
-
-
