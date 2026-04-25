@@ -1308,83 +1308,67 @@ document.addEventListener('keydown', function(e){
 })();
 
 /* ============================================================
-   FOCO Y SCROLL AL ACTIVAR TABS SUPERIORES (FUNCIONALIDAD AÑADIDA)
-   - Mantiene accesibilidad y centra la tab en contenedores scrollables
-   - Desplaza la página hacia el título principal (o el selector que prefieras)
-   - Esta versión fuerza el scroll arriba (inicio) y centra la tab,
-     de modo que al pinchar cualquier tab el usuario ve la cabecera.
+   FOCO Y SCROLL AL ACTIVAR TABS SUPERIORES (FUNCIONALIDAD AÑADIDA)
+   - Mantiene accesibilidad y centra la tab en contenedores scrollables
+   - Desplaza la página hacia el título principal (o el selector que prefieras)
+   - Esta versión fuerza el scroll arriba (inicio) y centra la tab,
+     de modo que al pinchar cualquier tab el usuario ve la cabecera.
 ============================================================ */
 (function () {
-  // Selector del contenedor de tabs y del objetivo de scroll en la portada
-  const tabsContainer = document.querySelector('.tabs');
-  const scrollTargetSelector = '#main-title'; // cambiar si quieres otro objetivo (ej. '#videoBannerArtistas')
+  // Selector del contenedor de tabs y del objetivo de scroll en la portada
+  const tabsContainer = document.querySelector('.tabs');
+  const scrollTargetSelector = '#main-title'; // cambiar si quieres otro objetivo (ej. '#videoBannerArtistas')
 
-  function focusAndScrollTo(section) {
-    if (!tabsContainer) return;
-    const tab = tabsContainer.querySelector(`.tab[data-section="${section}"]`);
-    if (!tab) return;
+  function focusAndScrollTo(section) {
+    if (!tabsContainer) return;
+    const tab = tabsContainer.querySelector(`.tab[data-section="${section}"]`);
+    if (!tab) return;
 
-    // Asegurar que la tab sea focusable y poner foco sin provocar scroll inmediato
-    tab.setAttribute('tabindex', '0');
-    try {
-      tab.focus({ preventScroll: true });
-    } catch (e) {
-      tab.focus();
-    }
-
-    // Centrar la tab en el contenedor (útil en móvil si las tabs son scrollables)
-    if (typeof tab.offsetLeft !== 'undefined' && tabsContainer.scrollTo) {
-      const margin = 20;
-      const targetLeft = Math.max(0, tab.offsetLeft - margin);
-      tabsContainer.scrollTo({ left: targetLeft, behavior: 'smooth' });
-    } else {
-      try {
-        tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      } catch (e) { /* ignore */ }
-    }
-
-    // Forzar scroll al inicio/portada (prioritario sobre el banner)
-    const target = document.querySelector(scrollTargetSelector);
-    if (target) {
-      const offset = 8; // px, ajustar si hay navbar fija
-      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top, behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  // Observador: cuando cambie .tab.active, actualizamos foco y scroll
-  if (tabsContainer) {
-    const mo = new MutationObserver(() => {
-      const active = tabsContainer.querySelector('.tab.active');
-      if (active) {
-        const section = active.getAttribute('data-section');
-        focusAndScrollTo(section);
-      }
-    });
-    mo.observe(tabsContainer, { subtree: true, attributes: true, attributeFilter: ['class'] });
-  }
-
-  // Exponer la función globalmente por si quieres llamarla manualmente desde showSection
-  window.focusAndScrollTo = focusAndScrollTo;
-})();
-
-/* ============================================================
-   AJUSTE DE NAVEGACIÓN PARA GOOGLE SITES (VERSIÓN AGRESIVA)
-============================================================ */
-document.addEventListener('click', function(e) {
-    var el = e.target.closest('a');
-    if (el) {
-        var url = el.getAttribute('href');
-        if (url && url.indexOf('goldlabelmusic.com') !== -1) {
-            e.preventDefault();
-            e.stopPropagation();
-            // window.open con _top es lo que mejor rompe el sandbox de Google
-            window.open(url, '_top');
-        }
+    // Asegurar que la tab sea focusable y poner foco sin provocar scroll inmediato
+    tab.setAttribute('tabindex', '0');
+    try {
+      tab.focus({ preventScroll: true });
+    } catch (e) {
+      tab.focus();
     }
-}, true);
+
+    // Centrar la tab en el contenedor (útil en móvil si las tabs son scrollables)
+    if (typeof tab.offsetLeft !== 'undefined' && tabsContainer.scrollTo) {
+      const margin = 20;
+      const targetLeft = Math.max(0, tab.offsetLeft - margin);
+      tabsContainer.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    } else {
+      try {
+        tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      } catch (e) { /* ignore */ }
+    }
+
+    // Forzar scroll al inicio/portada (prioritario sobre el banner)
+    const target = document.querySelector(scrollTargetSelector);
+    if (target) {
+      const offset = 8; // px, ajustar si hay navbar fija
+      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  // Observador: cuando cambie .tab.active, actualizamos foco y scroll
+  if (tabsContainer) {
+    const mo = new MutationObserver(() => {
+      const active = tabsContainer.querySelector('.tab.active');
+      if (active) {
+        const section = active.getAttribute('data-section');
+        focusAndScrollTo(section);
+      }
+    });
+    mo.observe(tabsContainer, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  }
+
+  // Exponer la función globalmente por si quieres llamarla manualmente desde showSection
+  window.focusAndScrollTo = focusAndScrollTo;
+})();
 
 </script>
 
@@ -2279,4 +2263,27 @@ document.addEventListener('click', function(e) {
 
 </div>
 
+
+<script>
+(function() {
+    // Escuchamos el clic en todo el documento para máxima compatibilidad
+    document.addEventListener('click', function(e) {
+        // Buscamos si el clic fue en un enlace (o dentro de uno)
+        var el = e.target.closest('a');
+        
+        if (el) {
+            var url = el.getAttribute('href');
+            
+            // Si el enlace apunta a tu web, forzamos la apertura en la ventana principal
+            if (url && url.indexOf('goldlabelmusic.com') !== -1) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // window.open con _top es el comando más potente para saltar el iframe
+                window.open(url, '_top');
+            }
+        }
+    }, true); // El 'true' asegura que este script sea el primero en reaccionar
+})();
+</script>
 
