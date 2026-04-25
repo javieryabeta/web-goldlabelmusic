@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Invitación Gold Label Music</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -16,79 +16,58 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: rgba(212, 168, 79, 0.3);
+            -webkit-tap-highlight-color: transparent;
         }
 
+        /* Evitar selección global pero permitirla en interactivos */
         html, body {
+            height: 100%;
             width: 100%;
+            overflow: hidden; 
             background-color: #000;
             font-family: 'Poppins', sans-serif;
             color: white;
             user-select: none;
             -webkit-user-select: none;
-            -webkit-touch-callout: none;
-            margin: 0;
-            padding: 0;
+            position: relative;
         }
 
         /* CORRECCIÓN PARA COMPATIBILIDAD UNIVERSAL (ANDROID/REALME/IOS) */
-        a.btn, button.btn, .email {
-            display: inline-flex !important;
+        a, .btn, .email {
+            display: flex !important;
             pointer-events: auto !important;
             cursor: pointer !important;
-            user-select: none !important;
-            -webkit-user-select: none !important;
-            touch-action: manipulation !important;
+            user-select: auto !important;
+            -webkit-user-select: auto !important;
+            touch-action: auto !important;
             position: relative;
-            z-index: auto !important;
-            -webkit-appearance: button;
-            -moz-appearance: button;
-            appearance: button;
-            border: none;
-            padding: 0;
-            font: inherit;
+            z-index: 500 !important; 
+            -webkit-appearance: none;
+            outline: none;
         }
 
-        a.btn:active, button.btn:active {
-            opacity: 0.7;
-            transform: scale(0.98);
-        }
-
-        a.btn:hover, button.btn:hover {
-            opacity: 0.85;
-        }
-
-        /* Contenedor Principal - FONDO COMPLETO SIN CORTES */
+        /* Contenedor Principal */
         .main-container {
             position: relative;
             width: 100%;
+            height: 100%;
             max-width: 500px;
             margin: 0 auto;
-            min-height: 100vh;
-            background-image: url('https://i.postimg.cc/0Qqh3tGS/Background-invitacion.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: scroll;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* SECCIÓN SUPERIOR - ARRIBA DE LA LÍNEA DORADA */
-        .section-top {
-            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 4% 5% 3% 5%;
-            min-height: 45vh;
+            justify-content: flex-start; 
+            background-image: url('https://i.postimg.cc/0Qqh3tGS/Background-invitacion.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 8% 5% 15% 5%;
+            transition: padding-top 0.3s ease;
         }
 
         /* Cabecera / Logo */
         .header-section {
             margin-bottom: 2vh;
-            text-align: center;
         }
 
         .logo-wrapper {
@@ -107,7 +86,7 @@
         .content-section {
             text-align: center;
             width: 100%;
-            margin-bottom: 2vh;
+            margin-bottom: 1vh;
         }
 
         .guest-name {
@@ -138,7 +117,7 @@
             font-size: clamp(0.65rem, 3.2vw, 0.8rem);
             color: #ffffff;
             max-width: 85%;
-            margin: 0 auto 2vh auto;
+            margin: 0 auto;
         }
 
         /* Botones de Navegación */
@@ -148,8 +127,8 @@
             display: flex;
             flex-direction: column;
             gap: 1vh;
-            position: relative;
-            z-index: 10;
+            margin-top: 2vh; 
+            margin-bottom: 4vh;
         }
 
         .btn-row {
@@ -168,26 +147,18 @@
             font-weight: 600;
             background-color: var(--gold-main);
             color: #000;
-            transition: opacity 0.2s, transform 0.1s;
-            min-height: 44px;
-            min-width: 44px;
+            transition: opacity 0.2s;
         }
 
-        /* SECCIÓN INFERIOR - ABAJO DE LA LÍNEA DORADA */
-        .section-bottom {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 3% 5% 4% 5%;
-            min-height: 45vh;
-            position: relative;
-            z-index: 5;
+        .btn:active {
+            opacity: 0.7;
+            transform: scale(0.98); 
         }
 
         /* Pie de página / Firmas */
         .footer-section {
+            position: absolute;
+            bottom: 8.5%; 
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -198,9 +169,8 @@
             display: flex;
             justify-content: space-around;
             width: 100%;
-            margin-bottom: 1.5vh;
+            margin-bottom: 0.8vh;
             padding: 0 5%;
-            text-align: center;
         }
 
         .sig-item {
@@ -212,7 +182,7 @@
             font-size: clamp(0.55rem, 2.6vw, 0.68rem);
             font-weight: 600;
             color: white;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             line-height: 1.1;
         }
 
@@ -226,48 +196,34 @@
             color: var(--blue-link);
             font-size: clamp(0.65rem, 3vw, 0.8rem);
             text-decoration: none;
-            margin-top: 1vh;
-            display: inline-flex;
-            pointer-events: auto;
-            cursor: pointer;
+            margin-top: 14px; 
         }
 
-        /* REAJUSTE DE DISEÑO PARA TABLETS */
+        /* REAJUSTE DE DISEÑO PARA TABLETS (Proporciones altas) */
         @media (min-width: 600px) and (min-height: 800px) {
-            .section-top {
-                min-height: 45vh;
-                padding: 6% 5% 3% 5%;
+            .main-container {
+                padding-top: 16%; 
             }
-            
-            .section-bottom {
-                min-height: 45vh;
-                padding: 3% 5% 6% 5%;
+            .footer-section {
+                bottom: 11%; 
+            }
+            .nav-section {
+                margin-top: 3vh;
             }
         }
 
         /* AJUSTE FINAL PARA ESCRITORIO */
         @media (min-width: 1024px) {
             .main-container {
-                background-size: 100% auto;
-                background-attachment: fixed;
+                padding-top: 7%; /* Sube un poco más que el anterior 10% */
             }
-
-            .section-top {
-                min-height: auto;
-                padding: 8% 5% 3% 5%;
-            }
-
-            .section-bottom {
-                min-height: auto;
-                padding: 3% 5% 8% 5%;
-            }
-
+            /* Separamos el logo del título */
             .header-section {
-                margin-bottom: 5vh;
+                margin-bottom: 5vh; 
             }
-
+            /* Bajamos un poco el correo electrónico */
             .email {
-                margin-top: 2vh;
+                margin-top: 25px;
             }
         }
     </style>
@@ -276,75 +232,54 @@
 
     <div class="main-container">
         
-        <!-- SECCIÓN SUPERIOR - ARRIBA DE LA LÍNEA DORADA -->
-        <section class="section-top">
-            <header class="header-section">
-                <div class="logo-wrapper">
-                    <img src="https://i.postimg.cc/J7drPcSV/Gold-Label-Music-transp.png" alt="Logo Gold Label Music" class="logo-img">
-                </div>
-            </header>
+        <header class="header-section">
+            <div class="logo-wrapper">
+                <img src="https://i.postimg.cc/J7drPcSV/Gold-Label-Music-transp.png" alt="Logo Gold Label Music" class="logo-img">
+            </div>
+        </header>
 
-            <main class="content-section">
-                <h1 class="guest-name">Fher</h1>
-                <p class="invitation-label">Invitación a entrevista</p>
-                
-                <p class="description-text">
-                    Queremos invitarte a una conversación<br>
-                    íntima en <b>Gold Label Music Radio</b>.<br>
-                    Emisión internacional en ocho países.
-                </p>
+        <main class="content-section">
+            <h1 class="guest-name">Fher</h1>
+            <p class="invitation-label">Invitación a entrevista</p>
+            
+            <p class="description-text">
+                Queremos invitarte a una conversación<br>
+                íntima en <b>Gold Label Music Radio</b>.<br>
+                Emisión internacional en ocho países.
+            </p>
 
-                <p class="instruction-text">
-                    Si te parece bien, escríbeme por WhatsApp<br>
-                    o elige tu fecha en "Agendar".
-                </p>
-            </main>
+            <p class="instruction-text">
+                Si te parece bien, escríbeme por WhatsApp<br>
+                o elige tu fecha en "Agendar".
+            </p>
+        </main>
 
-            <nav class="nav-section">
-                <div class="btn-row">
-                    <a href="https://wa.me/34616714443?text=%C2%A1Hola!%20Acepto%20encantado%20la%20invitaci%C3%B3n%20para%20la%20entrevista%20en%20Gold%20Label%20Music." target="_blank" rel="noopener noreferrer" class="btn">WhatsApp</a>
-                    <a href="https://calendly.com/javieryabetajustiniano/30min" target="_blank" rel="noopener noreferrer" class="btn">Agendar</a>
-                </div>
-                <div class="btn-row">
-                    <a href="https://open.spotify.com/show/3BOJcxcovJtaD7oEBZlDit?si=9a5b9e8d10c04584" target="_blank" rel="noopener noreferrer" class="btn">Entrevistas</a>
-                    <a href="https://www.goldlabelmusic.com/radio" target="_blank" rel="noopener noreferrer" class="btn">Web</a>
-                </div>
-            </nav>
-        </section>
+        <nav class="nav-section">
+            <div class="btn-row">
+                <a href="https://wa.me/34616714443?text=%C2%A1Hola!%20Acepto%20encantado%20la%20invitaci%C3%B3n%20para%20la%20entrevista%20en%20Gold%20Label%20Music." target="_blank" class="btn">WhatsApp</a>
+                <a href="https://calendly.com/javieryabetajustiniano/30min" target="_blank" class="btn">Agendar</a>
+            </div>
+            <div class="btn-row">
+                <a href="https://open.spotify.com/show/3BOJcxcovJtaD7oEBZlDit?si=9a5b9e8d10c04584" target="_blank" class="btn">Entrevistas</a>
+                <a href="https://www.goldlabelmusic.com/radio" target="_blank" class="btn">Web</a>
+            </div>
+        </nav>
 
-        <!-- SECCIÓN INFERIOR - ABAJO DE LA LÍNEA DORADA -->
-        <section class="section-bottom">
-            <footer class="footer-section">
-                <div class="signatures">
-                    <div class="sig-item">
-                        <div class="name">Carmen Fátima Saavedra</div>
-                        <div class="role">Enlace Artístico</div>
-                    </div>
-                    <div class="sig-item">
-                        <div class="name">Javier Yabeta Justiniano</div>
-                        <div class="role">Director — Gold Label Music</div>
-                    </div>
+        <footer class="footer-section">
+            <div class="signatures">
+                <div class="sig-item">
+                    <div class="name">Carmen Fátima Saavedra</div>
+                    <div class="role">Enlace Artístico</div>
                 </div>
-                <a href="mailto:info@goldlabelmusic.com" class="email">info@goldlabelmusic.com</a>
-            </footer>
-        </section>
+                <div class="sig-item">
+                    <div class="name">Javier Yabeta Justiniano</div>
+                    <div class="role">Director — Gold Label Music</div>
+                </div>
+            </div>
+            <a href="mailto:info@goldlabelmusic.com" class="email">info@goldlabelmusic.com</a>
+        </footer>
 
     </div>
-
-    <script>
-        // Asegurar compatibilidad táctil en Android
-        document.addEventListener('touchstart', function() {}, true);
-        
-        // Prevenir zoom en doble tap pero mantener funcionalidad
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(event) {
-            let now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-    </script>
 
 </body>
 </html>
