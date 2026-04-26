@@ -221,7 +221,7 @@ body {
 }
 
 /* ============================================================
-   BOTÓN COMPARTIR + OVERLAY — CORREGIDO
+   BOTÓN COMPARTIR + OVERLAY — CORREGIDO Y FUNCIONAL
 ============================================================ */
 .share-trigger{
   background-color:#fdd835;
@@ -236,6 +236,8 @@ body {
   align-items:center;
   gap:8px;
   transition: background 0.3s ease;
+  z-index:100;
+  position:relative;
 }
 .share-trigger:hover{
   background-color:#ffeb3b;
@@ -249,7 +251,7 @@ body {
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:9999;
+  z-index:99999;
 }
 
 .share-overlay.active{
@@ -265,6 +267,8 @@ body {
   padding:20px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.5);
   animation: slideDown 0.3s ease;
+  position:relative;
+  z-index:100000;
 }
 
 @keyframes slideDown {
@@ -1257,47 +1261,57 @@ document.addEventListener('DOMContentLoaded', function(){
 
 /* ============================================================
    OVERLAY COMPARTIR — CORREGIDO Y FUNCIONAL
+   (Sin conflictos con tabs ni otros scripts)
 ============================================================ */
+
+// Variables globales para el overlay
+var shareOverlay = null;
+var shareModal = null;
+
+// Inicializar overlay cuando DOM esté listo
+document.addEventListener('DOMContentLoaded', function(){
+  // Obtener referencias del DOM
+  shareOverlay = document.getElementById('share-overlay');
+  shareModal = document.querySelector('.share-modal');
+  
+  if(!shareOverlay || !shareModal) return;
+  
+  // Event listener: clic en overlay (fuera del modal)
+  shareOverlay.addEventListener('click', function(e){
+    if(e.target === shareOverlay){
+      closeShareOverlay();
+    }
+  });
+  
+  // Event listener: prevenir cierre al clicar dentro del modal
+  shareModal.addEventListener('click', function(e){
+    e.stopPropagation();
+  });
+});
 
 // Abrir overlay
 function openShareOverlay(){
-  var overlay = document.getElementById('share-overlay');
-  if(!overlay) return;
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden'; // Evitar scroll del fondo
+  if(!shareOverlay) {
+    shareOverlay = document.getElementById('share-overlay');
+  }
+  if(!shareOverlay) return;
+  
+  shareOverlay.classList.add('active');
 }
 
 // Cerrar overlay
 function closeShareOverlay(){
-  var overlay = document.getElementById('share-overlay');
-  if(!overlay) return;
-  overlay.classList.remove('active');
-  document.body.style.overflow = 'auto'; // Restaurar scroll
+  if(!shareOverlay) {
+    shareOverlay = document.getElementById('share-overlay');
+  }
+  if(!shareOverlay) return;
+  
+  shareOverlay.classList.remove('active');
 }
-
-// Cerrar al hacer clic fuera del modal
-document.addEventListener('DOMContentLoaded', function(){
-  var overlay = document.getElementById('share-overlay');
-  if(overlay){
-    overlay.addEventListener('click', function(e){
-      if(e.target.id === 'share-overlay'){
-        closeShareOverlay();
-      }
-    });
-  }
-
-  // Evitar que clics dentro del modal lo cierren
-  var modal = document.querySelector('.share-modal');
-  if(modal){
-    modal.addEventListener('click', function(e){
-      e.stopPropagation();
-    });
-  }
-});
 
 // Cerrar con tecla ESC
 document.addEventListener('keydown', function(e){
-  if(e.key === 'Escape'){
+  if(e.key === 'Escape' || e.keyCode === 27){
     closeShareOverlay();
   }
 });
