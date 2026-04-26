@@ -221,7 +221,7 @@ body {
 }
 
 /* ============================================================
-   BOTÓN COMPARTIR + OVERLAY — CORREGIDO Y FUNCIONAL
+   BOTÓN COMPARTIR + OVERLAY — CORREGIDO
 ============================================================ */
 .share-trigger{
   background-color:#fdd835;
@@ -236,8 +236,6 @@ body {
   align-items:center;
   gap:8px;
   transition: background 0.3s ease;
-  z-index:100;
-  position:relative;
 }
 .share-trigger:hover{
   background-color:#ffeb3b;
@@ -251,7 +249,7 @@ body {
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:99999;
+  z-index:9999;
 }
 
 .share-overlay.active{
@@ -267,8 +265,6 @@ body {
   padding:20px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.5);
   animation: slideDown 0.3s ease;
-  position:relative;
-  z-index:100000;
 }
 
 @keyframes slideDown {
@@ -1260,58 +1256,50 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 /* ============================================================
-   OVERLAY COMPARTIR — CORREGIDO Y FUNCIONAL
-   (Sin conflictos con tabs ni otros scripts)
+   OVERLAY COMPARTIR — COMPLETAMENTE REPARADO
 ============================================================ */
 
-// Variables globales para el overlay
-var shareOverlay = null;
-var shareModal = null;
+function openShareOverlay(){
+  var overlay = document.getElementById('share-overlay');
+  if(!overlay) return;
+  overlay.style.display = 'flex';
+  overlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
 
-// Inicializar overlay cuando DOM esté listo
+function closeShareOverlay(){
+  var overlay = document.getElementById('share-overlay');
+  if(!overlay) return;
+  overlay.style.display = 'none';
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = 'auto';
+}
+
+// Event listeners para cerrar overlay
 document.addEventListener('DOMContentLoaded', function(){
-  // Obtener referencias del DOM
-  shareOverlay = document.getElementById('share-overlay');
-  shareModal = document.querySelector('.share-modal');
+  var overlay = document.getElementById('share-overlay');
+  var modal = document.querySelector('.share-modal');
   
-  if(!shareOverlay || !shareModal) return;
+  if(!overlay) return;
   
-  // Event listener: clic en overlay (fuera del modal)
-  shareOverlay.addEventListener('click', function(e){
-    if(e.target === shareOverlay){
+  // Cerrar al hacer clic fuera del modal
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay){
       closeShareOverlay();
     }
   });
   
-  // Event listener: prevenir cierre al clicar dentro del modal
-  shareModal.addEventListener('click', function(e){
-    e.stopPropagation();
-  });
+  // Evitar cierre al hacer clic dentro del modal
+  if(modal){
+    modal.addEventListener('click', function(e){
+      e.stopPropagation();
+    });
+  }
 });
-
-// Abrir overlay
-function openShareOverlay(){
-  if(!shareOverlay) {
-    shareOverlay = document.getElementById('share-overlay');
-  }
-  if(!shareOverlay) return;
-  
-  shareOverlay.classList.add('active');
-}
-
-// Cerrar overlay
-function closeShareOverlay(){
-  if(!shareOverlay) {
-    shareOverlay = document.getElementById('share-overlay');
-  }
-  if(!shareOverlay) return;
-  
-  shareOverlay.classList.remove('active');
-}
 
 // Cerrar con tecla ESC
 document.addEventListener('keydown', function(e){
-  if(e.key === 'Escape' || e.keyCode === 27){
+  if(e.key === 'Escape'){
     closeShareOverlay();
   }
 });
@@ -2248,15 +2236,15 @@ document.addEventListener('keydown', function(e){
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <!-- ============================================================
-     FOOTER GLOBAL — GOLD LABEL MUSIC
+     FOOTER GLOBAL — GOLD LABEL MUSIC (COMPLETAMENTE ARREGLADO)
 ============================================================ -->
 <div class="footer">
   <div class="social-icons">
-    <a href="https://www.facebook.com/GoldLabelSelloDigital" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-    <a href="https://www.instagram.com/goldlabelsellodigital" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="https://www.tiktok.com/@goldlabelmusicdigital" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-    <a href="https://www.youtube.com/@goldlabelmusic" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-    <a href="https://www.javieryabeta.com/" aria-label="Sitio web"><i class="fas fa-globe"></i></a>
+    <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+    <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.goldlabelmusic.com/" target="_blank" rel="noopener noreferrer" aria-label="Sitio web"><i class="fas fa-globe"></i></a>
   </div>
 
   <button class="share-trigger" type="button" onclick="openShareOverlay()" aria-label="Compartir todo">
@@ -2267,13 +2255,13 @@ document.addEventListener('keydown', function(e){
   <p>© 2026 Gold Label Music</p>
 
   <div class="footer-links">
-    <a role="button" onclick="showSection('privacidad')">Política de Privacidad</a>
-    <a role="button" onclick="showSection('cookies')">Política de Cookies</a>
+    <a role="button" onclick="showSection('privacidad'); window.scrollTo({top: 0, behavior: 'smooth'});">Política de Privacidad</a>
+    <a role="button" onclick="showSection('cookies'); window.scrollTo({top: 0, behavior: 'smooth'});">Política de Cookies</a>
   </div>
 </div>
 
 <!-- ============================================================
-     OVERLAY COMPARTIR — GOLD LABEL MUSIC (CORREGIDO Y FUNCIONAL)
+     OVERLAY COMPARTIR — GOLD LABEL MUSIC (REPARADO)
 ============================================================ -->
 <div id="share-overlay" class="share-overlay" aria-hidden="true">
 
@@ -2281,28 +2269,28 @@ document.addEventListener('keydown', function(e){
 
     <div class="share-header">
       <div id="share-title" class="share-title">Compartir Gold Label Music</div>
-      <button class="share-close" aria-label="Cerrar" onclick="closeShareOverlay()">&times;</button>
+      <button class="share-close" type="button" aria-label="Cerrar" onclick="closeShareOverlay()">&times;</button>
     </div>
 
     <div class="share-grid">
 
-      <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.goldlabelmusic.com/booking" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.goldlabelmusic.com/booking" target="_blank" rel="noopener noreferrer" title="Compartir en Facebook">
         <i class="fab fa-facebook-f"></i> Facebook
       </a>
 
-      <a href="https://twitter.com/intent/tweet?url=https://www.goldlabelmusic.com/booking&text=Descubre%20Gold%20Label%20Music" target="_blank" rel="noopener noreferrer">
+      <a href="https://twitter.com/intent/tweet?url=https://www.goldlabelmusic.com/booking&text=Descubre%20Gold%20Label%20Music" target="_blank" rel="noopener noreferrer" title="Compartir en Twitter">
         <i class="fab fa-x-twitter"></i> X (Twitter)
       </a>
 
-      <a href="https://api.whatsapp.com/send?text=Descubre%20Gold%20Label%20Music%20https://www.goldlabelmusic.com/booking" target="_blank" rel="noopener noreferrer">
+      <a href="https://api.whatsapp.com/send?text=Descubre%20Gold%20Label%20Music%20https://www.goldlabelmusic.com/booking" target="_blank" rel="noopener noreferrer" title="Compartir en WhatsApp">
         <i class="fab fa-whatsapp"></i> WhatsApp
       </a>
 
-      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.goldlabelmusic.com/booking" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.goldlabelmusic.com/booking" target="_blank" rel="noopener noreferrer" title="Compartir en LinkedIn">
         <i class="fab fa-linkedin-in"></i> LinkedIn
       </a>
 
-      <a href="mailto:?subject=Gold%20Label%20Music&body=Descubre%20Gold%20Label%20Music%20en%20https://www.goldlabelmusic.com/booking">
+      <a href="mailto:?subject=Gold%20Label%20Music&body=Descubre%20Gold%20Label%20Music%20en%20https://www.goldlabelmusic.com/booking" title="Enviar por Email">
         <i class="fas fa-envelope"></i> Email
       </a>
 
