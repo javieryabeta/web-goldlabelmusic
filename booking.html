@@ -20,8 +20,10 @@
 html,body {
   margin:0;
   padding:0;
-  background:#000;
+  background:#0b1630; /* Evita márgenes negros en app de escritorio al unificarse con el color de tu web */
   overflow-x:hidden;
+  width:100%;
+  min-width:100%;
 }
 body {
   font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -221,7 +223,7 @@ body {
 }
 
 /* ============================================================
-   BOTÓN COMPARTIR + OVERLAY — CORREGIDO
+   BOTÓN COMPARTIR + OVERLAY (COPIADO EXACTO DE RAY ROSARIO)
 ============================================================ */
 .share-trigger{
   background-color:#fdd835;
@@ -245,88 +247,63 @@ body {
 .share-overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.7);
+  background:rgba(0,0,0,0.6);
   display:none;
   align-items:center;
   justify-content:center;
   z-index:9999;
 }
 
-.share-overlay.active{
-  display:flex !important;
-}
-
 .share-modal{
   width:92vw;
   max-width:420px;
   background:var(--bg1);
-  border:2px solid var(--gold);
+  border:1px solid rgba(87,148,255,0.4);
   border-radius:16px;
-  padding:20px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  padding:16px;
 }
 
 .share-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:15px;
 }
+
 .share-title{
-  font-size:18px;
+  font-size:16px;
   color:var(--gold);
   font-weight:700;
 }
+
 .share-close{
   background:transparent;
   border:none;
   color:var(--muted);
-  font-size:28px;
+  font-size:20px;
   cursor:pointer;
-  transition: color 0.2s ease;
-}
-.share-close:hover{
-  color:var(--gold);
 }
 
 .share-grid{
   display:flex;
   flex-direction:column;
-  gap:12px;
-  margin-top:15px;
+  gap:10px;
+  margin-top:8px;
 }
+
 .share-grid a{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:10px;
   text-decoration:none;
-  color:#000 !important;
+  color:#0b1630;
   font-weight:700;
   background:var(--gold);
-  padding:12px 15px;
-  border-radius:8px;
-  font-size:14px;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-.share-grid a:hover{
-  background:#ffd84d;
-  transform: translateX(5px);
+  padding:10px 12px;
+  border-radius:10px;
 }
 
-.share-grid a i{
-  font-size:18px;
+.share-grid a:hover{
+  background:#ffd84d;
 }
 
 /* ============================================================
@@ -1116,7 +1093,7 @@ var isInitialLoad = true;
   // Flag que indica que la próxima llamada a scrollIntoView de un banner debe suprimirse
   window._suppressBannerScroll = false;
 
-  // Función para activar la supresión por un corto periodo (ms)
+  // Function para activar la supresión por un corto periodo (ms)
   window._suppressBannerScrollOnce = function (timeoutMs) {
     window._suppressBannerScroll = true;
     setTimeout(function () {
@@ -2230,13 +2207,15 @@ document.addEventListener('keydown', function(e){
 
 </section> 
 
+</div> <!-- /#app-container -->
+
 <!-- ============================================================
-     FONT AWESOME — ICONOS SOCIALES
+     FONT AWESOME — ICONOS SOCIALES (FUERA DEL CONTENEDOR)
 ============================================================ -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <!-- ============================================================
-     FOOTER GLOBAL — GOLD LABEL MUSIC (COMPLETAMENTE ARREGLADO)
+     FOOTER GLOBAL — GOLD LABEL MUSIC (FUERA DEL CONTENEDOR)
 ============================================================ -->
 <div class="footer">
   <div class="social-icons">
@@ -2261,7 +2240,7 @@ document.addEventListener('keydown', function(e){
 </div>
 
 <!-- ============================================================
-     OVERLAY COMPARTIR — GOLD LABEL MUSIC (REPARADO)
+     OVERLAY COMPARTIR — GOLD LABEL MUSIC (HIJO DIRECTO DEL BODY)
 ============================================================ -->
 <div id="share-overlay" class="share-overlay" aria-hidden="true">
 
@@ -2299,3 +2278,145 @@ document.addEventListener('keydown', function(e){
   </div>
 
 </div>
+
+<style id="share-overlay-fix">
+/* ============================================================
+   FIX FINAL PARA EL OVERLAY COMPARTIR
+   - Centrado real en viewport
+   - Independiente del scroll de la página
+   - Bloqueo robusto del fondo
+============================================================ */
+#share-overlay.share-overlay{
+  position:fixed !important;
+  inset:0 !important;
+  width:100vw !important;
+  height:100dvh !important;
+  max-height:100dvh !important;
+  box-sizing:border-box;
+  padding:24px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  overflow:auto;
+  overscroll-behavior:none;
+  -webkit-overflow-scrolling:touch;
+  isolation:isolate;
+  z-index:2147483647;
+}
+
+#share-overlay.share-overlay.is-open{
+  display:flex !important;
+}
+
+#share-overlay .share-modal{
+  width:min(92vw, 420px);
+  max-height:calc(100dvh - 48px);
+  overflow:auto;
+  box-sizing:border-box;
+}
+
+body.share-lock{
+  position:fixed !important;
+  inset:0 !important;
+  width:100%;
+  overflow:hidden !important;
+  touch-action:none;
+  overscroll-behavior:none;
+}
+
+@media (max-width: 480px){
+  #share-overlay.share-overlay{
+    padding:16px;
+  }
+  #share-overlay .share-modal{
+    max-height:calc(100dvh - 32px);
+  }
+}
+</style>
+
+<script id="share-overlay-fix-script">
+/* ============================================================
+   FIX FINAL DEL OVERLAY COMPARTIR
+   - Evita que el overlay se desplace con el scroll de la página
+   - Bloquea el fondo sin saltos
+   - Restaura exactamente la posición al cerrar
+============================================================ */
+(function () {
+  let lockedScrollY = 0;
+
+  function getOverlay() {
+    return document.getElementById('share-overlay');
+  }
+
+  function lockBodyScroll() {
+    lockedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    document.body.classList.add('share-lock');
+    document.body.style.top = `-${lockedScrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+  }
+
+  function unlockBodyScroll() {
+    document.body.classList.remove('share-lock');
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    window.scrollTo(0, lockedScrollY);
+  }
+
+  window.openShareOverlay = function () {
+    const overlay = getOverlay();
+    if (!overlay) return;
+
+    lockBodyScroll();
+    overlay.classList.add('is-open');
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden', 'false');
+  };
+
+  window.closeShareOverlay = function () {
+    const overlay = getOverlay();
+    if (!overlay) return;
+
+    overlay.classList.remove('is-open');
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden', 'true');
+    unlockBodyScroll();
+  };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const overlay = getOverlay();
+    if (!overlay) return;
+
+    const modal = overlay.querySelector('.share-modal');
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) {
+        window.closeShareOverlay();
+      }
+    });
+
+    if (modal) {
+      modal.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      window.closeShareOverlay();
+    }
+  });
+
+  window.addEventListener('resize', function () {
+    const overlay = getOverlay();
+    if (!overlay || !overlay.classList.contains('is-open')) return;
+    overlay.style.display = 'flex';
+  });
+})();
+</script>
+
+</body>
+</html>
+
