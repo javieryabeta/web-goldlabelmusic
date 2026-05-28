@@ -428,8 +428,8 @@
     .podcast-international{
       color:var(--gold);
       margin-top:12px;
-      font-size:16px;
-      font-weight:600;
+      font-size:13px;
+      font-weight:500;
       text-align:center;
     }
     .podcast-frame{
@@ -1277,6 +1277,14 @@
       }
     }
   </style>
+
+<style>
+html, body{
+  scroll-behavior:auto !important;
+  overflow-anchor:none !important;
+}
+</style>
+
 </head>
 <body>
   <div id="app-container">
@@ -1427,7 +1435,7 @@
         </div>
 
         <button class="listen-btn radio-btn" type="button"
-          data-stream="http://genevalatina.ice.infomaniak.ch/genevalatina-128.mp3"
+          data-stream="https://genevalatina.ice.infomaniak.ch/genevalatina-128.mp3"
           aria-pressed="false">
           <i class="fas fa-play-circle"></i> En Vivo
         </button>
@@ -2466,7 +2474,7 @@
   </div>
 
   <!-- ===== BLOQUE 10: SCRIPTS EXTERNOS Y FUNCIONES GLOBALES (OPTIMIZADO) ===== -->
-  <script async src="//www.instagram.com/embed.js"></script>
+  <script async src="https://www.instagram.com/embed.js"></script>
 
   <script>
     /* ============================================================
@@ -2667,63 +2675,111 @@
     /* ============================================================
        NAVEGACIÓN ENTRE SECCIONES
     ============================================================ */
-    function showSection(name){
-      const app = document.getElementById('app-container');
-      const tabs = document.querySelectorAll('.tab');
-      const sections = document.querySelectorAll('.section');
-      const title = document.getElementById('main-title');
-      const subtitle = document.getElementById('main-subtitle');
+    
+let isInitialLoad = true;
 
-      const banners = {
-        estudio: document.getElementById('videoBanner'),
-        radio: document.getElementById('videoBannerRadio'),
-        podcast: document.getElementById('videoBannerPodcast'),
-        blog: document.getElementById('videoBannerBlog'),
-        redes: document.getElementById('videoBannerRedes')
-      };
+window.history.scrollRestoration = "manual";
 
-      tabs.forEach(t => t.classList.remove('active'));
-      sections.forEach(s => s.classList.remove('active'));
+function forceTopScroll(){
+  window.scrollTo(0,0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
 
-      if(name === 'privacidad' || name === 'cookies'){
-        document.body.classList.add('policy-mode');
-      } else {
-        document.body.classList.remove('policy-mode');
-      }
 
-      const order = ['estudio','radio','podcast','blog','redes'];
-      const idx = order.indexOf(name);
-      if(idx >= 0) tabs[idx].classList.add('active');
+const sectionTitles = {
+  estudio: {
+    title: 'Estudio',
+    subtitle: 'Grabación de entrevistas'
+  },
+  radio: {
+    title: 'Gold Label Music Radio',
+    subtitle: 'Emisión en directo'
+  },
+  podcast: {
+    title: 'Podcasts',
+    subtitle: 'Una entrevista de oro'
+  },
+  blog: {
+    title: 'Blog',
+    subtitle: 'Entrevistas destacadas'
+  },
+  redes: {
+    title: 'Redes',
+    subtitle: 'Publicación en redes sociales'
+  }
+};
 
-      const target = document.getElementById('section-' + name);
-      if(target) target.classList.add('active');
+function showSection(name){
 
-      Object.values(banners).forEach(b => b.classList.remove('show'));
-      if(banners[name]) banners[name].classList.add('show');
+  const app = document.getElementById('app-container');
+  const tabs = document.querySelectorAll('.tab');
+  const sections = document.querySelectorAll('.section');
+  const title = document.getElementById('main-title');
+  const subtitle = document.getElementById('main-subtitle');
 
-      const titles = {
-        estudio: ['Estudio', 'Grabación de Entrevista'],
-        radio: ['Gold Label Music Radio', 'Emisión en Directo'],
-        podcast: ['Podcasts', 'Una Entrevista de Oro'],
-        blog: ['Blog', 'Entrevistas Destacadas'],
-        redes: ['Redes', 'Publicación en Redes Sociales'],
-        privacidad: ['Privacidad', 'Política de Protección de Datos'],
-        cookies: ['Cookies', 'Uso y Gestión de Cookies']
-      };
+  if(sectionTitles[name]){
+    title.textContent = sectionTitles[name].title;
+    subtitle.textContent = sectionTitles[name].subtitle;
+  }
 
-      if(titles[name]){
-        title.textContent = titles[name][0];
-        subtitle.textContent = titles[name][1];
-      }
+  sections.forEach(section => {
+    section.classList.remove('active');
+  });
 
-      if(name === 'redes' && window.instgrm && window.instgrm.Embeds){
-        window.instgrm.Embeds.process();
-      }
-
-      if(app) app.scrollIntoView({ behavior:'smooth', block:'start' });
+  tabs.forEach(tab => {
+    tab.classList.remove('active');
+    if(tab.dataset.section === name){
+      tab.classList.add('active');
     }
+  });
 
-    showSection('estudio');
+  const activeSection = document.getElementById('section-' + name);
+  if(activeSection){
+    activeSection.classList.add('active');
+  }
+
+  const banners = {
+    estudio:'videoBanner',
+    radio:'videoBannerRadio',
+    podcast:'videoBannerPodcast',
+    blog:'videoBannerBlog',
+    redes:'videoBannerRedes'
+  };
+
+  document.querySelectorAll('.video-banner').forEach(v => {
+    v.classList.remove('show');
+  });
+
+  if(banners[name]){
+    const banner = document.getElementById(banners[name]);
+    if(banner){
+      banner.classList.add('show');
+    }
+  }
+
+  if(isInitialLoad){
+    forceTopScroll();
+    isInitialLoad = false;
+  } else {
+    setTimeout(() => {
+      forceTopScroll();
+    }, 10);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  forceTopScroll();
+  showSection('estudio');
+});
+
+window.addEventListener('load', () => {
+  forceTopScroll();
+});
+
+setTimeout(forceTopScroll, 100);
+setTimeout(forceTopScroll, 300);
+
 
     /* ============================================================
        REPRODUCTOR DE RADIO
@@ -2924,3 +2980,4 @@
   </script>
 </body>
 </html>
+
