@@ -22,6 +22,7 @@
       --accent:#f7b500;
       --accent-light:#ffd84d;
       --tabs-height: 72px; /* Altura de la barra fija de navegación */
+      --tabs-offset: 0px;
     }
 
     /* Base — CORRECCIÓN DE ANCHURA Y COLOR DE FONDO PARA APLICACIONES */
@@ -114,7 +115,7 @@
       left:50%;
       transform:translateX(-50%);
       top:0;
-      margin-top: var(--tabs-height); /* Evita que el video quede tapado por las tabs */
+      margin-top: calc(var(--tabs-height) + var(--tabs-offset)); /* Evita que el video quede tapado por las tabs */
     }
     .video-banner.show{display:block;}
 
@@ -148,14 +149,14 @@
 
     @media(max-width:768px){
       .video-banner{
-        margin-top: var(--tabs-height); /* Corrige el espacio en móviles */
+        margin-top: calc(var(--tabs-height) + var(--tabs-offset)); /* Corrige el espacio en móviles */
       }
     }
 
     /* ===== TABS PRINCIPALES — ESTILO COMPATIBLE CON PORTADA DE VIDEO FIJA ===== */
     .tabs{
       position: fixed;
-      top: 0;
+      top: var(--tabs-offset);
       left: 0;
       right: 0;
       z-index: 10010;
@@ -213,10 +214,16 @@
     @media (max-width: 1024px) {
       :root {
         --tabs-height: 64px;
+        --tabs-offset: calc(env(safe-area-inset-top, 0px) + 8px);
       }
       .tabs {
         justify-content: flex-start;
         padding-left: 12px;
+        box-sizing: border-box;
+        max-width: 100vw;
+        scroll-behavior: smooth;
+        scroll-padding-inline: 12px;
+        overscroll-behavior-x: contain;
       }
     }
 
@@ -2745,6 +2752,25 @@ initSteppedCarousel('redes-carousel');
 /* ============================================================
    NAVEGACIÓN ENTRE SECCIONES
 ============================================================ */
+function keepMobileTabVisible(activeTab, behavior = 'smooth'){
+  const tabsBar = activeTab ? activeTab.closest('.tabs') : document.querySelector('.tabs');
+  if(!activeTab || !tabsBar || !window.matchMedia('(max-width: 1024px)').matches) return;
+
+  window.requestAnimationFrame(() => {
+    const left = activeTab.offsetLeft - (tabsBar.clientWidth - activeTab.offsetWidth) / 2;
+    tabsBar.scrollTo({ left: Math.max(left, 0), behavior });
+  });
+}
+
+(function initMobileTabsPosition(){
+  const realign = () => {
+    const activeTab = document.querySelector('.tab.active');
+    keepMobileTabVisible(activeTab, 'auto');
+  };
+
+  window.addEventListener('resize', realign, { passive: true });
+  window.addEventListener('orientationchange', () => setTimeout(realign, 250), { passive: true });
+})();
 function showSection(name){
   const app = document.getElementById('app-container');
   const tabs = document.querySelectorAll('.tab');
@@ -2771,7 +2797,12 @@ function showSection(name){
 
   const order = ['estudio','radio','podcast','blog','redes'];
   const idx = order.indexOf(name);
-  if(idx >= 0) tabs[idx].classList.add('active');
+  let activeTab = null;
+  if(idx >= 0){
+    activeTab = tabs[idx];
+    activeTab.classList.add('active');
+  }
+  keepMobileTabVisible(activeTab);
 
   const target = document.getElementById('section-' + name);
   if(target) target.classList.add('active');
@@ -2953,4 +2984,5 @@ document.addEventListener('keydown', e => {
 
 </body>
 </html>
+
 
