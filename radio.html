@@ -22,7 +22,6 @@
       --accent:#f7b500;
       --accent-light:#ffd84d;
       --tabs-height: 72px; /* Altura de la barra fija de navegación */
-      --tabs-offset: 0px;
     }
 
     /* Base — CORRECCIÓN DE ANCHURA Y COLOR DE FONDO PARA APLICACIONES */
@@ -115,7 +114,7 @@
       left:50%;
       transform:translateX(-50%);
       top:0;
-      margin-top: calc(var(--tabs-height) + var(--tabs-offset)); /* Evita que el video quede tapado por las tabs */
+      margin-top: var(--tabs-height); /* Evita que el video quede tapado por las tabs */
     }
     .video-banner.show{display:block;}
 
@@ -149,14 +148,14 @@
 
     @media(max-width:768px){
       .video-banner{
-        margin-top: calc(var(--tabs-height) + var(--tabs-offset)); /* Corrige el espacio en móviles */
+        margin-top: var(--tabs-height); /* Corrige el espacio en móviles */
       }
     }
 
     /* ===== TABS PRINCIPALES — ESTILO COMPATIBLE CON PORTADA DE VIDEO FIJA ===== */
     .tabs{
       position: fixed;
-      top: var(--tabs-offset);
+      top: 0;
       left: 0;
       right: 0;
       z-index: 10010;
@@ -214,15 +213,14 @@
     @media (max-width: 1024px) {
       :root {
         --tabs-height: 64px;
-        --tabs-offset: calc(env(safe-area-inset-top, 0px) + 8px);
       }
       .tabs {
+        top: 0 !important;
         justify-content: flex-start;
         padding-left: 12px;
         box-sizing: border-box;
         max-width: 100vw;
         scroll-behavior: smooth;
-        scroll-padding-inline: 12px;
         overscroll-behavior-x: contain;
       }
     }
@@ -2393,7 +2391,7 @@ html, body{
     <!-- Reel Instagram -->
     <div class="redes-block reel-ig">
       <blockquote class="instagram-media"
-        data-instgrm-permalink="https://www.instagram.com/reel/DZb87laoOy6/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==">
+        data-instgrm-permalink="https://www.instagram.com/reel/DZwWl9lIRxa/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==">
       </blockquote>
     </div>
 
@@ -2752,24 +2750,88 @@ initSteppedCarousel('redes-carousel');
 /* ============================================================
    NAVEGACIÓN ENTRE SECCIONES
 ============================================================ */
-function keepMobileTabVisible(activeTab, behavior = 'smooth'){
-  const tabsBar = activeTab ? activeTab.closest('.tabs') : document.querySelector('.tabs');
-  if(!activeTab || !tabsBar || !window.matchMedia('(max-width: 1024px)').matches) return;
+let isRadioInitialLoad = true;
 
-  window.requestAnimationFrame(() => {
-    const left = activeTab.offsetLeft - (tabsBar.clientWidth - activeTab.offsetWidth) / 2;
-    tabsBar.scrollTo({ left: Math.max(left, 0), behavior });
-  });
+function scrollRadioPageToTop(behavior = 'smooth'){
+  const run = () => {
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior });
+    } catch (e) {
+      window.scrollTo(0, 0);
+    }
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
+  window.requestAnimationFrame(run);
 }
 
-(function initMobileTabsPosition(){
-  const realign = () => {
-    const activeTab = document.querySelector('.tab.active');
-    keepMobileTabVisible(activeTab, 'auto');
+function moveRadioTabsToStart(behavior = 'auto'){
+  const tabsBar = document.querySelector('.tabs');
+  if(!tabsBar || window.innerWidth > 1024) return;
+  tabsBar.scrollTo({ left: 0, behavior });
+}
+
+function moveRadioTabsFromPodcast(){
+  const tabsBar = document.querySelector('.tabs');
+  if(!tabsBar || window.innerWidth > 1024) return;
+
+  const podcastTab = tabsBar.querySelector('.tab[data-section="podcast"]') ||
+                     Array.from(tabsBar.querySelectorAll('.tab')).find(tab =>
+                       tab.textContent.trim().toLowerCase().includes('podcast')
+                     );
+  if(!podcastTab) return;
+
+  setTimeout(() => {
+    const margin = 20;
+    const targetLeft = Math.max(0, podcastTab.offsetLeft - margin);
+    tabsBar.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  }, 60);
+}
+
+(function initRadioMobileTabs(){
+  const init = () => {
+    const tabsBar = document.querySelector('.tabs');
+    if(!tabsBar) return;
+
+    const tabs = Array.from(tabsBar.querySelectorAll('.tab'));
+    const podcastTab = tabsBar.querySelector('.tab[data-section="podcast"]');
+
+    if(podcastTab){
+      podcastTab.addEventListener('click', moveRadioTabsFromPodcast);
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        if(window.innerWidth > 1024) return;
+        const section = tab.getAttribute('data-section');
+        if(section === 'estudio' || section === 'radio'){
+          setTimeout(() => moveRadioTabsToStart('auto'), 60);
+        }
+      });
+    });
+
+    const active = tabsBar.querySelector('.tab.active');
+    if(active && active.getAttribute('data-section') === 'podcast'){
+      moveRadioTabsFromPodcast();
+    } else {
+      moveRadioTabsToStart('auto');
+    }
   };
 
-  window.addEventListener('resize', realign, { passive: true });
-  window.addEventListener('orientationchange', () => setTimeout(realign, 250), { passive: true });
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.addEventListener('resize', () => {
+    if(window.innerWidth <= 1024){
+      const active = document.querySelector('.tabs .tab.active');
+      if(active && active.getAttribute('data-section') === 'podcast'){
+        moveRadioTabsFromPodcast();
+      }
+    }
+  }, { passive: true });
 })();
 function showSection(name){
   const app = document.getElementById('app-container');
@@ -2797,12 +2859,7 @@ function showSection(name){
 
   const order = ['estudio','radio','podcast','blog','redes'];
   const idx = order.indexOf(name);
-  let activeTab = null;
-  if(idx >= 0){
-    activeTab = tabs[idx];
-    activeTab.classList.add('active');
-  }
-  keepMobileTabVisible(activeTab);
+  if(idx >= 0) tabs[idx].classList.add('active');
 
   const target = document.getElementById('section-' + name);
   if(target) target.classList.add('active');
@@ -2829,10 +2886,13 @@ function showSection(name){
     window.instgrm.Embeds.process();
   }
 
-  if(app) app.scrollIntoView({ behavior:'smooth', block:'start' });
+  scrollRadioPageToTop(isRadioInitialLoad ? 'auto' : 'smooth');
+  isRadioInitialLoad = false;
 }
 
 showSection('estudio');
+window.addEventListener('load', () => setTimeout(() => scrollRadioPageToTop('auto'), 50));
+window.addEventListener('pageshow', () => setTimeout(() => scrollRadioPageToTop('auto'), 50));
 
 /* ============================================================
    REPRODUCTOR DE RADIO
@@ -2984,5 +3044,6 @@ document.addEventListener('keydown', e => {
 
 </body>
 </html>
+
 
 
