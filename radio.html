@@ -2895,7 +2895,7 @@ window.addEventListener('load', () => setTimeout(() => scrollRadioPageToTop('aut
 window.addEventListener('pageshow', () => setTimeout(() => scrollRadioPageToTop('auto'), 50));
 
 /* ============================================================
-   REPRODUCTOR DE RADIO
+   REPRODUCTOR DE RADIO (OPTIMIZADO Y BLINDADO)
 ============================================================ */
 (function(){
   if(document.readyState === 'loading'){
@@ -2923,7 +2923,9 @@ window.addEventListener('pageshow', () => setTimeout(() => scrollRadioPageToTop(
         return;
       }
 
-      if(isPlaying && currentStream === stream && !player.paused){
+      // Si ya está reproduciendo O está en estado "Cargando" (evita bucles por doble clic rápido)
+      const isConnecting = btn.classList.contains('is-loading');
+      if((isPlaying || isConnecting) && currentStream === stream){
         stop(player, btn);
         currentStream = null;
         isPlaying = false;
@@ -2932,7 +2934,14 @@ window.addEventListener('pageshow', () => setTimeout(() => scrollRadioPageToTop(
 
       try{
         setLoading(btn);
-        player.src = stream;
+        
+        // Registramos el stream que se intenta cargar inmediatamente
+        currentStream = stream;
+
+        // OPTIMIZACIÓN 1: Cache-busting para obligar al navegador a conectar directo y rápido
+        const separator = stream.includes('?') ? '&' : '?';
+        player.src = stream + separator + "_t=" + Date.now();
+        
         await player.play();
         setActive(btn);
 
@@ -2940,13 +2949,21 @@ window.addEventListener('pageshow', () => setTimeout(() => scrollRadioPageToTop(
           if(b !== btn) setInactive(b);
         });
 
-        currentStream = stream;
         isPlaying = true;
 
       } catch(err){
+        // Si el error fue por cancelación intencional del usuario al cargar, salimos limpiamente
+        if (err.name === 'AbortError' || currentStream !== stream) {
+          return; 
+        }
+
         setUnavailable(btn);
+        
+        // OPTIMIZACIÓN 2: Limpieza profunda si realmente falla la conexión externa
         player.pause();
-        player.src = '';
+        player.removeAttribute('src');
+        player.load();
+        
         currentStream = null;
         isPlaying = false;
       }
@@ -2965,6 +2982,7 @@ window.addEventListener('pageshow', () => setTimeout(() => scrollRadioPageToTop(
       btn.innerHTML = '<i class="fas fa-play-circle"></i> En Vivo';
     }
 
+    // Mantiene tus mismas clases de diseño e iconos de FontAwesome
     function setLoading(btn){
       btn.classList.add('is-loading');
       btn.setAttribute('aria-pressed', 'true');
@@ -2980,7 +2998,12 @@ window.addEventListener('pageshow', () => setTimeout(() => scrollRadioPageToTop(
 
     function stop(player, btn){
       player.pause();
-      player.src = '';
+      
+      // OPTIMIZACIÓN 3: Eliminar el 'src' por completo al detener
+      // Esto frena la descarga del streaming en segundo plano al instante.
+      player.removeAttribute('src'); 
+      player.load(); 
+      
       setInactive(btn);
     }
   }
