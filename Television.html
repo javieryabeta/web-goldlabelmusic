@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giga TV - GLM TV | Señal Internacional</title>
+  
+  <!-- FONT AWESOME ICONOS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <!-- ============================================================
+       1. ESTILOS CSS (MODULAR)
+  ============================================================ -->
+  <style>
+    /* ===== VARIABLES GENERALES ===== */
+    :root {
+      --gold: #f7b500;
+      --blue: #5794ff;
+      --bg1: #0b1630;
+      --bg2: #071227;
+      --text: #ffffff;
+      --muted: #9aa3b8;
+      --live-red: #e50914;
+      --tabs-height: 64px;
+    }
+
+    /* ===== BASE & RESET ===== */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg1);
+      overflow-x: hidden;
+      width: 100%;
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+    }
+
+    /* ===== NAVEGACIÓN SUPERIOR FIJA / ESCALABLE ===== */
+    .tabs-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10000;
+      height: var(--tabs-height);
+      padding: 0 16px;
+      background: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tabs-header::-webkit-scrollbar { display: none; }
+
+    @media (min-width: 1025px) {
+      .tabs-header {
+        justify-content: center;
+      }
+    }
+
+    .nav-tab {
+      flex: 0 0 auto;
+      padding: 8px 18px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cdd3e1;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .nav-tab i {
+      color: var(--blue);
+      font-size: 14px;
+    }
+    .nav-tab:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .nav-tab.active {
+      background: var(--gold);
+      color: #0b1630;
+      font-weight: 700;
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+    .nav-tab.active i {
+      color: #0b1630;
+    }
+
+    /* ===== CONTENEDOR PRINCIPAL ===== */
+    #app-container {
+      max-width: 1200px;
+      margin: calc(var(--tabs-height) + 20px) auto 20px;
+      padding: 30px 20px 20px;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2) 70%);
+      border-radius: 16px;
+    }
+
+    /* ===== CABECERA DE TEXTOS ===== */
+    .tv-header-block {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .main-title {
+      font-size: 32px;
+      color: var(--gold);
+      margin: 0 0 6px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .main-subtitle {
+      font-size: 18px;
+      color: var(--blue);
+      margin: 0 0 16px;
+      font-weight: 600;
+    }
+
+    .main-description {
+      font-size: 15px;
+      color: #ffffff;
+      max-width: 850px;
+      margin: 0 auto;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* ===== REPRODUCTOR DE TV PREMIUM ===== */
+    .tv-player-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.8), 0 0 20px rgba(247, 181, 0, 0.15);
+      border: 1px solid rgba(247, 181, 0, 0.3);
+    }
+
+    .tv-player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px;
+      background: rgba(7, 18, 39, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tv-brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .tv-brand-badge i {
+      color: var(--gold);
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(229, 9, 20, 0.2);
+      border: 1px solid var(--live-red);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--live-red);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--live-red);
+      animation: pulseLive 1.5s infinite;
+    }
+
+    @keyframes pulseLive {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .tv-iframe-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* Aspect Ratio 16:9 */
+      background: #000;
+    }
+
+    .tv-iframe-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Amplía el área del vídeo completa y conserva la mosca en su esquina original. */
+    .tv-iframe-wrapper:fullscreen,
+    .tv-iframe-wrapper:-webkit-full-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483646;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      padding-top: 0;
+      background: #000;
+    }
+    .tv-iframe-wrapper.is-page-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483646;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      padding-top: 0;
+      background: #000;
+    }
+
+    .tv-iframe-wrapper:fullscreen iframe,
+    .tv-iframe-wrapper:-webkit-full-screen iframe,
+    .tv-iframe-wrapper.is-page-fullscreen iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* En pantalla completa, acerca la mosca a la izquierda y bájala para alinearla con Giga TV. */
+    .tv-iframe-wrapper:fullscreen .tv-watermark-logo,
+    .tv-iframe-wrapper:-webkit-full-screen .tv-watermark-logo,
+    .tv-iframe-wrapper.is-page-fullscreen .tv-watermark-logo {
+      position: fixed;
+      top: clamp(42px, 7vh, 72px);
+      left: clamp(12px, 4vw, 50px);
+      width: 70px;
+    }
+
+    .tv-fullscreen-trigger {
+      position: absolute;
+      top: auto;
+      right: 8px;
+      bottom: 8px;
+      z-index: 2147483647;
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 4px;
+      background: #f26b2b;
+      color: #fff;
+      cursor: pointer;
+    }
+    .tv-fullscreen-trigger:hover { background: #ff7b3c; }
+    .tv-iframe-wrapper:fullscreen .tv-fullscreen-trigger,
+    .tv-iframe-wrapper:-webkit-full-screen .tv-fullscreen-trigger,
+    .tv-iframe-wrapper.is-page-fullscreen .tv-fullscreen-trigger {
+      position: fixed;
+      top: auto;
+      right: 8px;
+      bottom: 8px;
+    }
+
+    /* Mosca / Logotipo ID mejorado de tamaño y posición */
+    .tv-watermark-logo {
+      position: absolute;
+      top: 18px;
+      left: 14px;
+      width: 70px;
+      height: auto;
+      z-index: 2147483647; /* Asegurar visibilidad máxima sobre el reproductor */
+      pointer-events: none;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.8));
+      opacity: 0.95;
+    }
+
+    .tv-player-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: rgba(7, 18, 39, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .tv-status {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .tv-status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tv-status-item i {
+      color: var(--blue);
+    }
+
+    /* ===== TARJETAS DE CONTENIDO INFERIOR ===== */
+    .tv-grid-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto 20px;
+    }
+
+    .tv-info-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: left;
+      transition: all 0.3s ease;
+    }
+    .tv-info-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(247, 181, 0, 0.3);
+      transform: translateY(-3px);
+    }
+    .tv-info-card i {
+      font-size: 24px;
+      color: var(--gold);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .tv-info-card h3 {
+      font-size: 15px;
+      color: #fff;
+      margin: 0 0 6px;
+      font-weight: 700;
+    }
+    .tv-info-card p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* ===== FOOTER GLOBAL ===== */
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      padding-bottom: 60px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 12px;
+    }
+    .social-icons a {
+      color: var(--blue);
+      font-size: 22px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .social-icons a:hover {
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .share-trigger {
+      background-color: #fdd835;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 10px 0 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .share-trigger:hover {
+      background-color: #ffeb3b;
+      transform: scale(1.03);
+    }
+
+    .footer p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0;
+    }
+
+    .footer-links {
+      margin-top: 20px;
+    }
+    .footer-links a {
+      color: var(--blue);
+      text-decoration: none;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+    .footer-links a + a::before {
+      content: "|";
+      color: var(--blue);
+      margin: 0 8px;
+    }
+
+    /* ===== OVERLAY MODAL COMPARTIR ===== */
+    .share-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+    }
+    .share-modal {
+      width: 92vw;
+      max-width: 420px;
+      background: var(--bg1);
+      border: 1px solid rgba(87, 148, 255, 0.4);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .share-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .share-title {
+      font-size: 16px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .share-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .share-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .share-grid a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #0b1630;
+      font-weight: 700;
+      background: var(--gold);
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+    .share-grid a:hover {
+      background: #ffd84d;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .tv-grid-info { grid-template-columns: 1fr; }
+      .main-title { font-size: 24px; }
+      .main-subtitle { font-size: 16px; }
+      .tv-player-footer { flex-direction: column; gap: 8px; text-align: center; }
+      .tv-watermark-logo { width: 56px; top: 12px; left: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       2. ESTRUCTURA HTML
+  ============================================================ -->
+
+  <!-- NAVEGACIÓN SUPERIOR FIJA / ESCALABLE CON ANIMACIÓN DE SCROLL A PARTIR DEL 3.º BOTÓN EN MÓVIL -->
+  <nav class="tabs-header" id="navTabsContainer" role="tablist">
+    <!-- CAMBIAR ENLACE: Inicio. Sustituye la URL dentro de href. -->
+    <a href="https://www.goldlabelmusic.com/" class="nav-tab active">
+      <i class="fas fa-home"></i> Inicio
+    </a>
+    <!-- CAMBIAR ENLACE: Distribución. Sustituye la URL dentro de href. -->
+    <a href="https://www.goldlabelmusic.com/distribucion" class="nav-tab">
+      <i class="fas fa-compact-disc"></i> Distribución
+    </a>
+    <!-- CAMBIAR ENLACE: Promoción. Sustituye la URL dentro de href. -->
+    <a href="https://www.goldlabelmusic.com/promocion" class="nav-tab">
+      <i class="fas fa-bullhorn"></i> Promoción
+    </a>
+    <!-- CAMBIAR ENLACE: Branding. Sustituye la URL dentro de href. -->
+    <a href="https://www.goldlabelmusic.com/branding" class="nav-tab">
+      <i class="fas fa-gem"></i> Branding
+    </a>
+    <!-- CAMBIAR ENLACE: Booking. Sustituye la URL dentro de href. -->
+    <a href="https://www.goldlabelmusic.com/booking" class="nav-tab">
+      <i class="fas fa-users"></i> Booking
+    </a>
+    <!-- CAMBIAR ENLACE: Radio. Sustituye la URL dentro de href. -->
+    <a href="https://www.goldlabelmusic.com/radio" class="nav-tab">
+      <i class="fas fa-podcast"></i> Radio
+    </a>
+    <!-- CAMBIAR ENLACE: Giga Radio TV. Reemplaza # por la URL de esta página cuando esté publicada. -->
+    <a href="#" class="nav-tab">
+      <i class="fas fa-tv"></i> Giga Radio TV
+    </a>
+  </nav>
+
+  <!-- CONTENEDOR DE LA PÁGINA -->
+  <div id="app-container">
+
+    <!-- CABECERA -->
+    <div class="tv-header-block">
+      <h1 class="main-title">GIGA TV - GLM TV</h1>
+      <h2 class="main-subtitle">Señal Internacional</h2>
+      <p class="main-description">
+        En alianza estratégica con Giga TV, transmitimos una programación musical 24/7 con videoclips, reportajes, coberturas especiales y las entrevistas de televisión a nuestros artistas referentes.
+      </p>
+    </div>
+
+    <!-- REPRODUCTOR -->
+    <div class="tv-player-container" id="tvPlayerBox">
+      
+      <!-- BARRA SUPERIOR CON TEXTO ORIGINAL -->
+      <div class="tv-player-header">
+        <div class="tv-brand-badge">
+          <i class="fas fa-tv"></i> GIGA TV & GOLD LABEL MUSIC TV
+        </div>
+        <div class="live-indicator">
+          <span class="live-dot"></span> EN DIRECTO · HD
+        </div>
+      </div>
+
+      <!-- CONTENEDOR DE EMISIÓN CON MOSCA FIJA SOBRE EL VÍDEO -->
+      <div class="tv-iframe-wrapper">
+        <!-- Logotipo tipo mosca fijo sobre la emisión -->
+        <img src="https://i.postimg.cc/j29NzMYR/Gold_Label_Music_logo.png" alt="Gold Label Music" class="tv-watermark-logo">
+        <button class="tv-fullscreen-trigger" type="button" onclick="togglePlayerFullscreen()" aria-label="Ampliar o salir de pantalla completa" title="Ampliar o salir de pantalla completa"><i class="fas fa-expand" aria-hidden="true"></i></button>
+        
+        <iframe
+          src="https://streamtv2.elitecomunicacion.cloud/live-stream-video-widget/gigatv?autoplay=0&muted=0"
+          title="Giga TV - Gold Label Music TV"
+          loading="eager"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allow="autoplay; picture-in-picture">
+        </iframe>
+      </div>
+
+      <div class="tv-player-footer">
+        <div class="tv-status">
+          <span class="tv-status-item"><i class="fas fa-signal"></i> Emisión HD</span>
+          <span class="tv-status-item"><i class="fas fa-music"></i> Cadena Musical</span>
+        </div>
+        <div>
+          <i class="fas fa-globe"></i> Transmisión Global
+        </div>
+      </div>
+    </div>
+
+    <!-- TARJETA INFORMATIVA INFERIOR -->
+    <div class="tv-grid-info">
+      <div class="tv-info-card">
+        <i class="fas fa-microphone-alt"></i>
+        <h3>Entrevistas Exclusivas</h3>
+        <p>Conversaciones en plató con nuestros artistas estelares, lanzamientos y primicias discográficas.</p>
+      </div>
+
+      <div class="tv-info-card">
+        <i class="fas fa-film"></i>
+        <h3>Videoclips & Estrenos</h3>
+        <p>La mejor selección audiovisual y las novedades más potentes del mercado internacional.</p>
+      </div>
+
+      <div class="tv-info-card">
+        <i class="fas fa-broadcast-tower"></i>
+        <h3>Reportajes & Coberturas</h3>
+        <p>Especiales desde festivales, eventos y backstage de las giras más importantes.</p>
+      </div>
+    </div>
+
+  </div> <!-- /#app-container -->
+
+  <!-- FOOTER GLOBAL -->
+  <footer class="footer">
+    <div class="social-icons">
+      <!-- CAMBIAR ENLACE: perfil de Facebook; edita href. -->
+      <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <!-- CAMBIAR ENLACE: perfil de Instagram; edita href. -->
+      <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <!-- CAMBIAR ENLACE: perfil de TikTok; edita href. -->
+      <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <!-- CAMBIAR ENLACE: canal de YouTube; edita href. -->
+      <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <!-- CAMBIAR ENLACE: sitio web; edita href. -->
+      <a href="https://www.goldlabelmusic.com/" target="_blank" rel="noopener noreferrer" aria-label="Sitio web"><i class="fas fa-globe"></i></a>
+    </div>
+
+    <!-- Este botón abre el menú de compartir; los enlaces de cada red se editan en .share-grid más abajo. -->
+    <button class="share-trigger" type="button" onclick="openShareOverlay()" aria-label="Compartir todo">
+      <i class="fas fa-share-alt"></i> Compartir todo
+    </button>
+
+    <p><a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">info@goldlabelmusic.com</a></p>
+    <p>© 2026 Gold Label Music</p>
+
+    <div class="footer-links">
+      <a href="https://www.goldlabelmusic.com/privacidad" target="_blank">Política de Privacidad</a>
+      <a href="https://www.goldlabelmusic.com/cookies" target="_blank">Política de Cookies</a>
+    </div>
+  </footer>
+
+  <!-- OVERLAY COMPARTIR -->
+  <div id="share-overlay" class="share-overlay" aria-hidden="true">
+    <div class="share-modal" role="dialog" aria-modal="true">
+      <div class="share-header">
+        <div class="share-title">Compartir Gold Label Music</div>
+        <button class="share-close" type="button" onclick="closeShareOverlay()">&times;</button>
+      </div>
+
+      <div class="share-grid">
+        <!-- CAMBIAR ENLACE DE COMPARTIR: Facebook. Sustituye la URL del sitio dentro de u=. -->
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.goldlabelmusic.com" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-facebook-f"></i> Facebook
+        </a>
+        <!-- CAMBIAR ENLACE DE COMPARTIR: X. Actualiza url= y el texto después de text=. -->
+        <a href="https://twitter.com/intent/tweet?url=https://www.goldlabelmusic.com&text=Descubre%20Gold%20Label%20Music" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-x-twitter"></i> X (Twitter)
+        </a>
+        <!-- CAMBIAR ENLACE DE COMPARTIR: WhatsApp. Sustituye la URL que aparece después del texto. -->
+        <a href="https://api.whatsapp.com/send?text=Descubre%20Gold%20Label%20Music%20https://www.goldlabelmusic.com" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <!-- CAMBIAR ENLACE DE COMPARTIR: LinkedIn. Sustituye la URL después de url=. -->
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.goldlabelmusic.com" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-linkedin-in"></i> LinkedIn
+        </a>
+        <!-- CAMBIAR ENLACE DE COMPARTIR: correo. Edita el asunto y el enlace dentro de mailto:. -->
+        <a href="mailto:?subject=Gold%20Label%20Music&body=Descubre%20Gold%20Label%20Music%20en%20https://www.goldlabelmusic.com">
+          <i class="fas fa-envelope"></i> Email
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       3. LÓGICA JAVASCRIPT (MODULAR)
+  ============================================================ -->
+  <script>
+    /* Pantalla completa sobre el contenedor: el logo queda dentro y mantiene su posición. */
+    async function togglePlayerFullscreen() {
+      const player = document.querySelector('.tv-iframe-wrapper');
+      if (!player) return;
+      if (player.classList.contains('is-page-fullscreen')) {
+        player.classList.remove('is-page-fullscreen');
+        return;
+      }
+      try {
+        const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+        if (fullscreenElement === player) {
+          if (document.exitFullscreen) await document.exitFullscreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+          return;
+        }
+        if (player.requestFullscreen) await player.requestFullscreen();
+        else if (player.webkitRequestFullscreen) player.webkitRequestFullscreen();
+        else player.classList.add('is-page-fullscreen');
+      } catch (error) {
+        console.warn('No se pudo activar la pantalla completa del reproductor.', error);
+        player.classList.add('is-page-fullscreen');
+      }
+    }
+
+    /* MODAL COMPARTIR */
+    function openShareOverlay() {
+      const overlay = document.getElementById('share-overlay');
+      if (!overlay) return;
+      overlay.style.display = 'flex';
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeShareOverlay() {
+      const overlay = document.getElementById('share-overlay');
+      if (!overlay) return;
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const overlay = document.getElementById('share-overlay');
+      if (!overlay) return;
+
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          closeShareOverlay();
+        }
+      });
+
+      /* ANIMACIÓN Y DESPLAZAMIENTO MÓVIL A PARTIR DEL TERCER BOTÓN */
+      const tabsContainer = document.getElementById('navTabsContainer');
+      const tabs = tabsContainer ? tabsContainer.querySelectorAll('.nav-tab') : [];
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', function() {
+          if (window.innerWidth <= 1024 && index >= 2) {
+            const margin = 20;
+            const targetLeft = Math.max(0, this.offsetLeft - margin);
+            tabsContainer.scrollTo({
+              left: targetLeft,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeShareOverlay();
+      }
+    });
+  </script>
+</body>
+</html>
+
+
