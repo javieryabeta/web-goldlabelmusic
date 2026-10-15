@@ -30,6 +30,10 @@
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
+    body.fullscreen-lock {
+      overflow: hidden;
+    }
+
     #app-container {
       box-sizing: border-box;
       max-width: 1200px;
@@ -55,6 +59,8 @@
     }
 
     .tv-player-header {
+      position: relative;
+      z-index: 3;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -128,18 +134,95 @@
       border: 0;
     }
 
-    /* Mosca visible en reproducción normal */
+    /* Mosca en reproducción normal y sobre el reproductor ampliado */
     .tv-watermark-logo {
       position: absolute;
       top: 18px;
       left: 14px;
-      z-index: 2;
+      z-index: 3;
       width: 70px !important;
       max-width: 70px;
       height: auto;
       pointer-events: none;
       filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
       opacity: 0.95;
+    }
+
+    /* Fullscreen propio: amplía todo el reproductor */
+    .tv-player-container:fullscreen,
+    .tv-player-container:-webkit-full-screen,
+    .tv-player-container.is-page-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483646;
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      max-width: none;
+      height: 100vh;
+      height: 100dvh;
+      margin: 0;
+      overflow: hidden;
+      border: 0;
+      border-radius: 0;
+      background: #000;
+    }
+
+    .tv-player-container:fullscreen .tv-iframe-wrapper,
+    .tv-player-container:-webkit-full-screen .tv-iframe-wrapper,
+    .tv-player-container.is-page-fullscreen .tv-iframe-wrapper {
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+      padding-top: 0;
+    }
+
+    .tv-player-container:fullscreen .tv-iframe-wrapper iframe,
+    .tv-player-container:-webkit-full-screen .tv-iframe-wrapper iframe,
+    .tv-player-container.is-page-fullscreen .tv-iframe-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Botón para pantalla completa, colocado sobre el botón nativo */
+    .tv-fullscreen-button {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 0;
+      border-radius: 5px;
+      background: var(--gold);
+      color: #111;
+      font-size: 16px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease, background 0.2s ease;
+    }
+
+    .tv-player-container:hover .tv-fullscreen-button,
+    .tv-fullscreen-button:focus-visible,
+    .tv-player-container:fullscreen .tv-fullscreen-button,
+    .tv-player-container:-webkit-full-screen .tv-fullscreen-button,
+    .tv-player-container.is-page-fullscreen .tv-fullscreen-button {
+      opacity: 1;
+    }
+
+    .tv-fullscreen-button:hover {
+      background: var(--blue);
+    }
+
+    @media (hover: none) {
+      .tv-fullscreen-button {
+        opacity: 1;
+      }
     }
 
     /* Navegación de escritorio */
@@ -420,7 +503,7 @@
         padding: 16px 10px 20px;
       }
 
-      /* Fila desplazable en móvil */
+      /* Fila deslizable de navegación */
       .tabs-header {
         justify-content: flex-start;
         flex-wrap: nowrap;
@@ -440,6 +523,7 @@
 
       .nav-tab {
         padding: 8px 16px;
+        scroll-snap-align: start;
       }
 
       .tv-player-header {
@@ -458,11 +542,20 @@
         font-size: 9px;
       }
 
+      /* Mosca más pequeña en móvil, a la misma altura relativa */
       .tv-watermark-logo {
         top: 18px;
-        left: 14px;
-        width: 70px !important;
-        max-width: 70px;
+        left: 10px;
+        width: 48px !important;
+        max-width: 48px;
+      }
+
+      .tv-fullscreen-button {
+        right: 8px;
+        bottom: 8px;
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
       }
 
       .tv-grid-info {
@@ -500,6 +593,7 @@
 
 <body>
   <main id="app-container">
+
     <section class="tv-player-container" id="tvPlayerBox" aria-label="Giga TV en directo">
       <div class="tv-player-header">
         <div class="tv-brand-badge">
@@ -519,7 +613,18 @@
           alt="Gold Label Music"
           class="tv-watermark-logo">
 
+        <!-- Este botón solicita fullscreen de todo el contenedor del reproductor. -->
+        <button
+          class="tv-fullscreen-button"
+          id="tvFullscreenButton"
+          type="button"
+          aria-label="Activar pantalla completa"
+          title="Activar pantalla completa">
+          <i class="fas fa-expand" aria-hidden="true"></i>
+        </button>
+
         <iframe
+          id="tvStreamFrame"
           src="https://streamtv2.elitecomunicacion.cloud/live-stream-video-widget/gigatv?autoplay=0&amp;muted=0&amp;mute=0&amp;playsinline=1"
           title="Giga TV - Gold Label Music TV"
           loading="eager"
@@ -726,6 +831,73 @@
   </div>
 
   <script>
+    async function togglePlayerFullscreen() {
+      const player = document.getElementById("tvPlayerBox");
+      const button = document.getElementById("tvFullscreenButton");
+      if (!player) return;
+
+      const fullscreenElement =
+        document.fullscreenElement || document.webkitFullscreenElement;
+
+      if (fullscreenElement === player) {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        return;
+      }
+
+      if (player.classList.contains("is-page-fullscreen")) {
+        player.classList.remove("is-page-fullscreen");
+        document.body.classList.remove("fullscreen-lock");
+        return;
+      }
+
+      try {
+        if (player.requestFullscreen) {
+          await player.requestFullscreen({ navigationUI: "hide" });
+        } else if (player.webkitRequestFullscreen) {
+          player.webkitRequestFullscreen();
+        } else {
+          player.classList.add("is-page-fullscreen");
+          document.body.classList.add("fullscreen-lock");
+        }
+      } catch (error) {
+        player.classList.add("is-page-fullscreen");
+        document.body.classList.add("fullscreen-lock");
+      }
+
+      if (button) button.blur();
+    }
+
+    function syncFullscreenButton() {
+      const player = document.getElementById("tvPlayerBox");
+      const button = document.getElementById("tvFullscreenButton");
+      if (!player || !button) return;
+
+      const isFullscreen =
+        document.fullscreenElement === player ||
+        document.webkitFullscreenElement === player ||
+        player.classList.contains("is-page-fullscreen");
+
+      const icon = button.querySelector("i");
+      if (icon) {
+        icon.className = isFullscreen ? "fas fa-compress" : "fas fa-expand";
+      }
+
+      button.setAttribute(
+        "aria-label",
+        isFullscreen ? "Salir de pantalla completa" : "Activar pantalla completa"
+      );
+
+      if (isFullscreen) {
+        document.body.classList.add("fullscreen-lock");
+      } else {
+        document.body.classList.remove("fullscreen-lock");
+      }
+    }
+
     function openShareOverlay() {
       const overlay = document.getElementById("share-overlay");
       if (!overlay) return;
@@ -746,6 +918,14 @@
 
     document.addEventListener("DOMContentLoaded", function() {
       const overlay = document.getElementById("share-overlay");
+      const fullscreenButton = document.getElementById("tvFullscreenButton");
+
+      if (fullscreenButton) {
+        fullscreenButton.addEventListener("click", togglePlayerFullscreen);
+      }
+
+      document.addEventListener("fullscreenchange", syncFullscreenButton);
+      document.addEventListener("webkitfullscreenchange", syncFullscreenButton);
 
       if (overlay) {
         overlay.addEventListener("click", function(event) {
@@ -755,51 +935,49 @@
         });
       }
 
-      /*
-        Movimiento adaptado de Booking:
-        desde el tercer botón, lleva el botón pulsado
-        hacia el inicio visible de la fila.
-      */
+      /* Desplazamiento de navegación inspirado en Booking */
       const tabsContainer = document.getElementById("navTabsContainer");
       const tabs = tabsContainer
         ? Array.from(tabsContainer.querySelectorAll(".nav-tab"))
         : [];
 
-      if (!tabsContainer) return;
+      if (tabsContainer) {
+        tabs.forEach(function(tab, index) {
+          tab.addEventListener("click", function() {
+            if (window.innerWidth > 1024 || index < 2) return;
 
-      tabs.forEach(function(tab, index) {
-        tab.addEventListener("click", function() {
-          if (window.innerWidth > 1024 || index < 2) return;
+            window.requestAnimationFrame(function() {
+              const containerRect = tabsContainer.getBoundingClientRect();
+              const tabRect = tab.getBoundingClientRect();
+              const margin = 20;
+              const targetLeft = Math.max(
+                0,
+                tabsContainer.scrollLeft + tabRect.left - containerRect.left - margin
+              );
 
-          window.setTimeout(function() {
-            const margin = 20;
-            const targetLeft = Math.max(0, tab.offsetLeft - margin);
-
-            tabsContainer.scrollTo({
-              left: targetLeft,
-              behavior: "smooth"
+              tabsContainer.scrollTo({
+                left: targetLeft,
+                behavior: "smooth"
+              });
             });
-          }, 60);
+          });
         });
-      });
 
-      const activeTab = tabsContainer.querySelector(".nav-tab.active");
-      if (activeTab && window.innerWidth <= 1024) {
-        tabsContainer.scrollLeft = Math.max(0, activeTab.offsetLeft - 20);
-      }
-
-      window.addEventListener("resize", function() {
-        if (window.innerWidth <= 1024) {
-          const currentActiveTab = tabsContainer.querySelector(".nav-tab.active");
-          if (currentActiveTab) {
-            tabsContainer.scrollLeft = Math.max(0, currentActiveTab.offsetLeft - 20);
-          }
+        const activeTab = tabsContainer.querySelector(".nav-tab.active");
+        if (activeTab && window.innerWidth <= 1024) {
+          tabsContainer.scrollLeft = Math.max(0, activeTab.offsetLeft - 20);
         }
-      });
+      }
     });
 
     document.addEventListener("keydown", function(event) {
       if (event.key === "Escape") {
+        const player = document.getElementById("tvPlayerBox");
+        if (player && player.classList.contains("is-page-fullscreen")) {
+          player.classList.remove("is-page-fullscreen");
+          document.body.classList.remove("fullscreen-lock");
+        }
+
         closeShareOverlay();
       }
     });
