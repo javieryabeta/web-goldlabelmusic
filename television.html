@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Giga TV - GLM TV | Señal Internacional</title>
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
     :root {
       --gold: #f4b815;
       --blue: #5284c4;
       --bg1: #0b1630;
-      --bg2: #071227;
       --text: #ffffff;
       --muted: #9aa3b8;
       --tabs-height: 64px;
@@ -21,23 +21,213 @@
 
     html,
     body {
+      width: 100%;
       margin: 0;
       padding: 0;
-      width: 100%;
       overflow-x: hidden;
       background: var(--bg1);
       color: var(--text);
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
-    /* Navegación responsive debajo del reproductor */
+    #app-container {
+      box-sizing: border-box;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 30px 20px 20px;
+      border-radius: 16px;
+      background: var(--bg1);
+    }
+
+    /* Reproductor */
+    .tv-player-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto 22px;
+      overflow: hidden;
+      border: 1px solid rgba(244, 184, 21, 0.3);
+      border-radius: 12px;
+      background: #000;
+      box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(244, 184, 21, 0.15);
+    }
+
+    .tv-player-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-sizing: border-box;
+      min-height: 46px;
+      padding: 10px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(7, 18, 39, 0.95);
+    }
+
+    .tv-brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tv-brand-badge i {
+      flex: 0 0 auto;
+      color: var(--gold);
+    }
+
+    .live-indicator {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      background: rgba(244, 184, 21, 0.14);
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+      animation: pulseLive 1.5s infinite;
+    }
+
+    @keyframes pulseLive {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .tv-iframe-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+
+    .tv-iframe-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /*
+      La mosca conserva la misma posición dentro del reproductor
+      tanto en tamaño normal como en pantalla completa.
+    */
+    .tv-watermark-logo {
+      position: absolute;
+      top: 18px;
+      left: 14px;
+      z-index: 2147483647;
+      width: 70px !important;
+      max-width: 70px;
+      height: auto;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
+      opacity: 0.95;
+    }
+
+    .tv-iframe-wrapper:fullscreen,
+    .tv-iframe-wrapper:-webkit-full-screen,
+    .tv-iframe-wrapper.is-page-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483646;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      padding-top: 0;
+      background: #000;
+    }
+
+    .tv-iframe-wrapper:fullscreen iframe,
+    .tv-iframe-wrapper:-webkit-full-screen iframe,
+    .tv-iframe-wrapper.is-page-fullscreen iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tv-iframe-wrapper:fullscreen .tv-watermark-logo,
+    .tv-iframe-wrapper:-webkit-full-screen .tv-watermark-logo,
+    .tv-iframe-wrapper.is-page-fullscreen .tv-watermark-logo {
+      position: absolute;
+      top: 18px;
+      left: 14px;
+      width: 70px !important;
+      max-width: 70px;
+    }
+
+    /* Botón propio de pantalla completa, anclado a la esquina del reproductor */
+    .tv-fullscreen-trigger {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      z-index: 2147483647;
+      display: grid;
+      place-items: center;
+      box-sizing: border-box;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      background: var(--gold);
+      color: #071227;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease, background 0.2s ease;
+    }
+
+    .tv-player-container:hover .tv-fullscreen-trigger,
+    .tv-fullscreen-trigger:focus-visible {
+      opacity: 1;
+    }
+
+    .tv-fullscreen-trigger:hover {
+      background: var(--blue);
+    }
+
+    .tv-iframe-wrapper:fullscreen .tv-fullscreen-trigger,
+    .tv-iframe-wrapper:-webkit-full-screen .tv-fullscreen-trigger,
+    .tv-iframe-wrapper.is-page-fullscreen .tv-fullscreen-trigger {
+      position: fixed;
+      right: 8px;
+      bottom: 8px;
+    }
+
+    @media (hover: none) {
+      .tv-fullscreen-trigger {
+        opacity: 1;
+      }
+    }
+
+    /* Navegación: fila centrada en escritorio */
     .tabs-header {
       position: relative;
       z-index: 1;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: center;
+      flex-wrap: wrap;
       gap: 10px;
       box-sizing: border-box;
       width: 100%;
@@ -86,191 +276,6 @@
       color: #0b1630;
     }
 
-    /* Contenedor principal */
-    #app-container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 30px 20px 20px;
-      border-radius: 16px;
-      background: var(--bg1);
-      box-sizing: border-box;
-    }
-
-    /* Reproductor */
-    .tv-player-container {
-      position: relative;
-      width: 100%;
-      max-width: 1000px;
-      margin: 0 auto 22px;
-      overflow: hidden;
-      border: 1px solid rgba(244, 184, 21, 0.3);
-      border-radius: 12px;
-      background: #000;
-      box-shadow:
-        0 12px 35px rgba(0, 0, 0, 0.8),
-        0 0 20px rgba(244, 184, 21, 0.15);
-    }
-
-    .tv-player-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(7, 18, 39, 0.95);
-      box-sizing: border-box;
-    }
-
-    .tv-brand-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .tv-brand-badge i {
-      color: var(--gold);
-    }
-
-    .live-indicator {
-      display: flex;
-      flex: 0 0 auto;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px;
-      border: 1px solid var(--gold);
-      border-radius: 20px;
-      background: rgba(244, 184, 21, 0.14);
-      color: #fff;
-      font-size: 11px;
-      font-weight: bold;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 8px var(--gold);
-      animation: pulseLive 1.5s infinite;
-    }
-
-    @keyframes pulseLive {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .tv-iframe-wrapper {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%;
-      background: #000;
-    }
-
-    .tv-iframe-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    /* Pantalla completa: amplía el contenedor y mantiene la mosca visible */
-    .tv-iframe-wrapper:fullscreen,
-    .tv-iframe-wrapper:-webkit-full-screen,
-    .tv-iframe-wrapper.is-page-fullscreen {
-      position: fixed;
-      inset: 0;
-      z-index: 2147483646;
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      padding-top: 0;
-      background: #000;
-    }
-
-    .tv-iframe-wrapper:fullscreen iframe,
-    .tv-iframe-wrapper:-webkit-full-screen iframe,
-    .tv-iframe-wrapper.is-page-fullscreen iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Posición de la mosca en pantalla completa */
-    .tv-iframe-wrapper:fullscreen .tv-watermark-logo,
-    .tv-iframe-wrapper:-webkit-full-screen .tv-watermark-logo,
-    .tv-iframe-wrapper.is-page-fullscreen .tv-watermark-logo {
-      position: fixed;
-      top: clamp(42px, 7vh, 72px);
-      left: clamp(12px, 4vw, 50px);
-      width: 70px;
-    }
-
-    /* Botón propio de pantalla completa */
-    .tv-fullscreen-trigger {
-      position: absolute;
-      right: 8px;
-      bottom: 8px;
-      z-index: 2147483647;
-      display: grid;
-      place-items: center;
-      width: 40px;
-      height: 40px;
-      border: 0;
-      border-radius: 4px;
-      background: var(--gold);
-      color: #071227;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.2s ease, background 0.2s ease;
-    }
-
-    .tv-player-container:hover .tv-fullscreen-trigger,
-    .tv-fullscreen-trigger:focus-visible {
-      opacity: 1;
-    }
-
-    .tv-fullscreen-trigger:hover {
-      background: var(--blue);
-    }
-
-    .tv-iframe-wrapper:fullscreen .tv-fullscreen-trigger,
-    .tv-iframe-wrapper:-webkit-full-screen .tv-fullscreen-trigger,
-    .tv-iframe-wrapper.is-page-fullscreen .tv-fullscreen-trigger {
-      position: fixed;
-      right: 8px;
-      bottom: 8px;
-    }
-
-    @media (hover: none) {
-      .tv-fullscreen-trigger {
-        opacity: 1;
-      }
-    }
-
-    /* Mosca / logotipo */
-    .tv-watermark-logo {
-      position: absolute;
-      top: 18px;
-      left: 14px;
-      z-index: 2147483647;
-      width: 70px;
-      height: auto;
-      pointer-events: none;
-      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
-      opacity: 0.95;
-    }
-
     /* Título, subtítulo y descripción */
     .tv-header-block {
       margin-bottom: 28px;
@@ -298,7 +303,6 @@
       margin: 0 auto;
       color: #fff;
       font-size: 15px;
-      font-weight: 400;
       line-height: 1.6;
     }
 
@@ -350,7 +354,7 @@
       line-height: 1.4;
     }
 
-    /* Pie de página: mismo fondo que el resto de la página */
+    /* Pie de página con el mismo fondo de la página */
     .footer {
       margin-top: 48px;
       padding: 24px 12px 60px;
@@ -413,7 +417,6 @@
       color: var(--blue);
       font-size: 12px;
       text-decoration: none;
-      cursor: pointer;
     }
 
     .footer-links a:hover {
@@ -438,13 +441,13 @@
     }
 
     .share-modal {
+      box-sizing: border-box;
       width: 92vw;
       max-width: 420px;
       padding: 20px;
       border: 1px solid rgba(82, 132, 196, 0.4);
       border-radius: 16px;
       background: var(--bg1);
-      box-sizing: border-box;
     }
 
     .share-header {
@@ -495,6 +498,50 @@
         padding: 16px 10px 20px;
       }
 
+      /* En móvil la navegación pasa a una sola fila desplazable */
+      .tabs-header {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        gap: 8px;
+        overflow-x: auto;
+        margin-bottom: 24px;
+        padding: 10px 4px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .tabs-header::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav-tab {
+        padding: 8px 12px;
+      }
+
+      .tv-player-header {
+        gap: 8px;
+        padding: 10px;
+      }
+
+      /* Mantiene título e indicador en una misma línea */
+      .tv-brand-badge {
+        gap: 6px;
+        font-size: 11px;
+      }
+
+      .live-indicator {
+        gap: 5px;
+        padding: 4px 7px;
+        font-size: 9px;
+      }
+
+      .tv-watermark-logo {
+        top: 18px;
+        left: 14px;
+        width: 70px !important;
+        max-width: 70px;
+      }
+
       .tv-grid-info {
         grid-template-columns: 1fr;
       }
@@ -507,37 +554,29 @@
         font-size: 16px;
       }
 
-      .tv-player-header {
-        gap: 8px;
-        padding: 9px 10px;
-      }
-
-      .tv-brand-badge {
-        gap: 6px;
-        font-size: 13px;
-      }
-
-      .live-indicator {
-        gap: 5px;
-        padding: 4px 7px;
-        font-size: 11px;
-      }
-
-      .tv-watermark-logo {
-        top: 18px;
-        left: 14px;
-        width: 70px;
-      }
-
-      .nav-tab {
-        padding: 8px 12px;
+      .tv-fullscreen-trigger {
+        width: 36px;
+        height: 36px;
+        right: 8px;
+        bottom: 8px;
       }
     }
 
-    @media (max-width: 390px) {
+    @media (max-width: 360px) {
       .tv-player-header {
-        flex-wrap: wrap;
-        justify-content: space-between;
+        gap: 5px;
+        padding: 8px;
+      }
+
+      .tv-brand-badge {
+        gap: 4px;
+        font-size: 10px;
+      }
+
+      .live-indicator {
+        gap: 4px;
+        padding: 3px 5px;
+        font-size: 8px;
       }
     }
   </style>
@@ -546,8 +585,8 @@
 <body>
   <main id="app-container">
 
-    <!-- Reproductor, primero al entrar en la página -->
-    <section class="tv-player-container" id="tvPlayerBox" aria-label="Giga Tv en directo">
+    <!-- Reproductor primero -->
+    <section class="tv-player-container" id="tvPlayerBox" aria-label="Giga TV en directo">
       <div class="tv-player-header">
         <div class="tv-brand-badge">
           <i class="fas fa-tv" aria-hidden="true"></i>
@@ -576,18 +615,21 @@
         </button>
 
         <iframe
-          src="https://streamtv2.elitecomunicacion.cloud/live-stream-video-widget/gigatv?autoplay=0&amp;muted=0"
+          src="https://streamtv2.elitecomunicacion.cloud/live-stream-video-widget/gigatv?autoplay=0&amp;muted=0&amp;playsinline=1"
           title="Giga TV - Gold Label Music TV"
           loading="eager"
           referrerpolicy="strict-origin-when-cross-origin"
-          allow="autoplay; picture-in-picture">
+          allow="autoplay; encrypted-media; picture-in-picture">
         </iframe>
       </div>
     </section>
 
     <!-- Navegación debajo del reproductor -->
     <nav class="tabs-header" id="navTabsContainer" aria-label="Navegación principal">
-      <a href="https://www.goldlabelmusic.com/inicio" class="nav-tab active">
+      <a
+        href="https://www.goldlabelmusic.com/inicio"
+        class="nav-tab active"
+        target="_top">
         <i class="fas fa-home" aria-hidden="true"></i> Inicio
       </a>
 
@@ -606,33 +648,38 @@
         <i class="fas fa-gem" aria-hidden="true"></i> Branding
       </a>
 
-      <a href="https://www.goldlabelmusic.com/booking" class="nav-tab">
+      <a
+        href="https://www.goldlabelmusic.com/booking"
+        class="nav-tab"
+        target="_top">
         <i class="fas fa-users" aria-hidden="true"></i> Booking
       </a>
 
-      <a href="https://www.goldlabelmusic.com/radio" class="nav-tab">
+      <a
+        href="https://www.goldlabelmusic.com/radio"
+        class="nav-tab"
+        target="_top">
         <i class="fas fa-podcast" aria-hidden="true"></i> Radio
       </a>
 
       <a
         href="https://lagigaradio.es/"
         class="nav-tab"
-        target="_blank"
-        rel="noopener noreferrer">
+        target="_top">
         <i class="fas fa-tv" aria-hidden="true"></i> Giga Radio TV
       </a>
     </nav>
 
-    <!-- Título, subtítulo y texto debajo de los botones -->
+    <!-- Título, subtítulo y texto debajo de la navegación -->
     <section class="tv-header-block">
-      <h1 class="main-title">Giga Tv - Glm Tv</h1>
+      <h1 class="main-title">GIGA TV - GLM TV</h1>
       <h2 class="main-subtitle">Señal Internacional</h2>
       <p class="main-description">
-        En alianza estratégica con Giga Tv, transmitimos una programación musical 24/7 con videoclips, reportajes, coberturas especiales y las entrevistas de televisión a nuestros artistas referentes.
+        En alianza estratégica con Giga TV, transmitimos una programación musical 24/7 con videoclips, reportajes, coberturas especiales y las entrevistas de televisión a nuestros artistas referentes.
       </p>
     </section>
 
-    <!-- Tarjetas finales -->
+    <!-- Tarjetas al final -->
     <section class="tv-grid-info" aria-label="Más contenido">
       <a
         class="tv-info-card"
@@ -668,7 +715,7 @@
 
   <footer class="footer">
     <div class="social-icons">
-      <!-- Enlaces actuales de redes sociales -->
+      <!-- Enlaces de redes sociales -->
       <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
         <i class="fab fa-facebook-f" aria-hidden="true"></i>
       </a>
@@ -681,7 +728,11 @@
       <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
         <i class="fab fa-youtube" aria-hidden="true"></i>
       </a>
-      <a href="https://www.goldlabelmusic.com/television" target="_blank" rel="noopener noreferrer" aria-label="Televisión Gold Label Music">
+      <a
+        href="https://www.goldlabelmusic.com/television"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Televisión Gold Label Music">
         <i class="fas fa-globe" aria-hidden="true"></i>
       </a>
     </div>
@@ -708,12 +759,18 @@
     </div>
   </footer>
 
-  <!-- Ventana para compartir la página de televisión -->
+  <!-- Compartir la página de televisión -->
   <div id="share-overlay" class="share-overlay" aria-hidden="true">
     <div class="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-title">
       <div class="share-header">
         <div class="share-title" id="share-title">Compartir Gold Label Music</div>
-        <button class="share-close" type="button" onclick="closeShareOverlay()" aria-label="Cerrar">&times;</button>
+        <button
+          class="share-close"
+          type="button"
+          onclick="closeShareOverlay()"
+          aria-label="Cerrar">
+          &times;
+        </button>
       </div>
 
       <div class="share-grid">
@@ -808,12 +865,31 @@
 
     document.addEventListener("DOMContentLoaded", function() {
       const overlay = document.getElementById("share-overlay");
-      if (!overlay) return;
 
-      overlay.addEventListener("click", function(event) {
-        if (event.target === overlay) {
-          closeShareOverlay();
-        }
+      if (overlay) {
+        overlay.addEventListener("click", function(event) {
+          if (event.target === overlay) {
+            closeShareOverlay();
+          }
+        });
+      }
+
+      /* En móvil, desplaza suavemente la fila al pulsar desde el tercer botón. */
+      const tabsContainer = document.getElementById("navTabsContainer");
+      const tabs = tabsContainer
+        ? tabsContainer.querySelectorAll(".nav-tab")
+        : [];
+
+      tabs.forEach(function(tab, index) {
+        tab.addEventListener("click", function() {
+          if (window.innerWidth <= 768 && index >= 2) {
+            const targetLeft = Math.max(0, tab.offsetLeft - 16);
+            tabsContainer.scrollTo({
+              left: targetLeft,
+              behavior: "smooth"
+            });
+          }
+        });
       });
     });
 
@@ -825,4 +901,3 @@
   </script>
 </body>
 </html>
-``)
