@@ -156,8 +156,8 @@
     }
 
     /*
-      En fullscreen se baja la mosca hasta el comienzo del vídeo 16:9.
-      Así se adapta al espacio negro superior del reproductor en cada pantalla.
+      En fullscreen, la mosca se alinea con el inicio del vídeo 16:9.
+      El cálculo se adapta al espacio negro superior del reproductor.
     */
     .tv-player-container:fullscreen .tv-watermark-logo,
     .tv-player-container:-webkit-full-screen .tv-watermark-logo,
@@ -204,7 +204,7 @@
       height: 100%;
     }
 
-    /* Botón fullscreen en la barra superior, fuera de la zona inferior del móvil */
+    /* Botón fullscreen en la barra superior */
     .tv-fullscreen-button {
       display: grid;
       flex: 0 0 34px;
@@ -503,7 +503,7 @@
         padding: 16px 10px 20px;
       }
 
-      /* Navegación horizontal desplazable en móvil */
+      /* La fila se puede desplazar manualmente en móvil */
       .tabs-header {
         justify-content: flex-start;
         flex-wrap: nowrap;
@@ -514,7 +514,6 @@
         padding: 10px 4px;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
       }
 
       .tabs-header::-webkit-scrollbar {
@@ -545,18 +544,26 @@
         font-size: 8px;
       }
 
+      /* Mosca móvil: mismo tamaño aproximado y altura que el logo de Giga TV */
+      .tv-watermark-logo {
+        top: 6px;
+        left: 10px;
+        width: 30px !important;
+        max-width: 30px;
+      }
+
+      .tv-player-container:fullscreen .tv-watermark-logo,
+      .tv-player-container:-webkit-full-screen .tv-watermark-logo,
+      .tv-player-container.is-page-fullscreen .tv-watermark-logo {
+        width: 30px !important;
+        max-width: 30px;
+      }
+
       .tv-fullscreen-button {
         flex-basis: 30px;
         width: 30px;
         height: 30px;
         font-size: 12px;
-      }
-
-      .tv-watermark-logo {
-        top: 18px;
-        left: 10px;
-        width: 70px !important;
-        max-width: 70px;
       }
 
       .tv-grid-info {
@@ -652,56 +659,49 @@
       <a
         href="https://www.goldlabelmusic.com/inicio"
         class="nav-tab active"
-        target="_blank"
-        rel="noopener noreferrer">
+        target="_top">
         <i class="fas fa-home" aria-hidden="true"></i> Inicio
       </a>
 
       <a
         href="https://www.goldlabelmusic.com/distribucion"
         class="nav-tab"
-        target="_blank"
-        rel="noopener noreferrer">
+        target="_top">
         <i class="fas fa-compact-disc" aria-hidden="true"></i> Distribución
       </a>
 
       <a
         href="https://www.goldlabelmusic.com/promocion"
         class="nav-tab"
-        target="_blank"
-        rel="noopener noreferrer">
+        target="_top">
         <i class="fas fa-bullhorn" aria-hidden="true"></i> Promoción
       </a>
 
       <a
         href="https://www.goldlabelmusic.com/branding"
         class="nav-tab"
-        target="_blank"
-        rel="noopener noreferrer">
+        target="_top">
         <i class="fas fa-gem" aria-hidden="true"></i> Branding
       </a>
 
       <a
         href="https://www.goldlabelmusic.com/booking"
         class="nav-tab"
-        target="_blank"
-        rel="noopener noreferrer">
+        target="_top">
         <i class="fas fa-users" aria-hidden="true"></i> Booking
       </a>
 
       <a
         href="https://www.goldlabelmusic.com/radio"
         class="nav-tab"
-        target="_blank"
-        rel="noopener noreferrer">
+        target="_top">
         <i class="fas fa-podcast" aria-hidden="true"></i> Radio
       </a>
 
       <a
         href="https://lagigaradio.es/"
         class="nav-tab"
-        target="_blank"
-        rel="noopener noreferrer">
+        target="_top">
         <i class="fas fa-tv" aria-hidden="true"></i> Giga Radio TV
       </a>
     </nav>
@@ -944,43 +944,6 @@
             closeShareOverlay();
           }
         });
-      }
-
-      /* Desplazamiento móvil como en Booking, activado desde el tercer botón */
-      const tabsContainer = document.getElementById("navTabsContainer");
-      const tabs = tabsContainer
-        ? Array.from(tabsContainer.querySelectorAll(".nav-tab"))
-        : [];
-
-      if (tabsContainer) {
-        tabs.forEach(function(tab, index) {
-          tab.addEventListener("click", function() {
-            if (window.innerWidth > 1024 || index < 2) return;
-
-            window.requestAnimationFrame(function() {
-              const containerRect = tabsContainer.getBoundingClientRect();
-              const tabRect = tab.getBoundingClientRect();
-              const margin = 20;
-              const targetLeft = Math.max(
-                0,
-                tabsContainer.scrollLeft +
-                  tabRect.left -
-                  containerRect.left -
-                  margin
-              );
-
-              tabsContainer.scrollTo({
-                left: targetLeft,
-                behavior: "smooth"
-              });
-            });
-          });
-        });
-
-        const activeTab = tabsContainer.querySelector(".nav-tab.active");
-        if (activeTab && window.innerWidth <= 1024) {
-          tabsContainer.scrollLeft = Math.max(0, activeTab.offsetLeft - 20);
-        }
       }
     });
 
