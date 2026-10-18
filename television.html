@@ -17,7 +17,9 @@
       --text: #ffffff;
       --muted: #9aa3b8;
       --tabs-height: 64px;
-      --player-height: min(56.25vw, calc(100vh - var(--tabs-height) - 120px));
+      --player-frame-height: min(56.25vw, calc(100vh - var(--tabs-height) - 120px));
+      --player-height: var(--player-frame-height);
+      --desktop-bottom-crop: clamp(36px, 4vw, 72px);
     }
 
     html,
@@ -158,7 +160,25 @@
     }
 
     @supports (height: 100dvh) {
-      :root { --player-height: min(56.25vw, calc(100dvh - var(--tabs-height) - 120px)); }
+      :root {
+        --player-frame-height: min(56.25vw, calc(100dvh - var(--tabs-height) - 120px));
+        --player-height: var(--player-frame-height);
+      }
+    }
+
+    /*
+      Escritorio: reduce la ventana visible por abajo.
+      El iframe conserva su altura original y sigue anclado arriba,
+      por lo que el recorte solo afecta a la franja inferior.
+    */
+    @media (min-width: 769px) {
+      :root {
+        --player-height: calc(var(--player-frame-height) - var(--desktop-bottom-crop));
+      }
+
+      .tv-iframe-wrapper iframe {
+        height: var(--player-frame-height);
+      }
     }
 
     .tv-fullscreen-button {
@@ -924,3 +944,4 @@
   </script>
 </body>
 </html>
+
