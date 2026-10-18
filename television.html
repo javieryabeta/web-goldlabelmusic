@@ -17,45 +17,69 @@
       --text: #ffffff;
       --muted: #9aa3b8;
       --tabs-height: 64px;
+      --player-height: min(56.25vw, calc(100vh - var(--tabs-height) - 120px));
     }
 
     html,
     body {
       width: 100%;
+      height: 100%;
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
+      overflow: hidden;
       background: var(--bg1);
       color: var(--text);
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
-    body.fullscreen-lock {
-      overflow: hidden;
-    }
+    body.fullscreen-lock { overflow: hidden; }
 
     #app-container {
+      position: fixed;
+      inset: 0;
       box-sizing: border-box;
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 30px 20px 20px;
-      border-radius: 16px;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
       background: var(--bg1);
     }
 
-    /* Reproductor */
+    .tv-fixed-shell {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      width: 100%;
+      background: var(--bg1);
+    }
+
+    .tv-content-scroll {
+      position: fixed;
+      top: calc(var(--player-height) + var(--tabs-height));
+      right: 0;
+      bottom: 0;
+      left: 0;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 24px 20px 0;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Reproductor limpio, a todo el ancho */
     .tv-player-container {
       position: relative;
       width: 100%;
-      max-width: 1000px;
-      margin: 0 auto 22px;
+      max-width: none;
+      margin: 0;
       overflow: hidden;
-      border: 1px solid rgba(244, 184, 21, 0.3);
-      border-radius: 12px;
+      border: 0;
+      border-radius: 0;
       background: #000;
-      box-shadow:
-        0 12px 35px rgba(0, 0, 0, 0.8),
-        0 0 20px rgba(244, 184, 21, 0.15);
+      box-shadow: none;
     }
 
     .tv-player-header {
@@ -128,9 +152,35 @@
     .tv-iframe-wrapper {
       position: relative;
       width: 100%;
-      padding-top: 56.25%;
+      height: var(--player-height);
+      padding-top: 0;
       background: #000;
     }
+
+    @supports (height: 100dvh) {
+      :root { --player-height: min(56.25vw, calc(100dvh - var(--tabs-height) - 120px)); }
+    }
+
+    .tv-fullscreen-button {
+      position: absolute;
+      bottom: 10px;
+      left: 48px;
+      z-index: 4;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 6px;
+      background: var(--gold);
+      color: #111;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .tv-fullscreen-button:hover,
+    .tv-fullscreen-button:focus-visible { background: var(--blue); }
 
     .tv-iframe-wrapper iframe {
       position: absolute;
@@ -139,31 +189,6 @@
       width: 100%;
       height: 100%;
       border: 0;
-    }
-
-    /* Mosca en reproducción normal */
-    .tv-watermark-logo {
-      position: absolute;
-      top: 18px;
-      left: 14px;
-      z-index: 3;
-      width: 70px !important;
-      max-width: 70px;
-      height: auto;
-      pointer-events: none;
-      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
-      opacity: 0.95;
-    }
-
-    /*
-      En fullscreen, la mosca se alinea con el inicio del vídeo 16:9.
-      El cálculo se adapta al espacio negro superior del reproductor.
-    */
-    .tv-player-container:fullscreen .tv-watermark-logo,
-    .tv-player-container:-webkit-full-screen .tv-watermark-logo,
-    .tv-player-container.is-page-fullscreen .tv-watermark-logo {
-      top: max(8px, calc((100% - 56.25vw) / 2 + 8px));
-      left: 14px;
     }
 
     /* Fullscreen de todo el reproductor */
@@ -204,42 +229,28 @@
       height: 100%;
     }
 
-    /* Botón fullscreen en la barra superior */
-    .tv-fullscreen-button {
-      display: grid;
-      flex: 0 0 34px;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      padding: 0;
-      border: 0;
-      border-radius: 5px;
-      background: var(--gold);
-      color: #111;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .tv-fullscreen-button:hover,
-    .tv-fullscreen-button:focus-visible {
-      background: var(--blue);
-    }
-
     /* Navegación de escritorio */
     .tabs-header {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 10px;
       box-sizing: border-box;
       width: 100%;
       min-height: var(--tabs-height);
-      margin: 0 auto 28px;
-      padding: 10px 8px;
+      margin: 0;
+      padding: 8px 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      background: var(--bg1);
     }
+
+    .tabs-header::-webkit-scrollbar { display: none; }
 
     .nav-tab {
       display: inline-flex;
@@ -499,26 +510,9 @@
     }
 
     @media (max-width: 768px) {
-      #app-container {
-        padding: 16px 10px 20px;
-      }
-
-      /* La fila se puede desplazar manualmente en móvil */
-      .tabs-header {
-        justify-content: flex-start;
-        flex-wrap: nowrap;
-        gap: 10px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        margin-bottom: 24px;
-        padding: 10px 4px;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .tabs-header::-webkit-scrollbar {
-        display: none;
-      }
+      :root { --tabs-height: 58px; }
+      .tv-content-scroll { padding: 20px 14px 0; }
+      .tabs-header { justify-content: flex-start; gap: 10px; padding: 8px; }
 
       .nav-tab {
         padding: 8px 16px;
@@ -544,23 +538,9 @@
         font-size: 8px;
       }
 
-      /* Mosca móvil: mismo tamaño aproximado y altura que el logo de Giga TV */
-      .tv-watermark-logo {
-        top: 6px;
-        left: 10px;
-        width: 30px !important;
-        max-width: 30px;
-      }
-
-      .tv-player-container:fullscreen .tv-watermark-logo,
-      .tv-player-container:-webkit-full-screen .tv-watermark-logo,
-      .tv-player-container.is-page-fullscreen .tv-watermark-logo {
-        width: 30px !important;
-        max-width: 30px;
-      }
-
       .tv-fullscreen-button {
-        flex-basis: 30px;
+        bottom: 8px;
+        left: 44px;
         width: 30px;
         height: 30px;
         font-size: 12px;
@@ -580,28 +560,8 @@
     }
 
     @media (max-width: 360px) {
-      .tv-player-header {
-        gap: 4px;
-        padding: 7px;
-      }
-
-      .tv-brand-badge {
-        gap: 4px;
-        font-size: 9px;
-      }
-
-      .tv-player-header-right {
-        gap: 4px;
-      }
-
-      .live-indicator {
-        gap: 3px;
-        padding: 3px 5px;
-        font-size: 7px;
-      }
-
       .tv-fullscreen-button {
-        flex-basis: 28px;
+        left: 42px;
         width: 28px;
         height: 28px;
         font-size: 11px;
@@ -612,18 +572,19 @@
 
 <body>
   <main id="app-container">
-    <section class="tv-player-container" id="tvPlayerBox" aria-label="Giga TV en directo">
-      <div class="tv-player-header">
-        <div class="tv-brand-badge">
-          <i class="fas fa-tv" aria-hidden="true"></i>
-          Giga Tv - Gold Label Tv
-        </div>
-
-        <div class="tv-player-header-right">
-          <div class="live-indicator">
-            <span class="live-dot" aria-hidden="true"></span>
-            En directo · HD
-          </div>
+    <div class="tv-fixed-shell">
+      <section class="tv-player-container" id="tvPlayerBox" aria-label="Giga TV en directo">
+        <div class="tv-iframe-wrapper">
+          <iframe
+            src="https://streamtv2.elitecomunicacion.cloud/live-stream-video-widget/gigatv?autoplay=0&amp;muted=0&amp;mute=0&amp;playsinline=1"
+            title="Giga TV - Gold Label Music TV"
+            loading="eager"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowfullscreen
+            webkitallowfullscreen
+            mozallowfullscreen>
+          </iframe>
 
           <button
             class="tv-fullscreen-button"
@@ -634,164 +595,148 @@
             <i class="fas fa-expand" aria-hidden="true"></i>
           </button>
         </div>
-      </div>
+      </section>
 
-      <div class="tv-iframe-wrapper">
-        <img
-          src="https://i.postimg.cc/j29NzMYR/Gold_Label_Music_logo.png"
-          alt="Gold Label Music"
-          class="tv-watermark-logo">
+      <nav class="tabs-header" id="navTabsContainer" aria-label="Navegación principal">
+        <a
+          href="https://www.goldlabelmusic.com/inicio"
+          class="nav-tab active"
+          target="_top">
+          <i class="fas fa-home" aria-hidden="true"></i> Inicio
+        </a>
 
-        <iframe
-          src="https://streamtv2.elitecomunicacion.cloud/live-stream-video-widget/gigatv?autoplay=0&amp;muted=0&amp;mute=0&amp;playsinline=1"
-          title="Giga TV - Gold Label Music TV"
-          loading="eager"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-          allowfullscreen
-          webkitallowfullscreen
-          mozallowfullscreen>
-        </iframe>
-      </div>
-    </section>
+        <a
+          href="https://www.goldlabelmusic.com/distribucion"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-compact-disc" aria-hidden="true"></i> Distribución
+        </a>
 
-    <nav class="tabs-header" id="navTabsContainer" aria-label="Navegación principal">
-      <a
-        href="https://www.goldlabelmusic.com/inicio"
-        class="nav-tab active"
-        target="_top">
-        <i class="fas fa-home" aria-hidden="true"></i> Inicio
-      </a>
+        <a
+          href="https://www.goldlabelmusic.com/promocion"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-bullhorn" aria-hidden="true"></i> Promoción
+        </a>
 
-      <a
-        href="https://www.goldlabelmusic.com/distribucion"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-compact-disc" aria-hidden="true"></i> Distribución
-      </a>
+        <a
+          href="https://www.goldlabelmusic.com/branding"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-gem" aria-hidden="true"></i> Branding
+        </a>
 
-      <a
-        href="https://www.goldlabelmusic.com/promocion"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-bullhorn" aria-hidden="true"></i> Promoción
-      </a>
+        <a
+          href="https://www.goldlabelmusic.com/booking"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-users" aria-hidden="true"></i> Booking
+        </a>
 
-      <a
-        href="https://www.goldlabelmusic.com/branding"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-gem" aria-hidden="true"></i> Branding
-      </a>
+        <a
+          href="https://www.goldlabelmusic.com/radio"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-podcast" aria-hidden="true"></i> Radio
+        </a>
 
-      <a
-        href="https://www.goldlabelmusic.com/booking"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-users" aria-hidden="true"></i> Booking
-      </a>
+        <a
+          href="https://lagigaradio.es/"
+          class="nav-tab"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-tv" aria-hidden="true"></i> Giga Radio TV
+        </a>
+      </nav>
+    </div>
 
-      <a
-        href="https://www.goldlabelmusic.com/radio"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-podcast" aria-hidden="true"></i> Radio
-      </a>
+    <div class="tv-content-scroll">
+      <section class="tv-header-block">
+        <h1 class="main-title">Giga Tv - Gold Label Tv</h1>
+        <h2 class="main-subtitle">Emisión en directo</h2>
+        <p class="main-description">
+          En alianza estratégica con Giga Tv, transmitimos una programación musical 24/7 con videoclips, reportajes, coberturas especiales y las entrevistas de televisión a nuestros artistas referentes.
+        </p>
+      </section>
 
-      <a
-	  href="https://lagigaradio.es/"
-	  class="nav-tab"
-	  target="_blank"
-	  rel="noopener noreferrer">
-	  <i class="fas fa-tv" aria-hidden="true"></i> Giga Radio TV
-	</a>
-    </nav>
+      <section class="tv-grid-info" aria-label="Más contenido">
+        <a
+          class="tv-info-card"
+          href="https://www.spreaker.com/podcast/gold-label-radio--6910142"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-microphone-alt" aria-hidden="true"></i>
+          <h3>Entrevistas Exclusivas</h3>
+          <p>Conversaciones en plató con nuestros artistas estelares, lanzamientos y primicias discográficas.</p>
+        </a>
 
-    <section class="tv-header-block">
-      <h1 class="main-title">Giga Tv - Gold Label Tv</h1>
-      <h2 class="main-subtitle">Señal Internacional</h2>
-      <p class="main-description">
-        En alianza estratégica con Giga Tv, transmitimos una programación musical 24/7 con videoclips, reportajes, coberturas especiales y las entrevistas de televisión a nuestros artistas referentes.
-      </p>
-    </section>
+        <a
+          class="tv-info-card"
+          href="https://www.youtube.com/@goldlabelmusic"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-film" aria-hidden="true"></i>
+          <h3>Videoclips &amp; Estrenos</h3>
+          <p>La mejor selección audiovisual y las novedades más potentes del mercado internacional.</p>
+        </a>
 
-    <section class="tv-grid-info" aria-label="Más contenido">
-      <a
-        class="tv-info-card"
-        href="https://www.spreaker.com/podcast/gold-label-radio--6910142"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-microphone-alt" aria-hidden="true"></i>
-        <h3>Entrevistas Exclusivas</h3>
-        <p>Conversaciones en plató con nuestros artistas estelares, lanzamientos y primicias discográficas.</p>
-      </a>
+        <a
+          class="tv-info-card"
+          href="https://genevalatina.ch/blog/"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
+          <h3>Reportajes &amp; Coberturas</h3>
+          <p>Especiales desde festivales, eventos y backstage de las giras más importantes.</p>
+        </a>
+      </section>
 
-      <a
-        class="tv-info-card"
-        href="https://www.youtube.com/@goldlabelmusic"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-film" aria-hidden="true"></i>
-        <h3>Videoclips &amp; Estrenos</h3>
-        <p>La mejor selección audiovisual y las novedades más potentes del mercado internacional.</p>
-      </a>
+      <footer class="footer">
+        <div class="social-icons">
+          <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <i class="fab fa-instagram" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <i class="fab fa-tiktok" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <i class="fab fa-youtube" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://www.goldlabelmusic.com/television"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Televisión Gold Label Music">
+            <i class="fas fa-globe" aria-hidden="true"></i>
+          </a>
+        </div>
 
-      <a
-        class="tv-info-card"
-        href="https://genevalatina.ch/blog/"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
-        <h3>Reportajes &amp; Coberturas</h3>
-        <p>Especiales desde festivales, eventos y backstage de las giras más importantes.</p>
-      </a>
-    </section>
+        <button
+          class="share-trigger"
+          type="button"
+          onclick="openShareOverlay()"
+          aria-label="Compartir todo">
+          <i class="fas fa-share-alt" aria-hidden="true"></i>
+          Compartir todo
+        </button>
+
+        <p>
+          <a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">
+            info@goldlabelmusic.com
+          </a>
+        </p>
+        <p>© 2026 Gold Label Music</p>
+
+        <div class="footer-links">
+          <a href="https://www.goldlabelmusic.com/privacidad" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>
+          <a href="https://www.goldlabelmusic.com/cookies" target="_blank" rel="noopener noreferrer">Política de Cookies</a>
+        </div>
+      </footer>
+    </div>
   </main>
-
-  <footer class="footer">
-    <div class="social-icons">
-      <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-        <i class="fab fa-facebook-f" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-        <i class="fab fa-instagram" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-        <i class="fab fa-tiktok" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-        <i class="fab fa-youtube" aria-hidden="true"></i>
-      </a>
-      <a
-        href="https://www.goldlabelmusic.com/television"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Televisión Gold Label Music">
-        <i class="fas fa-globe" aria-hidden="true"></i>
-      </a>
-    </div>
-
-    <button
-      class="share-trigger"
-      type="button"
-      onclick="openShareOverlay()"
-      aria-label="Compartir todo">
-      <i class="fas fa-share-alt" aria-hidden="true"></i>
-      Compartir todo
-    </button>
-
-    <p>
-      <a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">
-        info@goldlabelmusic.com
-      </a>
-    </p>
-    <p>© 2026 Gold Label Music</p>
-
-    <div class="footer-links">
-      <a href="https://www.goldlabelmusic.com/privacidad" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>
-      <a href="https://www.goldlabelmusic.com/cookies" target="_blank" rel="noopener noreferrer">Política de Cookies</a>
-    </div>
-  </footer>
 
   <div id="share-overlay" class="share-overlay" aria-hidden="true">
     <div class="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-title">
