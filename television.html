@@ -595,22 +595,11 @@
     <div class="tv-fixed-shell">
       <section class="tv-player-container" id="tvPlayerBox" aria-label="Giga TV en directo">
         <div class="tv-iframe-wrapper">
-          <iframe
-            id="gigaTvPlayer"
-            title="Giga TV - Gold Label Music TV"
-            loading="eager"
+          <iframe id="gigaTvPlayer" title="Giga TV - Gold Label Music TV"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowfullscreen>
-          </iframe>
-          <button
-            class="tv-fullscreen-button"
-            id="tvFullscreenButton"
-            type="button"
-            aria-label="Activar pantalla completa"
-            title="Activar pantalla completa">
-            <i class="fas fa-expand" aria-hidden="true"></i>
-          </button>
+            allowfullscreen></iframe>
+          
         </div>
       </section>
 
@@ -925,102 +914,118 @@
     });
   </script>
 
-  <script>
-    // PARRILLA EDITABLE: añade enlaces, elimina líneas o usa activo: false.
-    const GIGA_TV_PLAYLIST = [
-      { url: "https://youtu.be/msklOeoEv7o", activo: true },
-      { url: "https://youtu.be/MAd15qKQP7U", activo: true },
-      { url: "https://youtu.be/QwxmAUecoPs", activo: true },
-      { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
-      { url: "https://youtu.be/9_Dd8f368ns", activo: true },
-      { url: "https://youtu.be/kCoJ_2a5lbU", activo: true },
-      { url: "https://youtu.be/FQpflYKCcVE", activo: true },
-    ];
+<script>
+/* PARRILLA EDITABLE
+   Añadir: copia una línea, cambia el enlace y conserva la coma.
+   Quitar: elimina la línea. Desactivar: cambia activo a false.
+   Orden: mueve las líneas; tras un inicio aleatorio se respeta ese orden.
+   Los duplicados se eliminan automáticamente al cargar.
+   Los cambios se aplican al publicar y recargar la página.
+*/
+const GIGA_TV_PLAYLIST = [
+  { url: "https://youtu.be/msklOeoEv7o", activo: true },
+  { url: "https://youtu.be/MAd15qKQP7U", activo: true },
+  { url: "https://youtu.be/QwxmAUecoPs", activo: true },
+  { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
+  { url: "https://youtu.be/9_Dd8f368ns", activo: true },
+  { url: "https://youtu.be/kCoJ_2a5lbU", activo: true },
+  { url: "https://youtu.be/FQpflYKCcVE", activo: true },
+  { url: "https://youtu.be/DRasy5O0Udg", activo: true },
+  { url: "https://youtu.be/-Bt7Hi4d_wE", activo: true },
+  { url: "https://youtu.be/3Vjm6p9VYkU", activo: true },
+  { url: "https://youtu.be/oghwg81mTX8", activo: true },
+  { url: "https://youtu.be/hIYNGLmcFf0", activo: true },
+  { url: "https://youtu.be/6K4NJle5gYk", activo: true },
+  { url: "https://youtu.be/aTVhGKDzQVs", activo: true },
+  { url: "https://youtu.be/pa12immVyW8", activo: true },
+  { url: "https://youtu.be/7AT0HSwWTj0", activo: true },
+  { url: "https://youtu.be/h8SURa8bg9k", activo: true },
+  { url: "https://youtu.be/d0dZyGFvhiA", activo: true },
+  { url: "https://youtu.be/ONL821m3l0k", activo: true },
+  { url: "https://youtu.be/ppRjkdg2lGU", activo: true },
+  { url: "https://youtu.be/cfK1GDKlg5I", activo: true },
+  { url: "https://youtu.be/afiwQoYR6aE", activo: true },
+];
 
-    (function () {
-      function extractId(value) {
-        try {
-          const u = new URL(value);
-          const host = u.hostname.replace(/^www\./, "");
-          let id = "";
-          if (host === "youtu.be") id = u.pathname.split("/")[1];
-          else if (host === "youtube.com" || host === "m.youtube.com") {
-            id = u.searchParams.get("v") || u.pathname.split("/")[2] || "";
+(function () {
+  function extractId(value) {
+    try {
+      const u = new URL(value);
+      const host = u.hostname.replace(/^www\./, "");
+      let id = "";
+      if (host === "youtu.be") id = u.pathname.split("/")[1];
+      else if (host === "youtube.com" || host === "m.youtube.com") {
+        id = u.searchParams.get("v") || u.pathname.split("/")[2] || "";
+      }
+      return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
+    } catch (_) { return null; }
+  }
+  const videos = [...new Set(GIGA_TV_PLAYLIST.filter(v => v.activo !== false)
+    .map(v => extractId(v.url)).filter(Boolean))];
+  const frame = document.getElementById("gigaTvPlayer");
+  if (!videos.length) { console.warn("GIGA TV: parrilla vacía."); return; }
+  let index = Math.floor(Math.random() * videos.length);
+  let player;
+  let failures = 0;
+  // Sin salto aleatorio dentro del vídeo: evita una búsqueda y carga adicionales.
+  // YouTube decide la calidad: no existe aquí un ajuste garantizado para 1080p.
+  // No se fuerza cc_load_policy=1: no se solicita activar subtítulos.
+  // Su estado puede depender de las preferencias del visitante.
+  // controls=1 y fs=1 mantienen el fullscreen y ajustes nativos de YouTube.
+  const params = new URLSearchParams({
+    enablejsapi: "1", autoplay: "1", mute: "1", playsinline: "1",
+    controls: "1", fs: "1", rel: "0"
+  });
+  if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
+    params.set("origin", location.origin);
+  }
+  frame.src = "https://www.youtube.com/embed/" + videos[index] + "?" + params;
+  function next() {
+    if (!player) return;
+    index = (index + 1) % videos.length;
+    player.loadVideoById(videos[index]);
+  }
+  function initialize() {
+    if (player) return;
+    player = new YT.Player("gigaTvPlayer", {
+      events: {
+        onReady: function (e) { e.target.mute(); e.target.playVideo(); },
+        onStateChange: function (e) {
+          if (e.data === YT.PlayerState.PLAYING) failures = 0;
+          if (e.data === YT.PlayerState.ENDED) next();
+        },
+        onError: function (e) {
+          console.warn("GIGA TV / YouTube:", e.data, videos[index]);
+          if (e.data === 153) {
+            console.warn("Comprueba el Referer en la página HTTPS publicada.");
+            return;
           }
-          return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
-        } catch (_) { return null; }
-      }
-      const videos = [...new Set(GIGA_TV_PLAYLIST
-        .filter(item => item.activo !== false)
-        .map(item => extractId(item.url)).filter(Boolean))];
-      const frame = document.getElementById("gigaTvPlayer");
-      if (!videos.length) { console.warn("Parrilla vacía: añade vídeos válidos."); return; }
-      let index = Math.floor(Math.random() * videos.length);
-      let player;
-      let failures = 0;
-      let pendingInitialSeek = true;
-      const params = new URLSearchParams({
-        enablejsapi: "1", autoplay: "1", mute: "1", playsinline: "1", controls: "1", rel: "0"
-      });
-      // Usa el origen real del documento; no suplanta el dominio de Google Sites.
-      if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
-        params.set("origin", location.origin);
-      }
-      frame.src = "https://www.youtube.com/embed/" + videos[index] + "?" + params.toString();
-      function next() {
-        if (!player) return;
-        index = (index + 1) % videos.length;
-        player.loadVideoById(videos[index]);
-      }
-      function initialize() {
-        if (player) return;
-        player = new YT.Player("gigaTvPlayer", {
-          events: {
-            onReady: function (e) { e.target.mute(); e.target.playVideo(); },
-            onStateChange: function (e) {
-              if (e.data === YT.PlayerState.PLAYING) {
-                failures = 0;
-                if (pendingInitialSeek) {
-                  const duration = e.target.getDuration();
-                  if (duration > 30) {
-                    pendingInitialSeek = false;
-                    e.target.seekTo(Math.floor(Math.random() * (duration - 20)), true);
-                  }
-                }
-              }
-              if (e.data === YT.PlayerState.ENDED) { pendingInitialSeek = false; next(); }
-            },
-            onError: function (e) {
-              console.warn("YouTube: error", e.data, "vídeo", videos[index]);
-              if (e.data === 153) {
-                console.warn("Comprueba el Referer y prueba la página HTTPS publicada; no es un error específico del vídeo.");
-                return;
-              }
-              pendingInitialSeek = false;
-              failures++;
-              if (failures < videos.length && [2, 5, 100, 101, 150].includes(e.data)) {
-                setTimeout(next, 1200);
-              }
-            },
-            onAutoplayBlocked: function () { console.info("Pulsa reproducir en YouTube para iniciar."); }
+          failures++;
+          if (failures < videos.length && [2,5,100,101,150].includes(e.data)) {
+            setTimeout(next, 1200);
           }
-        });
-      }
-      if (window.YT && window.YT.Player) initialize();
-      else {
-        const previous = window.onYouTubeIframeAPIReady;
-        window.onYouTubeIframeAPIReady = function () {
-          if (typeof previous === "function") previous();
-          initialize();
-        };
-        if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
-          const script = document.createElement("script");
-          script.src = "https://www.youtube.com/iframe_api";
-          document.head.appendChild(script);
+        },
+        onAutoplayBlocked: function () {
+          console.info("Pulsa el botón de reproducción de YouTube para comenzar.");
         }
       }
-    })();
-  </script>
+    });
+  }
+  if (window.YT && window.YT.Player) initialize();
+  else {
+    const previous = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () {
+      if (typeof previous === "function") previous();
+      initialize();
+    };
+    const script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(script);
+  }
+  // AirPlay no dispone de un selector controlable desde esta API.
+  // Se utilizan las funciones disponibles en el navegador/dispositivo Apple.
+})();
+</script>
 
 </body>
 </html>
