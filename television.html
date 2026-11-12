@@ -609,20 +609,6 @@
       margin: 0;
       border: 0;
     }
-  
-    /* Única zona visual nueva: controles compactos fuera de la imagen. */
-    .glm-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-      gap:8px; padding:6px 10px; box-sizing:border-box; flex:0 0 auto; background:var(--bg1); }
-    .glm-control-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
-    .glm-controls [hidden] { display:none !important; }
-    .glm-control { display:inline-flex; align-items:center; gap:7px; padding:7px 12px;
-      border:1px solid rgba(244,184,21,.45); border-radius:20px;
-      background:rgba(255,255,255,.04); color:var(--gold); font:inherit; font-size:12px; cursor:pointer; }
-    .glm-control:hover, .glm-control:focus-visible { background:rgba(244,184,21,.12); }
-    .glm-control:disabled { opacity:.5; cursor:wait; }
-    .glm-status { color:var(--muted); font-size:12px; }
-    .glm-status:empty { display:none; }
-    .tv-content-scroll { top:var(--glm-shell-height, calc(var(--player-height) + var(--tabs-height) + 45px)); }
   </style>
 </head>
 
@@ -636,22 +622,6 @@
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowfullscreen></iframe>
           
-        </div>
-
-        <!-- Controles externos: nunca se superponen al iframe de YouTube. -->
-        <div class="glm-controls" id="glmControls">
-          <button type="button" class="glm-control" id="glmControlsToggle"
-            aria-expanded="true" aria-controls="glmControlActions">Controles</button>
-          <div id="glmControlActions" class="glm-control-actions">
-            <button type="button" class="glm-control glm-sound" id="glmSoundButton" disabled
-              aria-label="Activar sonido">Activar sonido</button>
-            <button type="button" class="glm-control" id="tvFullscreenButton"
-              aria-label="Activar pantalla completa" title="Activar pantalla completa">
-              <i class="fas fa-expand" aria-hidden="true"></i><span class="glm-fs-label">Pantalla completa</span>
-            </button>
-          </div>
-          <button type="button" class="glm-control" id="glmStartButton" hidden>Iniciar emisión</button>
-          <span id="glmStatus" class="glm-status" role="status" aria-live="polite"></span>
         </div>
       </section>
 
@@ -906,8 +876,6 @@
         isFullscreen ? "Salir de pantalla completa" : "Activar pantalla completa"
       );
 
-      const label = button.querySelector(".glm-fs-label");
-      if (label) label.textContent = isFullscreen ? "Salir de pantalla completa" : "Pantalla completa";
       button.title = isFullscreen
         ? "Salir de pantalla completa"
         : "Activar pantalla completa";
@@ -1000,72 +968,6 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/afiwQoYR6aE", activo: true },
 ];
 (function () {
-  // Ajustable: tiempo que permanecen desplegados los controles tras activar sonido.
-  const CONTROL_HIDE_MS = 4000;
-  const sound = document.getElementById("glmSoundButton");
-  const actions = document.getElementById("glmControlActions");
-  const toggle = document.getElementById("glmControlsToggle");
-  const bar = document.getElementById("glmControls");
-  const startButton = document.getElementById("glmStartButton");
-  const status = document.getElementById("glmStatus");
-  const shell = document.querySelector(".tv-fixed-shell");
-  let player, ready = false, hideTimer, errorTimer;
-  let failed = new Set();
-  function measureShell() {
-    if (document.fullscreenElement || document.webkitFullscreenElement ||
-        document.getElementById("tvPlayerBox").classList.contains("is-page-fullscreen")) return;
-    document.documentElement.style.setProperty("--glm-shell-height", shell.getBoundingClientRect().height + "px");
-  }
-  if (window.ResizeObserver) new ResizeObserver(measureShell).observe(shell);
-  window.addEventListener("resize", measureShell);
-  document.addEventListener("fullscreenchange", () => requestAnimationFrame(measureShell));
-  document.addEventListener("webkitfullscreenchange", () => requestAnimationFrame(measureShell));
-  measureShell();
-  function expandControls(expanded) {
-    actions.hidden = !expanded;
-    toggle.setAttribute("aria-expanded", String(expanded));
-    measureShell();
-  }
-  function scheduleHide() {
-    clearTimeout(hideTimer);
-    if (!ready || player.isMuted() || actions.hidden) return;
-    hideTimer = setTimeout(() => {
-      if (bar.contains(document.activeElement) || bar.matches(":hover")) return;
-      expandControls(false);
-    }, CONTROL_HIDE_MS);
-  }
-  toggle.addEventListener("click", () => {
-    expandControls(actions.hidden);
-    scheduleHide();
-  });
-  bar.addEventListener("pointerenter", () => clearTimeout(hideTimer));
-  bar.addEventListener("pointerleave", scheduleHide);
-  bar.addEventListener("focusin", () => clearTimeout(hideTimer));
-  bar.addEventListener("focusout", () => setTimeout(scheduleHide, 0));
-  function syncSound() {
-    if (!ready) return;
-    const muted = player.isMuted() || player.getVolume() === 0;
-    sound.textContent = muted ? "Activar sonido" : "Silenciar";
-    sound.setAttribute("aria-label", sound.textContent);
-  }
-  sound.addEventListener("click", () => {
-    if (!ready) return;
-    if (player.isMuted() || player.getVolume() === 0) {
-      player.unMute();
-      if (!player.getVolume()) player.setVolume(80);
-      player.playVideo();
-      // Devuelve el foco al acceso persistente antes de ocultar sus opciones.
-      toggle.focus();
-      expandControls(false);
-    } else {
-      player.mute();
-      expandControls(true);
-    }
-    syncSound();
-  });
-  startButton.addEventListener("click", () => {
-    if (ready) player.playVideo();
-  });
   function extractId(value) {
     try {
       const u = new URL(value);
@@ -1080,59 +982,44 @@ const GLM_ON_AIR_PLAYLIST = [
   }
   const videos = [...new Set(GLM_ON_AIR_PLAYLIST.filter(v => v.activo !== false)
     .map(v => extractId(v.url)).filter(Boolean))];
-  if (!videos.length) { status.textContent = "No hay vídeos activos en la parrilla."; return; }
+  if (!videos.length) { console.warn("GLM On Air: parrilla vacía."); return; }
   const frame = document.getElementById("glmOnAirPlayer");
-  const initialIndex = Math.floor(Math.random() * videos.length);
-  // La parrilla sigue en el script: YouTube recibe sus IDs y gestiona los avances.
-  // No se usa ENDED para cargar manualmente el siguiente vídeo.
-  const params = new URLSearchParams({enablejsapi:"1", autoplay:"0", mute:"1",
-    playsinline:"1", controls:"0", fs:"1", rel:"0"});
-  if (/^https?:$/.test(location.protocol) && location.origin !== "null") params.set("origin", location.origin);
-  frame.src = "https://www.youtube.com/embed/" + videos[initialIndex] + "?" + params;
+  let index = Math.floor(Math.random() * videos.length);
+  let player;
+  let failures = 0;
+  // Calidad automática de YouTube. No se solicita activar subtítulos.
+  // Controles y fullscreen nativos, sin capas que oculten información.
+  const params = new URLSearchParams({enablejsapi:"1", autoplay:"1", mute:"1",
+    playsinline:"1", controls:"1", fs:"1", rel:"0"});
+  if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
+    params.set("origin", location.origin);
+  }
+  frame.src = "https://www.youtube.com/embed/" + videos[index] + "?" + params;
+  function next() {
+    if (!player) return;
+    index = (index + 1) % videos.length;
+    player.loadVideoById(videos[index]);
+  }
   function initialize() {
     if (player) return;
     player = new YT.Player("glmOnAirPlayer", {events: {
-      onReady: function(e) {
-        ready = true;
-        sound.disabled = false;
-        e.target.mute();
-        e.target.setLoop(true);
-        // loadPlaylist inicia reproducción; el iframe no reproduce antes de recibir toda la lista.
-        e.target.loadPlaylist(videos, initialIndex, 0);
-        syncSound();
-      },
+      onReady: function(e) { e.target.mute(); e.target.playVideo(); },
       onStateChange: function(e) {
-        if (e.data === YT.PlayerState.PLAYING) {
-          clearTimeout(errorTimer);
-          failed.clear();
-          startButton.hidden = true;
-          status.textContent = "";
-          syncSound();
-        }
+        if (e.data === YT.PlayerState.PLAYING) failures = 0;
+        if (e.data === YT.PlayerState.ENDED) next();
       },
       onError: function(e) {
+        console.warn("GLM On Air / YouTube:", e.data, videos[index]);
         if (e.data === 153) {
-          status.textContent = "No se pudo identificar el origen. Comprueba la página publicada.";
-          return;
+          console.warn("Comprueba el Referer en la página HTTPS publicada."); return;
         }
-        if (![2,5,100,101,150].includes(e.data)) return;
-        const index = player.getPlaylistIndex();
-        failed.add(index);
-        clearTimeout(errorTimer);
-        if (failed.size >= videos.length) {
-          status.textContent = "No se pueden reproducir los vídeos de la parrilla.";
-          return;
+        failures++;
+        if (failures < videos.length && [2,5,100,101,150].includes(e.data)) {
+          setTimeout(next, 1200);
         }
-        errorTimer = setTimeout(() => {
-          if (player.getPlaylistIndex() === index && player.getPlayerState() !== YT.PlayerState.PLAYING) {
-            player.nextVideo();
-          }
-        }, 1400);
       },
       onAutoplayBlocked: function() {
-        startButton.hidden = false;
-        status.textContent = "Tu navegador requiere un toque para iniciar.";
-        measureShell();
+        console.info("El navegador ha bloqueado el inicio automático.");
       }
     }});
   }
