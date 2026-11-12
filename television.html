@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gold Label Tv - Giga Tv | Señal Internacional</title>
+  <title>GLM On Air</title>
 
   <link
     rel="stylesheet"
@@ -588,9 +588,9 @@
       }
     }
   
-    /* Ancho completo siguiendo la técnica del videobanner de Booking. */
-    .tv-fixed-shell,
-    .tv-iframe-wrapper {
+    /* Único ajuste visual: el reproductor llena el ancho del bloque incrustado.
+       El ancho exterior de Google Sites se configura en su editor, no aquí. */
+    .tv-fixed-shell, .tv-player-container, .tv-iframe-wrapper {
       left: 0;
       right: 0;
       width: 100%;
@@ -599,18 +599,6 @@
       margin-right: 0;
       box-sizing: border-box;
     }
-
-    .tv-player-container:not(:fullscreen):not(:-webkit-full-screen):not(.is-page-fullscreen) {
-      position: relative;
-      left: 50%;
-      right: auto;
-      width: 100vw;
-      max-width: 100vw;
-      margin: 0;
-      transform: translateX(-50%);
-      box-sizing: border-box;
-    }
-
     .tv-iframe-wrapper iframe {
       display: block;
       left: 0;
@@ -622,14 +610,14 @@
       border: 0;
     }
   </style>
-  </head>
+</head>
 
 <body>
   <main id="app-container">
     <div class="tv-fixed-shell">
-      <section class="tv-player-container" id="tvPlayerBox" aria-label="Gold Label TV en directo">
+      <section class="tv-player-container" id="tvPlayerBox" aria-label="GLM On Air">
         <div class="tv-iframe-wrapper">
-          <iframe id="goldlabelTvPlayer" title="Gold Label Tv - Giga Tv"
+          <iframe id="glmOnAirPlayer" title="GLM On Air"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowfullscreen></iframe>
@@ -681,99 +669,99 @@
       </a>
 
       <a
-	  href="https://lagigaradio.es/"
-	  class="nav-tab"
-	  target="_blank"
-	  rel="noopener noreferrer">
-	  <i class="fas fa-tv" aria-hidden="true"></i> Giga Radio TV
-	</a>
+        href="https://lagigaradio.es/"
+        class="nav-tab"
+        target="_blank"
+        rel="noopener noreferrer">
+        <i class="fas fa-tv" aria-hidden="true"></i> Giga Radio TV
+      </a>
       </nav>
     </div>
 
     <div class="tv-content-scroll">
       <section class="tv-header-block">
-      <h1 class="main-title">Gold Label Tv - Giga Tv</h1>
-      <h2 class="main-subtitle">Señal Internacional</h2>
-      <p class="main-description">
-        En alianza estratégica con Giga Tv, transmitimos una programación musical 24/7 con videoclips, reportajes, coberturas especiales y las entrevistas de televisión a nuestros artistas referentes.
-      </p>
-    </section>
+        <h1 class="main-title">GLM On Air</h1>
+        <h2 class="main-subtitle">Señal Internacional</h2>
+        <p class="main-description">
+          Gold Label Music presenta una programación musical 24/7 con videoclips, reportajes, coberturas especiales y entrevistas a nuestros artistas.
+        </p>
+      </section>
 
-    <section class="tv-grid-info" aria-label="Más contenido">
-      <a
-        class="tv-info-card"
-        href="https://www.spreaker.com/podcast/gold-label-radio--6910142"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-microphone-alt" aria-hidden="true"></i>
-        <h3>Entrevistas Exclusivas</h3>
-        <p>Conversaciones en plató con nuestros artistas estelares, lanzamientos y primicias discográficas.</p>
-      </a>
+      <section class="tv-grid-info" aria-label="Más contenido">
+        <a
+          class="tv-info-card"
+          href="https://www.spreaker.com/podcast/gold-label-radio--6910142"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-microphone-alt" aria-hidden="true"></i>
+          <h3>Entrevistas Exclusivas</h3>
+          <p>Conversaciones en plató con nuestros artistas estelares, lanzamientos y primicias discográficas.</p>
+        </a>
 
-      <a
-        class="tv-info-card"
-        href="https://www.youtube.com/@goldlabelmusic"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-film" aria-hidden="true"></i>
-        <h3>Videoclips &amp; Estrenos</h3>
-        <p>La mejor selección audiovisual y las novedades más potentes del mercado internacional.</p>
-      </a>
+        <a
+          class="tv-info-card"
+          href="https://www.youtube.com/@goldlabelmusic"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-film" aria-hidden="true"></i>
+          <h3>Videoclips &amp; Estrenos</h3>
+          <p>La mejor selección audiovisual y las novedades más potentes del mercado internacional.</p>
+        </a>
 
-      <a
-        class="tv-info-card"
-        href="https://genevalatina.ch/blog/"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
-        <h3>Reportajes &amp; Coberturas</h3>
-        <p>Especiales desde festivales, eventos y backstage de las giras más importantes.</p>
-      </a>
-    </section>
+        <a
+          class="tv-info-card"
+          href="https://genevalatina.ch/blog/"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
+          <h3>Reportajes &amp; Coberturas</h3>
+          <p>Especiales desde festivales, eventos y backstage de las giras más importantes.</p>
+        </a>
+      </section>
 
       <footer class="footer">
-    <div class="social-icons">
-      <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-        <i class="fab fa-facebook-f" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-        <i class="fab fa-instagram" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-        <i class="fab fa-tiktok" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-        <i class="fab fa-youtube" aria-hidden="true"></i>
-      </a>
-      <a
-        href="https://www.goldlabelmusic.com/television"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Televisión Gold Label Music">
-        <i class="fas fa-globe" aria-hidden="true"></i>
-      </a>
-    </div>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <i class="fab fa-instagram" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <i class="fab fa-tiktok" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <i class="fab fa-youtube" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://www.goldlabelmusic.com/television"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Televisión Gold Label Music">
+            <i class="fas fa-globe" aria-hidden="true"></i>
+          </a>
+        </div>
 
-    <button
-      class="share-trigger"
-      type="button"
-      onclick="openShareOverlay()"
-      aria-label="Compartir todo">
-      <i class="fas fa-share-alt" aria-hidden="true"></i>
-      Compartir todo
-    </button>
+        <button
+          class="share-trigger"
+          type="button"
+          onclick="openShareOverlay()"
+          aria-label="Compartir todo">
+          <i class="fas fa-share-alt" aria-hidden="true"></i>
+          Compartir todo
+        </button>
 
-    <p>
-      <a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">
-        info@goldlabelmusic.com
-      </a>
-    </p>
-    <p>© 2026 Gold Label Music</p>
+        <p>
+          <a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">
+            info@goldlabelmusic.com
+          </a>
+        </p>
+        <p>© 2026 Gold Label Music</p>
 
-    <div class="footer-links">
-      <a href="https://www.goldlabelmusic.com/privacidad" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>
-      <a href="https://www.goldlabelmusic.com/cookies" target="_blank" rel="noopener noreferrer">Política de Cookies</a>
-    </div>
+        <div class="footer-links">
+          <a href="https://www.goldlabelmusic.com/privacidad" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>
+          <a href="https://www.goldlabelmusic.com/cookies" target="_blank" rel="noopener noreferrer">Política de Cookies</a>
+        </div>
       </footer>
     </div>
   </main>
@@ -955,7 +943,7 @@
    Orden: mueve las líneas. El primer vídeo se elige al azar.
    Publica los cambios y recarga la página para aplicarlos.
 */
-const GIGA_TV_PLAYLIST = [
+const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/msklOeoEv7o", activo: true },
   { url: "https://youtu.be/MAd15qKQP7U", activo: true },
   { url: "https://youtu.be/QwxmAUecoPs", activo: true },
@@ -992,10 +980,10 @@ const GIGA_TV_PLAYLIST = [
       return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
     } catch (_) { return null; }
   }
-  const videos = [...new Set(GIGA_TV_PLAYLIST.filter(v => v.activo !== false)
+  const videos = [...new Set(GLM_ON_AIR_PLAYLIST.filter(v => v.activo !== false)
     .map(v => extractId(v.url)).filter(Boolean))];
-  if (!videos.length) { console.warn("GIGA TV: parrilla vacía."); return; }
-  const frame = document.getElementById("gigaTvPlayer");
+  if (!videos.length) { console.warn("GLM On Air: parrilla vacía."); return; }
+  const frame = document.getElementById("glmOnAirPlayer");
   let index = Math.floor(Math.random() * videos.length);
   let player;
   let failures = 0;
@@ -1014,14 +1002,14 @@ const GIGA_TV_PLAYLIST = [
   }
   function initialize() {
     if (player) return;
-    player = new YT.Player("gigaTvPlayer", {events: {
+    player = new YT.Player("glmOnAirPlayer", {events: {
       onReady: function(e) { e.target.mute(); e.target.playVideo(); },
       onStateChange: function(e) {
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
         if (e.data === YT.PlayerState.ENDED) next();
       },
       onError: function(e) {
-        console.warn("GIGA TV / YouTube:", e.data, videos[index]);
+        console.warn("GLM On Air / YouTube:", e.data, videos[index]);
         if (e.data === 153) {
           console.warn("Comprueba el Referer en la página HTTPS publicada."); return;
         }
