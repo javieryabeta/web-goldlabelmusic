@@ -588,9 +588,9 @@
       }
     }
   
-    /* Único ajuste visual: el reproductor llena el ancho del bloque incrustado.
-       El ancho exterior de Google Sites se configura en su editor, no aquí. */
-    .tv-fixed-shell, .tv-player-container, .tv-iframe-wrapper {
+    /* Ancho completo siguiendo la técnica del videobanner de Booking. */
+    .tv-fixed-shell,
+    .tv-iframe-wrapper {
       left: 0;
       right: 0;
       width: 100%;
@@ -599,6 +599,18 @@
       margin-right: 0;
       box-sizing: border-box;
     }
+
+    .tv-player-container:not(:fullscreen):not(:-webkit-full-screen):not(.is-page-fullscreen) {
+      position: relative;
+      left: 50%;
+      right: auto;
+      width: 100vw;
+      max-width: 100vw;
+      margin: 0;
+      transform: translateX(-50%);
+      box-sizing: border-box;
+    }
+
     .tv-iframe-wrapper iframe {
       display: block;
       left: 0;
@@ -610,14 +622,14 @@
       border: 0;
     }
   </style>
-</head>
+  </head>
 
 <body>
   <main id="app-container">
     <div class="tv-fixed-shell">
-      <section class="tv-player-container" id="tvPlayerBox" aria-label="Giga TV en directo">
+      <section class="tv-player-container" id="tvPlayerBox" aria-label="Gold Label TV en directo">
         <div class="tv-iframe-wrapper">
-          <iframe id="gigaTvPlayer" title="Gold Label Tv - Giga Tv"
+          <iframe id="goldlabelTvPlayer" title="Gold Label Tv - Giga Tv"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowfullscreen></iframe>
