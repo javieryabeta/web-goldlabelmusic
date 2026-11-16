@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giga Tv - Gold Label Tv | Señal Internacional</title>
+  <title>GLM On Air</title>
 
   <link
     rel="stylesheet"
@@ -587,30 +587,41 @@
         font-size: 11px;
       }
     }
+  
+    /* Único ajuste visual: el reproductor llena el ancho del bloque incrustado.
+       El ancho exterior de Google Sites se configura en su editor, no aquí. */
+    .tv-fixed-shell, .tv-player-container, .tv-iframe-wrapper {
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: none;
+      margin-left: 0;
+      margin-right: 0;
+      box-sizing: border-box;
+    }
+    .tv-iframe-wrapper iframe {
+      display: block;
+      left: 0;
+      right: 0;
+      width: 100%;
+      min-width: 100%;
+      max-width: none;
+      margin: 0;
+      border: 0;
+    }
   </style>
 </head>
 
 <body>
   <main id="app-container">
     <div class="tv-fixed-shell">
-      <section class="tv-player-container" id="tvPlayerBox" aria-label="Giga TV en directo">
+      <section class="tv-player-container" id="tvPlayerBox" aria-label="GLM On Air">
         <div class="tv-iframe-wrapper">
-          <iframe
-            id="gigaTvPlayer"
-            title="Giga TV - Gold Label Music TV"
-            loading="eager"
+          <iframe id="glmOnAirPlayer" title="GLM On Air"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowfullscreen>
-          </iframe>
-          <button
-            class="tv-fullscreen-button"
-            id="tvFullscreenButton"
-            type="button"
-            aria-label="Activar pantalla completa"
-            title="Activar pantalla completa">
-            <i class="fas fa-expand" aria-hidden="true"></i>
-          </button>
+            allowfullscreen></iframe>
+          
         </div>
       </section>
 
@@ -658,99 +669,99 @@
       </a>
 
       <a
-	  href="https://lagigaradio.es/"
-	  class="nav-tab"
-	  target="_blank"
-	  rel="noopener noreferrer">
-	  <i class="fas fa-tv" aria-hidden="true"></i> Giga Radio TV
-	</a>
+        href="https://lagigaradio.es/"
+        class="nav-tab"
+        target="_blank"
+        rel="noopener noreferrer">
+        <i class="fas fa-tv" aria-hidden="true"></i> Giga Radio TV
+      </a>
       </nav>
     </div>
 
     <div class="tv-content-scroll">
       <section class="tv-header-block">
-      <h1 class="main-title">Giga Tv - Gold Label Tv</h1>
-      <h2 class="main-subtitle">Señal Internacional</h2>
-      <p class="main-description">
-        En alianza estratégica con Giga Tv, transmitimos una programación musical 24/7 con videoclips, reportajes, coberturas especiales y las entrevistas de televisión a nuestros artistas referentes.
-      </p>
-    </section>
+        <h1 class="main-title">Gold Label On Air</h1>
+        <h2 class="main-subtitle">Señal Internacional</h2>
+        <p class="main-description">
+          Gold Label Music presenta una programación musical 24/7 con videoclips, reportajes, coberturas especiales y entrevistas a nuestros artistas.
+        </p>
+      </section>
 
-    <section class="tv-grid-info" aria-label="Más contenido">
-      <a
-        class="tv-info-card"
-        href="https://www.spreaker.com/podcast/gold-label-radio--6910142"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-microphone-alt" aria-hidden="true"></i>
-        <h3>Entrevistas Exclusivas</h3>
-        <p>Conversaciones en plató con nuestros artistas estelares, lanzamientos y primicias discográficas.</p>
-      </a>
+      <section class="tv-grid-info" aria-label="Más contenido">
+        <a
+          class="tv-info-card"
+          href="https://www.spreaker.com/podcast/gold-label-radio--6910142"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-microphone-alt" aria-hidden="true"></i>
+          <h3>Entrevistas Exclusivas</h3>
+          <p>Conversaciones en plató con nuestros artistas estelares, lanzamientos y primicias discográficas.</p>
+        </a>
 
-      <a
-        class="tv-info-card"
-        href="https://www.youtube.com/@goldlabelmusic"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-film" aria-hidden="true"></i>
-        <h3>Videoclips &amp; Estrenos</h3>
-        <p>La mejor selección audiovisual y las novedades más potentes del mercado internacional.</p>
-      </a>
+        <a
+          class="tv-info-card"
+          href="https://www.youtube.com/@goldlabelmusic"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-film" aria-hidden="true"></i>
+          <h3>Videoclips &amp; Estrenos</h3>
+          <p>La mejor selección audiovisual y las novedades más potentes del mercado internacional.</p>
+        </a>
 
-      <a
-        class="tv-info-card"
-        href="https://genevalatina.ch/blog/"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
-        <h3>Reportajes &amp; Coberturas</h3>
-        <p>Especiales desde festivales, eventos y backstage de las giras más importantes.</p>
-      </a>
-    </section>
+        <a
+          class="tv-info-card"
+          href="https://genevalatina.ch/blog/"
+          target="_blank"
+          rel="noopener noreferrer">
+          <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
+          <h3>Reportajes &amp; Coberturas</h3>
+          <p>Especiales desde festivales, eventos y backstage de las giras más importantes.</p>
+        </a>
+      </section>
 
       <footer class="footer">
-    <div class="social-icons">
-      <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-        <i class="fab fa-facebook-f" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-        <i class="fab fa-instagram" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-        <i class="fab fa-tiktok" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-        <i class="fab fa-youtube" aria-hidden="true"></i>
-      </a>
-      <a
-        href="https://www.goldlabelmusic.com/television"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Televisión Gold Label Music">
-        <i class="fas fa-globe" aria-hidden="true"></i>
-      </a>
-    </div>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <i class="fab fa-instagram" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <i class="fab fa-tiktok" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <i class="fab fa-youtube" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://www.goldlabelmusic.com/television"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Televisión Gold Label Music">
+            <i class="fas fa-globe" aria-hidden="true"></i>
+          </a>
+        </div>
 
-    <button
-      class="share-trigger"
-      type="button"
-      onclick="openShareOverlay()"
-      aria-label="Compartir todo">
-      <i class="fas fa-share-alt" aria-hidden="true"></i>
-      Compartir todo
-    </button>
+        <button
+          class="share-trigger"
+          type="button"
+          onclick="openShareOverlay()"
+          aria-label="Compartir todo">
+          <i class="fas fa-share-alt" aria-hidden="true"></i>
+          Compartir todo
+        </button>
 
-    <p>
-      <a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">
-        info@goldlabelmusic.com
-      </a>
-    </p>
-    <p>© 2026 Gold Label Music</p>
+        <p>
+          <a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">
+            info@goldlabelmusic.com
+          </a>
+        </p>
+        <p>© 2026 Gold Label Music</p>
 
-    <div class="footer-links">
-      <a href="https://www.goldlabelmusic.com/privacidad" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>
-      <a href="https://www.goldlabelmusic.com/cookies" target="_blank" rel="noopener noreferrer">Política de Cookies</a>
-    </div>
+        <div class="footer-links">
+          <a href="https://www.goldlabelmusic.com/privacidad" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>
+          <a href="https://www.goldlabelmusic.com/cookies" target="_blank" rel="noopener noreferrer">Política de Cookies</a>
+        </div>
       </footer>
     </div>
   </main>
@@ -925,102 +936,111 @@
     });
   </script>
 
-  <script>
-    // PARRILLA EDITABLE: añade enlaces, elimina líneas o usa activo: false.
-    const GIGA_TV_PLAYLIST = [
-      { url: "https://youtu.be/msklOeoEv7o", activo: true },
-      { url: "https://youtu.be/MAd15qKQP7U", activo: true },
-      { url: "https://youtu.be/QwxmAUecoPs", activo: true },
-      { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
-      { url: "https://youtu.be/9_Dd8f368ns", activo: true },
-      { url: "https://youtu.be/kCoJ_2a5lbU", activo: true },
-      { url: "https://youtu.be/FQpflYKCcVE", activo: true },
-    ];
-
-    (function () {
-      function extractId(value) {
-        try {
-          const u = new URL(value);
-          const host = u.hostname.replace(/^www\./, "");
-          let id = "";
-          if (host === "youtu.be") id = u.pathname.split("/")[1];
-          else if (host === "youtube.com" || host === "m.youtube.com") {
-            id = u.searchParams.get("v") || u.pathname.split("/")[2] || "";
-          }
-          return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
-        } catch (_) { return null; }
+<script>
+/* PARRILLA EDITABLE
+   Añadir: copia una línea y cambia el enlace. Conserva la coma.
+   Quitar: elimina la línea. Desactivar temporalmente: activo: false.
+   Orden: mueve las líneas. El primer vídeo se elige al azar.
+   Publica los cambios y recarga la página para aplicarlos.
+*/
+const GLM_ON_AIR_PLAYLIST = [
+  { url: "https://youtu.be/msklOeoEv7o", activo: true },
+  { url: "https://youtu.be/MAd15qKQP7U", activo: true },
+  { url: "https://youtu.be/QwxmAUecoPs", activo: true },
+  { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
+  { url: "https://youtu.be/9_Dd8f368ns", activo: true },
+  { url: "https://youtu.be/kCoJ_2a5lbU", activo: true },
+  { url: "https://youtu.be/T1tBMQEhj8U", activo: true },
+  { url: "https://youtu.be/FQpflYKCcVE", activo: true },
+  { url: "https://youtu.be/DRasy5O0Udg", activo: true },
+  { url: "https://youtu.be/-Bt7Hi4d_wE", activo: true },
+  { url: "https://youtu.be/3Vjm6p9VYkU", activo: true },
+  { url: "https://youtu.be/oghwg81mTX8", activo: true },
+  { url: "https://youtu.be/hIYNGLmcFf0", activo: true },
+  { url: "https://youtu.be/6K4NJle5gYk", activo: true },
+  { url: "https://youtu.be/aTVhGKDzQVs", activo: true },
+  { url: "https://youtu.be/pa12immVyW8", activo: true },
+  { url: "https://youtu.be/YuHS30MGwOk", activo: true },
+  { url: "https://youtu.be/4VRWHOREdS4", activo: true },
+  { url: "https://youtu.be/8Hh2QgXSpaU", activo: true },
+  { url: "https://youtu.be/h8SURa8bg9k", activo: true },
+  { url: "https://youtu.be/d0dZyGFvhiA", activo: true },
+  { url: "https://youtu.be/ONL821m3l0k", activo: true },
+  { url: "https://youtu.be/ppRjkdg2lGU", activo: true },
+  { url: "https://youtu.be/cfK1GDKlg5I", activo: true },
+  { url: "https://youtu.be/SU98XAl4nXo", activo: true },
+  
+  { url: "https://youtu.be/afiwQoYR6aE", activo: true },
+];
+(function () {
+  function extractId(value) {
+    try {
+      const u = new URL(value);
+      const host = u.hostname.replace(/^www\./, "");
+      let id = "";
+      if (host === "youtu.be") id = u.pathname.split("/")[1];
+      else if (host === "youtube.com" || host === "m.youtube.com") {
+        id = u.searchParams.get("v") || u.pathname.split("/")[2] || "";
       }
-      const videos = [...new Set(GIGA_TV_PLAYLIST
-        .filter(item => item.activo !== false)
-        .map(item => extractId(item.url)).filter(Boolean))];
-      const frame = document.getElementById("gigaTvPlayer");
-      if (!videos.length) { console.warn("Parrilla vacía: añade vídeos válidos."); return; }
-      let index = Math.floor(Math.random() * videos.length);
-      let player;
-      let failures = 0;
-      let pendingInitialSeek = true;
-      const params = new URLSearchParams({
-        enablejsapi: "1", autoplay: "1", mute: "1", playsinline: "1", controls: "1", rel: "0"
-      });
-      // Usa el origen real del documento; no suplanta el dominio de Google Sites.
-      if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
-        params.set("origin", location.origin);
-      }
-      frame.src = "https://www.youtube.com/embed/" + videos[index] + "?" + params.toString();
-      function next() {
-        if (!player) return;
-        index = (index + 1) % videos.length;
-        player.loadVideoById(videos[index]);
-      }
-      function initialize() {
-        if (player) return;
-        player = new YT.Player("gigaTvPlayer", {
-          events: {
-            onReady: function (e) { e.target.mute(); e.target.playVideo(); },
-            onStateChange: function (e) {
-              if (e.data === YT.PlayerState.PLAYING) {
-                failures = 0;
-                if (pendingInitialSeek) {
-                  const duration = e.target.getDuration();
-                  if (duration > 30) {
-                    pendingInitialSeek = false;
-                    e.target.seekTo(Math.floor(Math.random() * (duration - 20)), true);
-                  }
-                }
-              }
-              if (e.data === YT.PlayerState.ENDED) { pendingInitialSeek = false; next(); }
-            },
-            onError: function (e) {
-              console.warn("YouTube: error", e.data, "vídeo", videos[index]);
-              if (e.data === 153) {
-                console.warn("Comprueba el Referer y prueba la página HTTPS publicada; no es un error específico del vídeo.");
-                return;
-              }
-              pendingInitialSeek = false;
-              failures++;
-              if (failures < videos.length && [2, 5, 100, 101, 150].includes(e.data)) {
-                setTimeout(next, 1200);
-              }
-            },
-            onAutoplayBlocked: function () { console.info("Pulsa reproducir en YouTube para iniciar."); }
-          }
-        });
-      }
-      if (window.YT && window.YT.Player) initialize();
-      else {
-        const previous = window.onYouTubeIframeAPIReady;
-        window.onYouTubeIframeAPIReady = function () {
-          if (typeof previous === "function") previous();
-          initialize();
-        };
-        if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
-          const script = document.createElement("script");
-          script.src = "https://www.youtube.com/iframe_api";
-          document.head.appendChild(script);
+      return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
+    } catch (_) { return null; }
+  }
+  const videos = [...new Set(GLM_ON_AIR_PLAYLIST.filter(v => v.activo !== false)
+    .map(v => extractId(v.url)).filter(Boolean))];
+  if (!videos.length) { console.warn("GLM On Air: parrilla vacía."); return; }
+  const frame = document.getElementById("glmOnAirPlayer");
+  let index = Math.floor(Math.random() * videos.length);
+  let player;
+  let failures = 0;
+  // Calidad automática de YouTube. No se solicita activar subtítulos.
+  // Controles y fullscreen nativos, sin capas que oculten información.
+  const params = new URLSearchParams({enablejsapi:"1", autoplay:"1", mute:"1",
+    playsinline:"1", controls:"1", fs:"1", rel:"0"});
+  if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
+    params.set("origin", location.origin);
+  }
+  frame.src = "https://www.youtube.com/embed/" + videos[index] + "?" + params;
+  function next() {
+    if (!player) return;
+    index = (index + 1) % videos.length;
+    player.loadVideoById(videos[index]);
+  }
+  function initialize() {
+    if (player) return;
+    player = new YT.Player("glmOnAirPlayer", {events: {
+      onReady: function(e) { e.target.mute(); e.target.playVideo(); },
+      onStateChange: function(e) {
+        if (e.data === YT.PlayerState.PLAYING) failures = 0;
+        if (e.data === YT.PlayerState.ENDED) next();
+      },
+      onError: function(e) {
+        console.warn("GLM On Air / YouTube:", e.data, videos[index]);
+        if (e.data === 153) {
+          console.warn("Comprueba el Referer en la página HTTPS publicada."); return;
         }
+        failures++;
+        if (failures < videos.length && [2,5,100,101,150].includes(e.data)) {
+          setTimeout(next, 1200);
+        }
+      },
+      onAutoplayBlocked: function() {
+        console.info("El navegador ha bloqueado el inicio automático.");
       }
-    })();
-  </script>
+    }});
+  }
+  if (window.YT && window.YT.Player) initialize();
+  else {
+    const previous = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function() {
+      if (typeof previous === "function") previous();
+      initialize();
+    };
+    const script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(script);
+  }
+})();
+</script>
 
 </body>
 </html>
