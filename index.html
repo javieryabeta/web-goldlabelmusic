@@ -287,8 +287,42 @@
       .acceso { transition: none; }
     }
   </style>
+
+  <!-- GML INDEX PRELOADER - START -->
+  <style>
+    #gml-page-loader {
+      position: fixed; inset: 0; z-index: 2147483647; display: flex;
+      width: 100%; height: 100vh; height: 100dvh; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: var(--bg2, var(--navy, #071227)); color: var(--text, var(--white, #fff));
+      opacity: 1; visibility: visible;
+      transition: opacity .45s ease, visibility .45s ease;
+    }
+    #gml-page-loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    #gml-page-loader .gml-loader-spinner {
+      width: 46px; height: 46px; margin-bottom: 16px;
+      border: 3px solid rgba(247,181,0,.25); border-top-color: var(--gold, #ffc107);
+      border-radius: 50%; animation: gml-loader-spin .85s linear infinite;
+    }
+    #gml-page-loader .gml-loader-text {
+      margin: 0; color: var(--gold, #ffc107);
+      font: 500 16px/1.4 Arial, sans-serif; text-align: center;
+    }
+    @keyframes gml-loader-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      #gml-page-loader, #gml-page-loader .gml-loader-spinner { transition: none; animation: none; }
+    }
+  </style>
+  <!-- GML INDEX PRELOADER - END -->
 </head>
 <body>
+<!-- GML INDEX PRELOADER - START -->
+<div id="gml-page-loader" role="status" aria-live="polite">
+  <div class="gml-loader-spinner" aria-hidden="true"></div>
+  <p class="gml-loader-text">Preparando la experiencia…</p>
+</div>
+<!-- GML INDEX PRELOADER - END -->
+
   <main class="pantalla">
     <video class="fondo-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
       <source src="https://res.cloudinary.com/bcfph9h2/video/upload/v1794828385/videoapertura.mp4" type="video/mp4">
@@ -315,11 +349,34 @@
 
   </main>
 
+
+<!-- GML INDEX PRELOADER DISMISS - START -->
+<script>
+(function () {
+  const loader = document.getElementById('gml-page-loader');
+  if (!loader) return;
+  let hidden = false;
+  function hideLoader() {
+    if (hidden) return;
+    hidden = true;
+    loader.classList.add('is-hidden');
+    window.setTimeout(function () { loader.remove(); }, 520);
+  }
+  function afterInitialPaint() {
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        window.setTimeout(hideLoader, 100);
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', afterInitialPaint, { once: true });
+  } else { afterInitialPaint(); }
+  window.setTimeout(hideLoader, 5000);
+})();
+</script>
+<!-- GML INDEX PRELOADER DISMISS - END -->
 </body>
 </html>
-
-
-
-
 
 
