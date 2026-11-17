@@ -610,9 +610,43 @@
       border: 0;
     }
   </style>
+
+  <!-- GML ON AIR PRELOADER - START -->
+  <style>
+    #gml-page-loader {
+      position: fixed; inset: 0; z-index: 2147483647; display: flex;
+      width: 100%; height: 100vh; height: 100dvh; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: var(--bg2, #071227); color: var(--text, #fff);
+      opacity: 1; visibility: visible;
+      transition: opacity .45s ease, visibility .45s ease;
+    }
+    #gml-page-loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    #gml-page-loader .gml-loader-spinner {
+      width: 46px; height: 46px; margin-bottom: 16px;
+      border: 3px solid rgba(247,181,0,.25); border-top-color: var(--gold, #f7b500);
+      border-radius: 50%; animation: gml-loader-spin .85s linear infinite;
+    }
+    #gml-page-loader .gml-loader-text {
+      margin: 0; color: var(--gold, #f7b500);
+      font: 500 16px/1.4 Arial, sans-serif; text-align: center;
+    }
+    @keyframes gml-loader-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      #gml-page-loader, #gml-page-loader .gml-loader-spinner { transition: none; animation: none; }
+    }
+  </style>
+  <!-- GML ON AIR PRELOADER - END -->
 </head>
 
 <body>
+<!-- GML ON AIR PRELOADER - START -->
+<div id="gml-page-loader" role="status" aria-live="polite">
+  <div class="gml-loader-spinner" aria-hidden="true"></div>
+  <p class="gml-loader-text">Preparando la experiencia…</p>
+</div>
+<!-- GML ON AIR PRELOADER - END -->
+
   <main id="app-container">
     <div class="tv-fixed-shell">
       <section class="tv-player-container" id="tvPlayerBox" aria-label="GLM On Air">
@@ -950,7 +984,6 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
   { url: "https://youtu.be/9_Dd8f368ns", activo: true },
   { url: "https://youtu.be/kCoJ_2a5lbU", activo: true },
-  { url: "https://youtu.be/T1tBMQEhj8U", activo: true },
   { url: "https://youtu.be/FQpflYKCcVE", activo: true },
   { url: "https://youtu.be/DRasy5O0Udg", activo: true },
   { url: "https://youtu.be/-Bt7Hi4d_wE", activo: true },
@@ -960,16 +993,12 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/6K4NJle5gYk", activo: true },
   { url: "https://youtu.be/aTVhGKDzQVs", activo: true },
   { url: "https://youtu.be/pa12immVyW8", activo: true },
-  { url: "https://youtu.be/YuHS30MGwOk", activo: true },
-  { url: "https://youtu.be/4VRWHOREdS4", activo: true },
-  { url: "https://youtu.be/8Hh2QgXSpaU", activo: true },
+  { url: "https://youtu.be/7AT0HSwWTj0", activo: true },
   { url: "https://youtu.be/h8SURa8bg9k", activo: true },
   { url: "https://youtu.be/d0dZyGFvhiA", activo: true },
   { url: "https://youtu.be/ONL821m3l0k", activo: true },
   { url: "https://youtu.be/ppRjkdg2lGU", activo: true },
   { url: "https://youtu.be/cfK1GDKlg5I", activo: true },
-  { url: "https://youtu.be/SU98XAl4nXo", activo: true },
-  
   { url: "https://youtu.be/afiwQoYR6aE", activo: true },
 ];
 (function () {
@@ -1042,5 +1071,32 @@ const GLM_ON_AIR_PLAYLIST = [
 })();
 </script>
 
+
+<!-- GML ON AIR PRELOADER DISMISS - START -->
+<script>
+(function () {
+  const loader = document.getElementById('gml-page-loader');
+  if (!loader) return;
+  let hidden = false;
+  function hideLoader() {
+    if (hidden) return;
+    hidden = true;
+    loader.classList.add('is-hidden');
+    window.setTimeout(function () { loader.remove(); }, 520);
+  }
+  function afterInitialPaint() {
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        window.setTimeout(hideLoader, 100);
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', afterInitialPaint, { once: true });
+  } else { afterInitialPaint(); }
+  window.setTimeout(hideLoader, 5000);
+})();
+</script>
+<!-- GML ON AIR PRELOADER DISMISS - END -->
 </body>
 </html>
