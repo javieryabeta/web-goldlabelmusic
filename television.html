@@ -611,46 +611,65 @@
     }
   </style>
 
-  <!-- GML ON AIR PRELOADER - START -->
+  
+
+  <!-- Cartel inicial: halo azul petróleo sobre fondo oscuro, solo en el reproductor. -->
   <style>
-    #gml-page-loader {
-      position: fixed; inset: 0; z-index: 2147483647; display: flex;
-      width: 100%; height: 100vh; height: 100dvh; flex-direction: column;
-      align-items: center; justify-content: center;
-      background: var(--bg2, #071227); color: var(--text, #fff);
-      opacity: 1; visibility: visible;
-      transition: opacity .45s ease, visibility .45s ease;
+    #glm-intro-card {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: #0b0f14;
+      background-image: radial-gradient(ellipse at 50% 50%,
+        #205B73 0%, #184557 18%, #112c39 38%, #0d1821 60%, #0b0f14 82%);
+      opacity: 1;
+      transition: opacity 900ms ease-in-out;
     }
-    #gml-page-loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-    #gml-page-loader .gml-loader-spinner {
-      width: 46px; height: 46px; margin-bottom: 16px;
-      border: 3px solid rgba(247,181,0,.25); border-top-color: var(--gold, #f7b500);
-      border-radius: 50%; animation: gml-loader-spin .85s linear infinite;
+    #glm-intro-card .glm-intro-name {
+      margin: 0;
+      padding: 20px;
+      color: #f4b815;
+      font-family: inherit;
+      font-size: clamp(28px, 6vw, 80px);
+      font-weight: 700;
+      letter-spacing: .035em;
+      line-height: 1.2;
+      text-align: center;
     }
-    #gml-page-loader .gml-loader-text {
-      margin: 0; color: var(--gold, #f7b500);
-      font: 500 16px/1.4 Arial, sans-serif; text-align: center;
+    #glm-intro-card .glm-intro-subtitle {
+      margin: 0;
+      padding: 0 20px 20px;
+      color: #f4b815;
+      font-size: clamp(12px, 1.8vw, 22px);
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: .04em;
+      text-align: center;
     }
-    @keyframes gml-loader-spin { to { transform: rotate(360deg); } }
+    #glm-intro-card.is-fading { opacity: 0; pointer-events: none; }
     @media (prefers-reduced-motion: reduce) {
-      #gml-page-loader, #gml-page-loader .gml-loader-spinner { transition: none; animation: none; }
+      #glm-intro-card { transition-duration: 1ms; }
     }
   </style>
-  <!-- GML ON AIR PRELOADER - END -->
+
 </head>
 
 <body>
-<!-- GML ON AIR PRELOADER - START -->
-<div id="gml-page-loader" role="status" aria-live="polite">
-  <div class="gml-loader-spinner" aria-hidden="true"></div>
-  <p class="gml-loader-text">Preparando la experiencia…</p>
-</div>
-<!-- GML ON AIR PRELOADER - END -->
+
 
   <main id="app-container">
     <div class="tv-fixed-shell">
       <section class="tv-player-container" id="tvPlayerBox" aria-label="GLM On Air">
         <div class="tv-iframe-wrapper">
+          <div id="glm-intro-card" role="status" aria-label="En emisión. Videoclips, estrenos y artistas.">
+            <p class="glm-intro-name">EN EMISIÓN</p>
+            <p class="glm-intro-subtitle">Videoclips · Estrenos · Artistas</p>
+          </div>
           <iframe id="glmOnAirPlayer" title="GLM On Air"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
@@ -1072,31 +1091,25 @@ const GLM_ON_AIR_PLAYLIST = [
 </script>
 
 
-<!-- GML ON AIR PRELOADER DISMISS - START -->
+
+
 <script>
+/* CARTEL INICIAL: 7 segundos de permanencia y 0,9 segundos de fundido.
+   Se ejecuta una vez al cargar; no se repite entre videoclips.
+   No altera el funcionamiento del reproductor situado por debajo.
+*/
 (function () {
-  const loader = document.getElementById('gml-page-loader');
-  if (!loader) return;
-  let hidden = false;
-  function hideLoader() {
-    if (hidden) return;
-    hidden = true;
-    loader.classList.add('is-hidden');
-    window.setTimeout(function () { loader.remove(); }, 520);
-  }
-  function afterInitialPaint() {
-    window.requestAnimationFrame(function () {
-      window.requestAnimationFrame(function () {
-        window.setTimeout(hideLoader, 100);
-      });
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', afterInitialPaint, { once: true });
-  } else { afterInitialPaint(); }
-  window.setTimeout(hideLoader, 5000);
+  const INTRO_DURATION_MS = 7000;
+  const FADE_DURATION_MS = 900;
+  const card = document.getElementById("glm-intro-card");
+  if (!card) return;
+  window.setTimeout(function () {
+    card.classList.add("is-fading");
+    card.setAttribute("aria-hidden", "true");
+    window.setTimeout(function () { card.remove(); }, FADE_DURATION_MS + 100);
+  }, INTRO_DURATION_MS);
 })();
 </script>
-<!-- GML ON AIR PRELOADER DISMISS - END -->
+
 </body>
 </html>
