@@ -679,12 +679,12 @@
       </section>
 
       <nav class="tabs-header" id="navTabsContainer" aria-label="Navegación principal">
-      <a
-        href="https://www.goldlabelmusic.com/inicio"
-        class="nav-tab active"
-        target="_top">
-        <i class="fas fa-home" aria-hidden="true"></i> Inicio
-      </a>
+
+      <button type="button" id="glmSoundToggle" class="nav-tab active" disabled
+        style="font-family: inherit;" aria-label="Activar sonido">
+        <i class="fas fa-volume-mute" aria-hidden="true"></i>
+        <span>Activar sonido</span>
+      </button>
 
       <a
         href="https://www.goldlabelmusic.com/distribucion"
@@ -721,13 +721,6 @@
         <i class="fas fa-podcast" aria-hidden="true"></i> Radio
       </a>
 
-      <a
-        href="https://lagigaradio.es/"
-        class="nav-tab"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i class="fas fa-tv" aria-hidden="true"></i> La Giga Radio
-      </a>
       </nav>
     </div>
 
@@ -1040,10 +1033,32 @@ const GLM_ON_AIR_PLAYLIST = [
   let index = Math.floor(Math.random() * videos.length);
   let player;
   let failures = 0;
+  const soundButton = document.getElementById("glmSoundToggle");
+  function syncSoundButton() {
+    if (!soundButton || !player || typeof player.isMuted !== "function") return;
+    const muted = player.isMuted();
+    const label = muted ? "Activar sonido" : "Silenciar";
+    soundButton.querySelector("span").textContent = label;
+    soundButton.querySelector("i").className = muted ? "fas fa-volume-mute" : "fas fa-volume-up";
+    soundButton.setAttribute("aria-label", label);
+  }
+  if (soundButton) {
+    soundButton.addEventListener("click", function () {
+      if (!player || typeof player.isMuted !== "function") return;
+      if (player.isMuted()) {
+        if (player.getVolume() === 0) player.setVolume(100);
+        player.unMute();
+      } else {
+        player.mute();
+      }
+      syncSoundButton();
+      window.setTimeout(syncSoundButton, 150);
+    });
+  }
   // Calidad automática de YouTube. No se solicita activar subtítulos.
-  // Controles y fullscreen nativos, sin capas que oculten información.
+  // Controles nativos ocultos; sonido controlado desde la navegación.
   const params = new URLSearchParams({enablejsapi:"1", autoplay:"1", mute:"1",
-    playsinline:"1", controls:"1", fs:"1", rel:"0"});
+    playsinline:"1", controls:"0", fs:"1", rel:"0"});
   if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
     params.set("origin", location.origin);
   }
@@ -1056,8 +1071,14 @@ const GLM_ON_AIR_PLAYLIST = [
   function initialize() {
     if (player) return;
     player = new YT.Player("glmOnAirPlayer", {events: {
-      onReady: function(e) { e.target.mute(); e.target.playVideo(); },
+      onReady: function(e) {
+        e.target.mute();
+        e.target.playVideo();
+        if (soundButton) soundButton.disabled = false;
+        syncSoundButton();
+      },
       onStateChange: function(e) {
+        syncSoundButton();
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
         if (e.data === YT.PlayerState.ENDED) next();
       },
@@ -1094,12 +1115,12 @@ const GLM_ON_AIR_PLAYLIST = [
 
 
 <script>
-/* CARTEL INICIAL: 7 segundos de permanencia y 0,9 segundos de fundido.
+/* CARTEL INICIAL: 6 segundos de permanencia y 0,9 segundos de fundido.
    Se ejecuta una vez al cargar; no se repite entre videoclips.
    No altera el funcionamiento del reproductor situado por debajo.
 */
 (function () {
-  const INTRO_DURATION_MS = 5500;
+  const INTRO_DURATION_MS = 6000;
   const FADE_DURATION_MS = 900;
   const card = document.getElementById("glm-intro-card");
   if (!card) return;
