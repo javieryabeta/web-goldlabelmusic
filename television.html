@@ -203,6 +203,7 @@
       width: 100%;
       height: 100%;
       border: 0;
+      pointer-events: none;
     }
 
 
@@ -640,6 +641,11 @@
       letter-spacing: .035em;
       line-height: 1.2;
       text-align: center;
+      animation: glmOnAirZoom 6s linear 1 both;
+    }
+    @keyframes glmOnAirZoom {
+      from { transform: scale(.95); }
+      to { transform: scale(1.05); }
     }
     #glm-intro-card .glm-intro-subtitle {
       margin: 0;
@@ -990,14 +996,8 @@
    Publica los cambios y recarga la página para aplicarlos.
 */
 const GLM_ON_AIR_PLAYLIST = [
-    // Gold Label Music - Identidad
-  { url: "https://youtu.be/zp7PVKkxTeU", activo: true },
-  // Drew - Hasta el final
-  { url: "https://youtu.be/msklOeoEv7o", activo: true },
-  // JL.Fauli - Clasic 96
-  { url: "https://youtu.be/MAd15qKQP7U", activo: true },
-  // JL.Fauli - Música, viaje y sueños (programa especial)
-  { url: "https://youtu.be/QwxmAUecoPs", activo: true },
+  // Emisión - 1
+  { url: "https://youtu.be/xZy7V70qJT8", activo: true },
   // Coffe King - Agónica
   { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
   // JL Fauli - Tabarca
@@ -1008,7 +1008,7 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/FQpflYKCcVE", activo: true },
   // Eva Miller - My Way
   { url: "https://youtu.be/FG3syYxDtm4", activo: true },
-    // Angel en Secreto - More Than Words (cover)
+  // Angel en Secreto - More Than Words (cover)
   { url: "https://youtu.be/DRasy5O0Udg", activo: true },
   // Eddu Dai'z - Vive
   { url: "https://youtu.be/-Bt7Hi4d_wE", activo: true },
@@ -1020,15 +1020,9 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/kipbR1dVpOk", activo: true },
   // Ray Rosario - No Llegué a Conocerla
   { url: "https://youtu.be/H0T3cMhmBWI", activo: true },
-    // Bachata For Life - Entrevista Gold Label Music
-  { url: "https://youtu.be/v948Hd2fIiw", activo: true },
-    // Ángel & Guisela Santa Cruz - La Maravilla de Hacerte el Amor
-  { url: "https://youtu.be/3Vjm6p9VYkU", activo: true },
-  // Eddu Dai'z - Muévelo
-  { url: "https://youtu.be/oghwg81mTX8", activo: true },
   // Gold Label Music - Distribution
   { url: "https://youtu.be/FUu-XDkPtC0", activo: true },
-    // René Eduardo - Striptease
+  // René Eduardo - Striptease
   { url: "https://youtu.be/hIYNGLmcFf0", activo: true },
   // Eddu Dai'z - Ecuación Perfecta
   { url: "https://youtu.be/6K4NJle5gYk", activo: true },
@@ -1036,20 +1030,14 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/aTVhGKDzQVs", activo: true },
   // Rey More - Eres La Reina 
   { url: "https://youtu.be/pa12immVyW8", activo: true },
-  // René Eduardo - Ese Movimiento 
-  { url: "https://youtu.be/7AT0HSwWTj0", activo: true },
   // Rey More - Vete al Infierno 
   { url: "https://youtu.be/h8SURa8bg9k", activo: true },
-  // René Eduardo - Latinoamericano 
-  { url: "https://youtu.be/d0dZyGFvhiA", activo: true },
   // V Gastelu & JL.Fauli - (programa especial)
   { url: "https://youtu.be/ONL821m3l0k", activo: true },
   // Sylvia Mund / YÛMA - Regresa (cover de Augusto Polo Campos)
   { url: "https://youtu.be/ppRjkdg2lGU", activo: true },
   // PJ. Smith - Folsom Prison 
   { url: "https://youtu.be/cfK1GDKlg5I", activo: true },
-  // Roberto Sachun - Te extraño en la distancia
-  { url: "https://youtu.be/afiwQoYR6aE", activo: true },
 ];
 (function () {
   function extractId(value) {
@@ -1084,7 +1072,6 @@ const GLM_ON_AIR_PLAYLIST = [
     soundButton.addEventListener("click", function () {
       if (!player || typeof player.isMuted !== "function") return;
       if (player.isMuted()) {
-        if (player.getVolume() === 0) player.setVolume(100);
         player.unMute();
       } else {
         player.mute();
@@ -1096,7 +1083,7 @@ const GLM_ON_AIR_PLAYLIST = [
   // Calidad automática de YouTube. No se solicita activar subtítulos.
   // Controles nativos ocultos; sonido controlado desde la navegación.
   const params = new URLSearchParams({enablejsapi:"1", autoplay:"1", mute:"1",
-    playsinline:"1", controls:"0", fs:"1", rel:"0"});
+    playsinline:"1", controls:"0", fs:"1", rel:"0", cc_load_policy:"0", disablekb:"1"});
   if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
     params.set("origin", location.origin);
   }
@@ -1172,3 +1159,4 @@ const GLM_ON_AIR_PLAYLIST = [
 
 </body>
 </html>
+
