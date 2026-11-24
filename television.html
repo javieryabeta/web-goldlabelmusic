@@ -1071,10 +1071,13 @@ const GLM_ON_AIR_PLAYLIST = [
   if (soundButton) {
     soundButton.addEventListener("click", function () {
       if (!player || typeof player.isMuted !== "function") return;
-      // El gesto del botón activa el audio y solicita reproducir/reanudar el vídeo.
-      // Así el mismo control también recupera la imagen si el reproductor se pausa.
+      // Recargar el mismo vídeo desde su posición fuerza la recuperación del
+      // decodificador si YouTube sigue indicando "reproduciendo" con la imagen parada.
+      const startSeconds = typeof player.getCurrentTime === "function"
+        ? Math.max(0, player.getCurrentTime() || 0)
+        : 0;
       player.unMute();
-      player.playVideo();
+      player.loadVideoById({ videoId: videos[index], startSeconds });
       syncSoundButton();
       window.setTimeout(syncSoundButton, 250);
     });
