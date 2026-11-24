@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- GLM On Air | Versión 1.2 | Controles ocultos con interacción habilitada | 24-11-2026 -->
+  <!-- GLM On Air | Versión 1.3 | Prueba aislada: controles ocultos | 24-11-2026 -->
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1105,11 +1105,6 @@ const GLM_ON_AIR_PLAYLIST = [
       onStateChange: function(e) {
         syncSoundButton();
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
-        if (e.data === YT.PlayerState.PAUSED) {
-          window.setTimeout(function() {
-            if (player && player.getPlayerState() === YT.PlayerState.PAUSED) player.playVideo();
-          }, 100);
-        }
         if (e.data === YT.PlayerState.ENDED) next();
       },
       onError: function(e) {
