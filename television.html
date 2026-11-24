@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- GLM On Air | Versión 1.9 | Bloqueo 30 segundos tras activar sonido | 24-11-2026 -->
+  <!-- GLM On Air | Versión 2.0 | Base v1.1 con bloqueo a los 30 segundos | 24-11-2026 -->
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1061,14 +1061,6 @@ const GLM_ON_AIR_PLAYLIST = [
   let failures = 0;
   const soundButton = document.getElementById("glmSoundToggle");
   let screenLockTimer = null;
-  function unlockScreenForThirtySeconds() {
-    frame.style.pointerEvents = "auto";
-    if (screenLockTimer) window.clearTimeout(screenLockTimer);
-    screenLockTimer = window.setTimeout(function() {
-      frame.style.pointerEvents = "none";
-      screenLockTimer = null;
-    }, 30000);
-  }
   function syncSoundButton() {
     if (!soundButton || !player || typeof player.isMuted !== "function") return;
     const muted = player.isMuted();
@@ -1081,8 +1073,12 @@ const GLM_ON_AIR_PLAYLIST = [
     soundButton.addEventListener("click", function () {
       if (!player || typeof player.isMuted !== "function") return;
       if (player.isMuted()) {
-        unlockScreenForThirtySeconds();
         player.unMute();
+        if (screenLockTimer) window.clearTimeout(screenLockTimer);
+        screenLockTimer = window.setTimeout(function() {
+          frame.style.pointerEvents = "none";
+          screenLockTimer = null;
+        }, 30000);
       } else {
         player.mute();
       }
