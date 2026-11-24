@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- GLM On Air | Versión 1.4 | Prueba: controles visibles con pantalla bloqueada | 24-11-2026 -->
+  <!-- GLM On Air | Versión 1.5 | Bloqueo temporal al activar sonido | 24-11-2026 -->
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1061,6 +1061,13 @@ const GLM_ON_AIR_PLAYLIST = [
   let player;
   let failures = 0;
   const soundButton = document.getElementById("glmSoundToggle");
+  function relockPlayerAfterGesture() {
+    window.setTimeout(function() {
+      if (player && player.getPlayerState() === YT.PlayerState.PLAYING) {
+        frame.style.pointerEvents = "none";
+      }
+    }, 700);
+  }
   function syncSoundButton() {
     if (!soundButton || !player || typeof player.isMuted !== "function") return;
     const muted = player.isMuted();
@@ -1072,11 +1079,17 @@ const GLM_ON_AIR_PLAYLIST = [
   if (soundButton) {
     soundButton.addEventListener("click", function () {
       if (!player || typeof player.isMuted !== "function") return;
+      // Abrir brevemente el iframe durante el gesto del usuario permite que
+      // YouTube acepte el cambio de audio; después se vuelve a bloquear.
+      frame.style.pointerEvents = "auto";
+      const state = player.getPlayerState();
       if (player.isMuted()) {
         player.unMute();
       } else {
         player.mute();
       }
+      if (state !== YT.PlayerState.PLAYING) player.playVideo();
+      relockPlayerAfterGesture();
       syncSoundButton();
       window.setTimeout(syncSoundButton, 150);
     });
@@ -1105,7 +1118,10 @@ const GLM_ON_AIR_PLAYLIST = [
       },
       onStateChange: function(e) {
         syncSoundButton();
-        if (e.data === YT.PlayerState.PLAYING) failures = 0;
+        if (e.data === YT.PlayerState.PLAYING) {
+          failures = 0;
+          relockPlayerAfterGesture();
+        }
         if (e.data === YT.PlayerState.ENDED) next();
       },
       onError: function(e) {
