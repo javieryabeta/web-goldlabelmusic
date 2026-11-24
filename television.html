@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- GLM On Air | Versión 1.0 | 24-11-2026 -->
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1071,13 +1072,13 @@ const GLM_ON_AIR_PLAYLIST = [
   if (soundButton) {
     soundButton.addEventListener("click", function () {
       if (!player || typeof player.isMuted !== "function") return;
-      // Recargar el mismo vídeo desde su posición fuerza la recuperación del
-      // decodificador si YouTube sigue indicando "reproduciendo" con la imagen parada.
-      const startSeconds = typeof player.getCurrentTime === "function"
-        ? Math.max(0, player.getCurrentTime() || 0)
-        : 0;
-      player.unMute();
-      player.loadVideoById({ videoId: videos[index], startSeconds });
+      const wasMuted = player.isMuted();
+      const state = typeof player.getPlayerState === "function"
+        ? player.getPlayerState()
+        : YT.PlayerState.UNSTARTED;
+      if (wasMuted) player.unMute();
+      // No reiniciar un vídeo que ya está en marcha; si está pausado, Play sí lo arranca.
+      if (!wasMuted || state !== YT.PlayerState.PLAYING) player.playVideo();
       syncSoundButton();
       window.setTimeout(syncSoundButton, 250);
     });
@@ -1106,7 +1107,9 @@ const GLM_ON_AIR_PLAYLIST = [
       },
       onStateChange: function(e) {
         syncSoundButton();
-        if (e.data === YT.PlayerState.PLAYING) failures = 0;
+        if (e.data === YT.PlayerState.PLAYING) {
+          failures = 0;
+        }
         if (e.data === YT.PlayerState.ENDED) next();
       },
       onError: function(e) {
