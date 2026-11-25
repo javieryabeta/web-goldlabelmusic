@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- GLM On Air | Versión 2.3 | Sonido sin reiniciar el vídeo y código depurado | 25-11-2026 -->
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -98,16 +97,15 @@
       position: absolute;
       inset: 0;
       z-index: 1;
-      display: block;
       width: 100%;
+      height: 100%;
+      border: 0;
+      pointer-events: auto;
+      display: block;
       min-width: 100%;
       max-width: none;
-      height: 100%;
       margin: 0;
-      border: 0;
     }
-
-
 
     /* Navegación de escritorio */
     .tabs-header {
@@ -413,7 +411,9 @@
 
     /* Único ajuste visual: el reproductor llena el ancho del bloque incrustado.
        El ancho exterior de Google Sites se configura en su editor, no aquí. */
-    .tv-fixed-shell, .tv-player-container, .tv-iframe-wrapper {
+    .tv-fixed-shell,
+    .tv-player-container,
+    .tv-iframe-wrapper {
       left: 0;
       right: 0;
       width: 100%;
@@ -423,8 +423,6 @@
       box-sizing: border-box;
     }
   </style>
-
-  
 
   <!-- Cartel inicial: halo azul petróleo sobre fondo oscuro, solo en el reproductor. -->
   <style>
@@ -479,7 +477,6 @@
 
 <body>
 
-
   <main id="app-container">
     <div class="tv-fixed-shell">
       <section class="tv-player-container" id="tvPlayerBox" aria-label="GLM On Air">
@@ -492,53 +489,50 @@
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowfullscreen></iframe>
-          
         </div>
       </section>
 
       <nav class="tabs-header" id="navTabsContainer" aria-label="Navegación principal">
+        <button type="button" id="glmSoundToggle" class="nav-tab active" disabled
+          style="font-family: inherit;" aria-label="Activar sonido">
+          <i class="fas fa-volume-mute" aria-hidden="true"></i>
+          <span>Activar sonido</span>
+        </button>
 
-      <button type="button" id="glmSoundToggle" class="nav-tab active" disabled
-        style="font-family: inherit;" aria-label="Activar sonido">
-        <i class="fas fa-volume-mute" aria-hidden="true"></i>
-        <span>Activar sonido</span>
-      </button>
+        <a
+          href="https://www.goldlabelmusic.com/distribucion"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-compact-disc" aria-hidden="true"></i> Distribución
+        </a>
 
-      <a
-        href="https://www.goldlabelmusic.com/distribucion"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-compact-disc" aria-hidden="true"></i> Distribución
-      </a>
+        <a
+          href="https://www.goldlabelmusic.com/promocion"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-bullhorn" aria-hidden="true"></i> Promoción
+        </a>
 
-      <a
-        href="https://www.goldlabelmusic.com/promocion"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-bullhorn" aria-hidden="true"></i> Promoción
-      </a>
+        <a
+          href="https://www.goldlabelmusic.com/branding"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-gem" aria-hidden="true"></i> Branding
+        </a>
 
-      <a
-        href="https://www.goldlabelmusic.com/branding"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-gem" aria-hidden="true"></i> Branding
-      </a>
+        <a
+          href="https://www.goldlabelmusic.com/booking"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-users" aria-hidden="true"></i> Booking
+        </a>
 
-      <a
-        href="https://www.goldlabelmusic.com/booking"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-users" aria-hidden="true"></i> Booking
-      </a>
-
-      <a
-        href="https://www.goldlabelmusic.com/radio"
-        class="nav-tab"
-        target="_top">
-        <i class="fas fa-podcast" aria-hidden="true"></i> Radio
-      </a>
-
+        <a
+          href="https://www.goldlabelmusic.com/radio"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-podcast" aria-hidden="true"></i> Radio
+        </a>
       </nav>
     </div>
 
@@ -711,7 +705,9 @@
     });
 
     document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") closeShareOverlay();
+      if (event.key === "Escape") {
+        closeShareOverlay();
+      }
     });
   </script>
 
@@ -766,6 +762,7 @@ const GLM_ON_AIR_PLAYLIST = [
   // PJ. Smith - Folsom Prison 
   { url: "https://youtu.be/cfK1GDKlg5I", activo: true },
 ];
+
 (function () {
   function extractId(value) {
     try {
@@ -779,93 +776,127 @@ const GLM_ON_AIR_PLAYLIST = [
       return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
     } catch (_) { return null; }
   }
+
   const videos = [...new Set(GLM_ON_AIR_PLAYLIST.filter(v => v.activo !== false)
     .map(v => extractId(v.url)).filter(Boolean))];
-  if (!videos.length) { console.warn("GLM On Air: parrilla vacía."); return; }
+
+  if (!videos.length) {
+    console.warn("GLM On Air: parrilla vacía.");
+    return;
+  }
+
   const frame = document.getElementById("glmOnAirPlayer");
   let index = Math.floor(Math.random() * videos.length);
   let player;
   let failures = 0;
   const soundButton = document.getElementById("glmSoundToggle");
+
   function syncSoundButton() {
     if (!soundButton || !player || typeof player.isMuted !== "function") return;
+
     const muted = player.isMuted();
     const label = muted ? "Activar sonido" : "Silenciar";
+
     soundButton.querySelector("span").textContent = label;
     soundButton.querySelector("i").className = muted ? "fas fa-volume-mute" : "fas fa-volume-up";
     soundButton.setAttribute("aria-label", label);
   }
+
   if (soundButton) {
     soundButton.addEventListener("click", function () {
       if (!player || typeof player.isMuted !== "function") return;
+
       if (player.isMuted()) {
-        // Cambia solo el audio: no vuelve a cargar ni a reiniciar el videoclip.
         player.unMute();
       } else {
         player.mute();
       }
+
       syncSoundButton();
       window.setTimeout(syncSoundButton, 150);
     });
   }
-  // Calidad automática de YouTube. No se solicita activar subtítulos.
-  // Controles nativos visibles; sonido controlado desde la navegación.
-  const params = new URLSearchParams({enablejsapi:"1", autoplay:"1", mute:"1",
-    playsinline:"1", controls:"1", rel:"0", cc_load_policy:"0"});
+
+  // Controles nativos de YouTube activados y reproductor interactivo.
+  const params = new URLSearchParams({
+    enablejsapi: "1",
+    autoplay: "1",
+    mute: "1",
+    playsinline: "1",
+    controls: "1",
+    fs: "1",
+    rel: "0",
+    cc_load_policy: "0",
+    disablekb: "0"
+  });
+
   if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
     params.set("origin", location.origin);
   }
+
   frame.src = "https://www.youtube.com/embed/" + videos[index] + "?" + params;
+
   function next() {
     if (!player) return;
     index = (index + 1) % videos.length;
     player.loadVideoById(videos[index]);
   }
+
   function initialize() {
     if (player) return;
-    player = new YT.Player("glmOnAirPlayer", {events: {
-      onReady: function(e) {
-        e.target.mute();
-        e.target.playVideo();
-        if (soundButton) soundButton.disabled = false;
-        syncSoundButton();
-      },
-      onStateChange: function(e) {
-        syncSoundButton();
-        if (e.data === YT.PlayerState.PLAYING) failures = 0;
-        if (e.data === YT.PlayerState.ENDED) next();
-      },
-      onError: function(e) {
-        console.warn("GLM On Air / YouTube:", e.data, videos[index]);
-        if (e.data === 153) {
-          console.warn("Comprueba el Referer en la página HTTPS publicada."); return;
+
+    player = new YT.Player("glmOnAirPlayer", {
+      events: {
+        onReady: function(e) {
+          e.target.mute();
+          e.target.playVideo();
+
+          if (soundButton) soundButton.disabled = false;
+          syncSoundButton();
+        },
+        onStateChange: function(e) {
+          syncSoundButton();
+
+          if (e.data === YT.PlayerState.PLAYING) failures = 0;
+          if (e.data === YT.PlayerState.ENDED) next();
+        },
+        onError: function(e) {
+          console.warn("GLM On Air / YouTube:", e.data, videos[index]);
+
+          if (e.data === 153) {
+            console.warn("Comprueba el Referer en la página HTTPS publicada.");
+            return;
+          }
+
+          failures++;
+
+          if (failures < videos.length && [2, 5, 100, 101, 150].includes(e.data)) {
+            setTimeout(next, 1200);
+          }
+        },
+        onAutoplayBlocked: function() {
+          console.info("El navegador ha bloqueado el inicio automático.");
         }
-        failures++;
-        if (failures < videos.length && [2,5,100,101,150].includes(e.data)) {
-          setTimeout(next, 1200);
-        }
-      },
-      onAutoplayBlocked: function() {
-        console.info("El navegador ha bloqueado el inicio automático.");
       }
-    }});
+    });
   }
-  if (window.YT && window.YT.Player) initialize();
-  else {
+
+  if (window.YT && window.YT.Player) {
+    initialize();
+  } else {
     const previous = window.onYouTubeIframeAPIReady;
+
     window.onYouTubeIframeAPIReady = function() {
       if (typeof previous === "function") previous();
       initialize();
     };
+
     const script = document.createElement("script");
     script.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(script);
   }
 })();
 </script>
-
-
-
 
 <script>
 /* CARTEL INICIAL: 6 segundos de permanencia y 0,9 segundos de fundido.
@@ -876,15 +907,19 @@ const GLM_ON_AIR_PLAYLIST = [
   const INTRO_DURATION_MS = 6000;
   const FADE_DURATION_MS = 900;
   const card = document.getElementById("glm-intro-card");
+
   if (!card) return;
+
   window.setTimeout(function () {
     card.classList.add("is-fading");
     card.setAttribute("aria-hidden", "true");
-    window.setTimeout(function () { card.remove(); }, FADE_DURATION_MS + 100);
+
+    window.setTimeout(function () {
+      card.remove();
+    }, FADE_DURATION_MS + 100);
   }, INTRO_DURATION_MS);
 })();
 </script>
 
 </body>
 </html>
-
