@@ -90,7 +90,9 @@
     }
 
     @supports (height: 100dvh) {
-      :root { --player-height: min(56.25vw, calc(100dvh - var(--tabs-height) - 120px)); }
+      :root {
+        --player-height: min(56.25vw, calc(100dvh - var(--tabs-height) - 120px));
+      }
     }
 
     .tv-iframe-wrapper iframe {
@@ -107,7 +109,7 @@
       margin: 0;
     }
 
-    /* Navegación de escritorio */
+    /* Navegación */
     .tabs-header {
       position: relative;
       z-index: 2;
@@ -128,7 +130,9 @@
       background: var(--bg1);
     }
 
-    .tabs-header::-webkit-scrollbar { display: none; }
+    .tabs-header::-webkit-scrollbar {
+      display: none;
+    }
 
     .nav-tab {
       display: inline-flex;
@@ -170,6 +174,11 @@
       color: #0b1630;
     }
 
+    .nav-tab:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
     /* Título, subtítulo y descripción */
     .tv-header-block {
       margin-bottom: 28px;
@@ -198,6 +207,16 @@
       color: #fff;
       font-size: 15px;
       line-height: 1.6;
+    }
+
+    /* Aviso de reproducción */
+    #glmPlaybackNotice {
+      margin: 0;
+      padding: 8px 12px;
+      background: var(--bg1);
+      color: #fff;
+      font-size: 13px;
+      text-align: center;
     }
 
     /* Tarjetas finales */
@@ -388,9 +407,19 @@
     }
 
     @media (max-width: 768px) {
-      :root { --tabs-height: 58px; }
-      .tv-content-scroll { padding: 20px 14px 0; }
-      .tabs-header { justify-content: flex-start; gap: 10px; padding: 8px; }
+      :root {
+        --tabs-height: 58px;
+      }
+
+      .tv-content-scroll {
+        padding: 20px 14px 0;
+      }
+
+      .tabs-header {
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 8px;
+      }
 
       .nav-tab {
         padding: 8px 16px;
@@ -436,11 +465,19 @@
       flex-direction: column;
       overflow: hidden;
       background-color: #0b0f14;
-      background-image: radial-gradient(ellipse at 50% 50%,
-        #205B73 0%, #184557 18%, #112c39 38%, #0d1821 60%, #0b0f14 82%);
+      background-image: radial-gradient(
+        ellipse at 50% 50%,
+        #205B73 0%,
+        #184557 18%,
+        #112c39 38%,
+        #0d1821 60%,
+        #0b0f14 82%
+      );
       opacity: 1;
       transition: opacity 900ms ease-in-out;
+      pointer-events: none;
     }
+
     #glm-intro-card .glm-intro-name {
       margin: 0;
       padding: 20px;
@@ -453,10 +490,17 @@
       text-align: center;
       animation: glmOnAirZoom 6s linear 1 both;
     }
+
     @keyframes glmOnAirZoom {
-      from { transform: scale(.95); }
-      to { transform: scale(1.05); }
+      from {
+        transform: scale(.95);
+      }
+
+      to {
+        transform: scale(1.05);
+      }
     }
+
     #glm-intro-card .glm-intro-subtitle {
       margin: 0;
       padding: 0 20px 20px;
@@ -467,9 +511,16 @@
       letter-spacing: .04em;
       text-align: center;
     }
-    #glm-intro-card.is-fading { opacity: 0; pointer-events: none; }
+
+    #glm-intro-card.is-fading {
+      opacity: 0;
+      pointer-events: none;
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      #glm-intro-card { transition-duration: 1ms; }
+      #glm-intro-card {
+        transition-duration: 1ms;
+      }
     }
   </style>
 
@@ -485,6 +536,7 @@
             <p class="glm-intro-name">EN EMISIÓN</p>
             <p class="glm-intro-subtitle">Videoclips · Estrenos · Artistas</p>
           </div>
+
           <iframe id="glmOnAirPlayer" title="GLM On Air"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
@@ -493,8 +545,15 @@
       </section>
 
       <nav class="tabs-header" id="navTabsContainer" aria-label="Navegación principal">
-        <button type="button" id="glmSoundToggle" class="nav-tab active" disabled
-          style="font-family: inherit;" aria-label="Activar sonido">
+        <button
+          type="button"
+          id="glmSoundToggle"
+          class="nav-tab active"
+          disabled
+          style="font-family: inherit;"
+          aria-label="Activar sonido"
+          aria-controls="glmOnAirPlayer"
+          aria-describedby="glmPlaybackNotice">
           <i class="fas fa-volume-mute" aria-hidden="true"></i>
           <span>Activar sonido</span>
         </button>
@@ -534,6 +593,15 @@
           <i class="fas fa-podcast" aria-hidden="true"></i> Radio
         </a>
       </nav>
+
+      <p
+        id="glmPlaybackNotice"
+        role="status"
+        aria-live="polite"
+        hidden>
+        El navegador no ha permitido iniciar el sonido.
+        Pulsa reproducir o activa el volumen directamente en el vídeo.
+      </p>
     </div>
 
     <div class="tv-content-scroll">
@@ -676,6 +744,7 @@
   <script>
     function openShareOverlay() {
       const overlay = document.getElementById("share-overlay");
+
       if (!overlay) return;
 
       overlay.style.display = "flex";
@@ -685,6 +754,7 @@
 
     function closeShareOverlay() {
       const overlay = document.getElementById("share-overlay");
+
       if (!overlay) return;
 
       overlay.style.display = "none";
@@ -692,11 +762,11 @@
       document.body.style.overflow = "";
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       const overlay = document.getElementById("share-overlay");
 
       if (overlay) {
-        overlay.addEventListener("click", function(event) {
+        overlay.addEventListener("click", function (event) {
           if (event.target === overlay) {
             closeShareOverlay();
           }
@@ -704,222 +774,340 @@
       }
     });
 
-    document.addEventListener("keydown", function(event) {
+    document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") {
         closeShareOverlay();
       }
     });
   </script>
 
-<script>
-/* PARRILLA EDITABLE
-   Añadir: copia una línea y cambia el enlace. Conserva la coma.
-   Quitar: elimina la línea. Desactivar temporalmente: activo: false.
-   Orden: mueve las líneas. El primer vídeo se elige al azar.
-   Publica los cambios y recarga la página para aplicarlos.
-*/
-const GLM_ON_AIR_PLAYLIST = [
-  // Emisión - 1
-  { url: "https://youtu.be/xZy7V70qJT8", activo: true },
-  // Coffe King - Agónica
-  { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
-  // JL Fauli - Tabarca
-  { url: "https://youtu.be/9_Dd8f368ns", activo: true },
-  // Donis Salvador - Especial Donis Salvador (programa especial)
-  { url: "https://youtu.be/kCoJ_2a5lbU", activo: true },
-  // Nuestra Música Entre Amigos - Concierto
-  { url: "https://youtu.be/FQpflYKCcVE", activo: true },
-  // Eva Miller - My Way
-  { url: "https://youtu.be/FG3syYxDtm4", activo: true },
-  // Angel en Secreto - More Than Words (cover)
-  { url: "https://youtu.be/DRasy5O0Udg", activo: true },
-  // Eddu Dai'z - Vive
-  { url: "https://youtu.be/-Bt7Hi4d_wE", activo: true },
-  // Bachata For Life - Esa Mujer
-  { url: "https://youtu.be/9VP9TDbv8os", activo: true },
-  // Ray Rosario - Solamente Lloraba
-  { url: "https://youtu.be/T1tBMQEhj8U", activo: true },
-  // Bachata For Life - Amarga Soledad
-  { url: "https://youtu.be/kipbR1dVpOk", activo: true },
-  // Ray Rosario - No Llegué a Conocerla
-  { url: "https://youtu.be/H0T3cMhmBWI", activo: true },
-  // Gold Label Music - Distribution
-  { url: "https://youtu.be/FUu-XDkPtC0", activo: true },
-  // René Eduardo - Striptease
-  { url: "https://youtu.be/hIYNGLmcFf0", activo: true },
-  // Eddu Dai'z - Ecuación Perfecta
-  { url: "https://youtu.be/6K4NJle5gYk", activo: true },
-  // JL.Fauli - Especial JL.Fauli (programa especial)
-  { url: "https://youtu.be/aTVhGKDzQVs", activo: true },
-  // Rey More - Eres La Reina 
-  { url: "https://youtu.be/pa12immVyW8", activo: true },
-  // Rey More - Vete al Infierno 
-  { url: "https://youtu.be/h8SURa8bg9k", activo: true },
-  // V Gastelu & JL.Fauli - (programa especial)
-  { url: "https://youtu.be/ONL821m3l0k", activo: true },
-  // Sylvia Mund / YÛMA - Regresa (cover de Augusto Polo Campos)
-  { url: "https://youtu.be/ppRjkdg2lGU", activo: true },
-  // PJ. Smith - Folsom Prison 
-  { url: "https://youtu.be/cfK1GDKlg5I", activo: true },
-];
+  <script>
+    /* PARRILLA EDITABLE
+       Añadir: copia una línea y cambia el enlace. Conserva la coma.
+       Quitar: elimina la línea. Desactivar temporalmente: activo: false.
+       Orden: mueve las líneas. El primer vídeo se elige al azar.
+       Publica los cambios y recarga la página para aplicarlos.
+    */
+    const GLM_ON_AIR_PLAYLIST = [
+      // Emisión - 1
+      { url: "https://youtu.be/xZy7V70qJT8", activo: true },
+      // Coffe King - Agónica
+      { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
+      // JL Fauli - Tabarca
+      { url: "https://youtu.be/9_Dd8f368ns", activo: true },
+      // Donis Salvador - Especial Donis Salvador (programa especial)
+      { url: "https://youtu.be/kCoJ_2a5lbU", activo: true },
+      // Nuestra Música Entre Amigos - Concierto
+      { url: "https://youtu.be/FQpflYKCcVE", activo: true },
+      // Eva Miller - My Way
+      { url: "https://youtu.be/FG3syYxDtm4", activo: true },
+      // Angel en Secreto - More Than Words (cover)
+      { url: "https://youtu.be/DRasy5O0Udg", activo: true },
+      // Eddu Dai'z - Vive
+      { url: "https://youtu.be/-Bt7Hi4d_wE", activo: true },
+      // Bachata For Life - Esa Mujer
+      { url: "https://youtu.be/9VP9TDbv8os", activo: true },
+      // Ray Rosario - Solamente Lloraba
+      { url: "https://youtu.be/T1tBMQEhj8U", activo: true },
+      // Bachata For Life - Amarga Soledad
+      { url: "https://youtu.be/kipbR1dVpOk", activo: true },
+      // Ray Rosario - No Llegué a Conocerla
+      { url: "https://youtu.be/H0T3cMhmBWI", activo: true },
+      // Gold Label Music - Distribution
+      { url: "https://youtu.be/FUu-XDkPtC0", activo: true },
+      // René Eduardo - Striptease
+      { url: "https://youtu.be/hIYNGLmcFf0", activo: true },
+      // Eddu Dai'z - Ecuación Perfecta
+      { url: "https://youtu.be/6K4NJle5gYk", activo: true },
+      // JL.Fauli - Especial JL.Fauli (programa especial)
+      { url: "https://youtu.be/aTVhGKDzQVs", activo: true },
+      // Rey More - Eres La Reina
+      { url: "https://youtu.be/pa12immVyW8", activo: true },
+      // Rey More - Vete al Infierno
+      { url: "https://youtu.be/h8SURa8bg9k", activo: true },
+      // V Gastelu & JL.Fauli - (programa especial)
+      { url: "https://youtu.be/ONL821m3l0k", activo: true },
+      // Sylvia Mund / YÛMA - Regresa (cover de Augusto Polo Campos)
+      { url: "https://youtu.be/ppRjkdg2lGU", activo: true },
+      // PJ. Smith - Folsom Prison
+      { url: "https://youtu.be/cfK1GDKlg5I", activo: true }
+    ];
 
-(function () {
-  function extractId(value) {
-    try {
-      const u = new URL(value);
-      const host = u.hostname.replace(/^www\./, "");
-      let id = "";
-      if (host === "youtu.be") id = u.pathname.split("/")[1];
-      else if (host === "youtube.com" || host === "m.youtube.com") {
-        id = u.searchParams.get("v") || u.pathname.split("/")[2] || "";
-      }
-      return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
-    } catch (_) { return null; }
-  }
+    (function () {
+      function extractId(value) {
+        try {
+          const url = new URL(value);
+          const host = url.hostname.replace(/^www\./, "");
+          let id = "";
 
-  const videos = [...new Set(GLM_ON_AIR_PLAYLIST.filter(v => v.activo !== false)
-    .map(v => extractId(v.url)).filter(Boolean))];
+          if (host === "youtu.be") {
+            id = url.pathname.split("/")[1];
+          } else if (host === "youtube.com" || host === "m.youtube.com") {
+            id = url.searchParams.get("v") || url.pathname.split("/")[2] || "";
+          }
 
-  if (!videos.length) {
-    console.warn("GLM On Air: parrilla vacía.");
-    return;
-  }
-
-  const frame = document.getElementById("glmOnAirPlayer");
-  let index = Math.floor(Math.random() * videos.length);
-  let player;
-  let failures = 0;
-  const soundButton = document.getElementById("glmSoundToggle");
-
-  function syncSoundButton() {
-    if (!soundButton || !player || typeof player.isMuted !== "function") return;
-
-    const muted = player.isMuted();
-    const label = muted ? "Activar sonido" : "Silenciar";
-
-    soundButton.querySelector("span").textContent = label;
-    soundButton.querySelector("i").className = muted ? "fas fa-volume-mute" : "fas fa-volume-up";
-    soundButton.setAttribute("aria-label", label);
-  }
-
-  if (soundButton) {
-    soundButton.addEventListener("click", function () {
-      if (!player || typeof player.isMuted !== "function") return;
-
-      if (player.isMuted()) {
-        player.unMute();
-      } else {
-        player.mute();
+          return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
+        } catch (error) {
+          return null;
+        }
       }
 
-      syncSoundButton();
-      window.setTimeout(syncSoundButton, 150);
-    });
-  }
+      const videos = [
+        ...new Set(
+          GLM_ON_AIR_PLAYLIST
+            .filter(function (video) {
+              return video.activo !== false;
+            })
+            .map(function (video) {
+              return extractId(video.url);
+            })
+            .filter(Boolean)
+        )
+      ];
 
-  // Controles nativos de YouTube activados y reproductor interactivo.
-  const params = new URLSearchParams({
-    enablejsapi: "1",
-    autoplay: "1",
-    mute: "1",
-    playsinline: "1",
-    controls: "1",
-    fs: "1",
-    rel: "0",
-    cc_load_policy: "0",
-    disablekb: "0"
-  });
+      if (!videos.length) {
+        console.warn("GLM On Air: parrilla vacía.");
+        return;
+      }
 
-  if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
-    params.set("origin", location.origin);
-  }
+      const frame = document.getElementById("glmOnAirPlayer");
+      const soundButton = document.getElementById("glmSoundToggle");
+      const playbackNotice = document.getElementById("glmPlaybackNotice");
 
-  frame.src = "https://www.youtube.com/embed/" + videos[index] + "?" + params;
+      let index = Math.floor(Math.random() * videos.length);
+      let player = null;
+      let playerReady = false;
+      let failures = 0;
+      let soundCheckTimer = null;
 
-  function next() {
-    if (!player) return;
-    index = (index + 1) % videos.length;
-    player.loadVideoById(videos[index]);
-  }
+      function showPlaybackNotice(show) {
+        if (playbackNotice) {
+          playbackNotice.hidden = !show;
+        }
+      }
 
-  function initialize() {
-    if (player) return;
+      function syncSoundButton() {
+        if (!soundButton || !playerReady || !player) {
+          return;
+        }
 
-    player = new YT.Player("glmOnAirPlayer", {
-      events: {
-        onReady: function(e) {
-          e.target.mute();
-          e.target.playVideo();
+        const audible = !player.isMuted() && player.getVolume() > 0;
+        const label = audible ? "Silenciar" : "Activar sonido";
+        const text = soundButton.querySelector("span");
+        const icon = soundButton.querySelector("i");
 
-          if (soundButton) soundButton.disabled = false;
-          syncSoundButton();
-        },
-        onStateChange: function(e) {
-          syncSoundButton();
+        if (text) {
+          text.textContent = label;
+        }
 
-          if (e.data === YT.PlayerState.PLAYING) failures = 0;
-          if (e.data === YT.PlayerState.ENDED) next();
-        },
-        onError: function(e) {
-          console.warn("GLM On Air / YouTube:", e.data, videos[index]);
+        if (icon) {
+          icon.className = audible
+            ? "fas fa-volume-up"
+            : "fas fa-volume-mute";
+        }
 
-          if (e.data === 153) {
-            console.warn("Comprueba el Referer en la página HTTPS publicada.");
+        soundButton.setAttribute("aria-label", label);
+        soundButton.title = label;
+      }
+
+      function checkSoundRequest() {
+        window.clearTimeout(soundCheckTimer);
+        soundCheckTimer = null;
+
+        soundCheckTimer = window.setTimeout(function () {
+          soundCheckTimer = null;
+
+          if (!playerReady || !player) {
             return;
           }
 
-          failures++;
+          syncSoundButton();
 
-          if (failures < videos.length && [2, 5, 100, 101, 150].includes(e.data)) {
-            setTimeout(next, 1200);
-          }
-        },
-        onAutoplayBlocked: function() {
-          console.info("El navegador ha bloqueado el inicio automático.");
-        }
+          const state = player.getPlayerState();
+          const audible = !player.isMuted() && player.getVolume() > 0;
+          const isPlaying =
+            state === YT.PlayerState.PLAYING ||
+            state === YT.PlayerState.BUFFERING;
+
+          showPlaybackNotice(!audible || !isPlaying);
+        }, 1500);
       }
-    });
-  }
 
-  if (window.YT && window.YT.Player) {
-    initialize();
-  } else {
-    const previous = window.onYouTubeIframeAPIReady;
+      if (soundButton) {
+        soundButton.addEventListener("click", function () {
+          if (!playerReady || !player) {
+            return;
+          }
 
-    window.onYouTubeIframeAPIReady = function() {
-      if (typeof previous === "function") previous();
-      initialize();
-    };
+          window.clearTimeout(soundCheckTimer);
+          soundCheckTimer = null;
+          showPlaybackNotice(false);
 
-    const script = document.createElement("script");
-    script.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(script);
-  }
-})();
-</script>
+          const needsSound =
+            player.isMuted() || player.getVolume() === 0;
 
-<script>
-/* CARTEL INICIAL: 6 segundos de permanencia y 0,9 segundos de fundido.
-   Se ejecuta una vez al cargar; no se repite entre videoclips.
-   No altera el funcionamiento del reproductor situado por debajo.
-*/
-(function () {
-  const INTRO_DURATION_MS = 6000;
-  const FADE_DURATION_MS = 900;
-  const card = document.getElementById("glm-intro-card");
+          if (needsSound) {
+            if (player.getVolume() === 0) {
+              player.setVolume(100);
+            }
 
-  if (!card) return;
+            player.unMute();
+            player.playVideo();
 
-  window.setTimeout(function () {
-    card.classList.add("is-fading");
-    card.setAttribute("aria-hidden", "true");
+            checkSoundRequest();
+          } else {
+            player.mute();
 
-    window.setTimeout(function () {
-      card.remove();
-    }, FADE_DURATION_MS + 100);
-  }, INTRO_DURATION_MS);
-})();
-</script>
+            soundCheckTimer = window.setTimeout(function () {
+              soundCheckTimer = null;
+              syncSoundButton();
+            }, 200);
+          }
+        });
+      }
+
+      const params = new URLSearchParams({
+        enablejsapi: "1",
+        autoplay: "1",
+        mute: "1",
+        playsinline: "1",
+        controls: "1",
+        fs: "1",
+        rel: "0",
+        cc_load_policy: "0",
+        disablekb: "0"
+      });
+
+      if (
+        /^https?:$/.test(location.protocol) &&
+        location.origin !== "null"
+      ) {
+        params.set("origin", location.origin);
+      }
+
+      frame.src =
+        "https://www.youtube.com/embed/" +
+        videos[index] +
+        "?" +
+        params;
+
+      function next() {
+        if (!player) return;
+
+        index = (index + 1) % videos.length;
+        player.loadVideoById(videos[index]);
+      }
+
+      function initialize() {
+        if (player) return;
+
+        player = new YT.Player("glmOnAirPlayer", {
+          events: {
+            onReady: function (event) {
+              playerReady = true;
+
+              event.target.mute();
+              event.target.playVideo();
+
+              if (soundButton) {
+                soundButton.disabled = false;
+              }
+
+              syncSoundButton();
+            },
+
+            onStateChange: function (event) {
+              syncSoundButton();
+
+              if (event.data === YT.PlayerState.PLAYING) {
+                failures = 0;
+                showPlaybackNotice(false);
+              }
+
+              if (event.data === YT.PlayerState.ENDED) {
+                next();
+              }
+            },
+
+            onError: function (event) {
+              console.warn(
+                "GLM On Air / YouTube:",
+                event.data,
+                videos[index]
+              );
+
+              if (event.data === 153) {
+                console.warn(
+                  "Comprueba el Referer en la página HTTPS publicada."
+                );
+                return;
+              }
+
+              failures++;
+
+              if (
+                failures < videos.length &&
+                [2, 5, 100, 101, 150].includes(event.data)
+              ) {
+                window.setTimeout(next, 1200);
+              }
+            },
+
+            onAutoplayBlocked: function () {
+              showPlaybackNotice(true);
+              syncSoundButton();
+
+              console.info(
+                "GLM On Air: reproducción bloqueada. " +
+                "Usa los controles del vídeo para iniciarla."
+              );
+            }
+          }
+        });
+      }
+
+      if (window.YT && window.YT.Player) {
+        initialize();
+      } else {
+        const previous = window.onYouTubeIframeAPIReady;
+
+        window.onYouTubeIframeAPIReady = function () {
+          if (typeof previous === "function") {
+            previous();
+          }
+
+          initialize();
+        };
+
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(script);
+      }
+    })();
+  </script>
+
+  <script>
+    /* CARTEL INICIAL: 6 segundos de permanencia y 0,9 segundos de fundido.
+       Se ejecuta una vez al cargar; no se repite entre videoclips.
+       No altera el funcionamiento del reproductor situado por debajo.
+    */
+    (function () {
+      const INTRO_DURATION_MS = 6000;
+      const FADE_DURATION_MS = 900;
+      const card = document.getElementById("glm-intro-card");
+
+      if (!card) return;
+
+      window.setTimeout(function () {
+        card.classList.add("is-fading");
+        card.setAttribute("aria-hidden", "true");
+
+        window.setTimeout(function () {
+          card.remove();
+        }, FADE_DURATION_MS + 100);
+      }, INTRO_DURATION_MS);
+    })();
+  </script>
 
 </body>
 </html>
