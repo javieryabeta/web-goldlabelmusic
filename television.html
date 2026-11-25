@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>GLM On Air</title>
 
   <link
@@ -18,7 +19,10 @@
       --text: #ffffff;
       --muted: #9aa3b8;
       --tabs-height: 64px;
-      --player-height: min(56.25vw, calc(100vh - var(--tabs-height) - 120px));
+      --player-height: min(
+        56.25vw,
+        calc(100vh - var(--tabs-height) - 120px)
+      );
     }
 
     html,
@@ -30,7 +34,9 @@
       overflow: hidden;
       background: var(--bg1);
       color: var(--text);
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family:
+        "Inter", system-ui, -apple-system, "Segoe UI",
+        Roboto, Arial, sans-serif;
     }
 
     #app-container {
@@ -68,7 +74,7 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* Reproductor limpio, a todo el ancho */
+    /* Reproductor */
     .tv-player-container {
       position: relative;
       width: 100%;
@@ -91,7 +97,10 @@
 
     @supports (height: 100dvh) {
       :root {
-        --player-height: min(56.25vw, calc(100dvh - var(--tabs-height) - 120px));
+        --player-height: min(
+          56.25vw,
+          calc(100dvh - var(--tabs-height) - 120px)
+        );
       }
     }
 
@@ -99,14 +108,14 @@
       position: absolute;
       inset: 0;
       z-index: 1;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      pointer-events: auto;
       display: block;
+      width: 100%;
       min-width: 100%;
       max-width: none;
+      height: 100%;
       margin: 0;
+      border: 0;
+      pointer-events: auto;
     }
 
     /* Navegación */
@@ -174,9 +183,14 @@
       color: #0b1630;
     }
 
-    .nav-tab:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
+    /* Aviso: solo aparece si existe un problema */
+    #glmPlaybackNotice {
+      margin: 0;
+      padding: 8px 12px;
+      background: var(--bg1);
+      color: #fff;
+      font-size: 13px;
+      text-align: center;
     }
 
     /* Título, subtítulo y descripción */
@@ -209,17 +223,7 @@
       line-height: 1.6;
     }
 
-    /* Aviso de reproducción */
-    #glmPlaybackNotice {
-      margin: 0;
-      padding: 8px 12px;
-      background: var(--bg1);
-      color: #fff;
-      font-size: 13px;
-      text-align: center;
-    }
-
-    /* Tarjetas finales */
+    /* Tarjetas */
     .tv-grid-info {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -267,7 +271,7 @@
       line-height: 1.4;
     }
 
-    /* Pie de página */
+    /* Pie */
     .footer {
       margin-top: 48px;
       padding: 24px 12px 60px;
@@ -438,8 +442,6 @@
       }
     }
 
-    /* Único ajuste visual: el reproductor llena el ancho del bloque incrustado.
-       El ancho exterior de Google Sites se configura en su editor, no aquí. */
     .tv-fixed-shell,
     .tv-player-container,
     .tv-iframe-wrapper {
@@ -451,10 +453,8 @@
       margin-right: 0;
       box-sizing: border-box;
     }
-  </style>
 
-  <!-- Cartel inicial: halo azul petróleo sobre fondo oscuro, solo en el reproductor. -->
-  <style>
+    /* Cartel inicial */
     #glm-intro-card {
       position: absolute;
       inset: 0;
@@ -492,13 +492,8 @@
     }
 
     @keyframes glmOnAirZoom {
-      from {
-        transform: scale(.95);
-      }
-
-      to {
-        transform: scale(1.05);
-      }
+      from { transform: scale(.95); }
+      to { transform: scale(1.05); }
     }
 
     #glm-intro-card .glm-intro-subtitle {
@@ -523,28 +518,45 @@
       }
     }
   </style>
-
 </head>
 
 <body>
 
   <main id="app-container">
     <div class="tv-fixed-shell">
-      <section class="tv-player-container" id="tvPlayerBox" aria-label="GLM On Air">
+
+      <section
+        class="tv-player-container"
+        id="tvPlayerBox"
+        aria-label="GLM On Air">
+
         <div class="tv-iframe-wrapper">
-          <div id="glm-intro-card" role="status" aria-label="En emisión. Videoclips, estrenos y artistas.">
+          <div
+            id="glm-intro-card"
+            role="status"
+            aria-label="En emisión. Videoclips, estrenos y artistas.">
+
             <p class="glm-intro-name">EN EMISIÓN</p>
-            <p class="glm-intro-subtitle">Videoclips · Estrenos · Artistas</p>
+            <p class="glm-intro-subtitle">
+              Videoclips · Estrenos · Artistas
+            </p>
           </div>
 
-          <iframe id="glmOnAirPlayer" title="GLM On Air"
+          <iframe
+            id="glmOnAirPlayer"
+            title="GLM On Air"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowfullscreen></iframe>
+            allowfullscreen>
+          </iframe>
         </div>
       </section>
 
-      <nav class="tabs-header" id="navTabsContainer" aria-label="Navegación principal">
+      <nav
+        class="tabs-header"
+        id="navTabsContainer"
+        aria-label="Navegación principal">
+
         <button
           type="button"
           id="glmSoundToggle"
@@ -554,6 +566,7 @@
           aria-label="Activar sonido"
           aria-controls="glmOnAirPlayer"
           aria-describedby="glmPlaybackNotice">
+
           <i class="fas fa-volume-mute" aria-hidden="true"></i>
           <span>Activar sonido</span>
         </button>
@@ -562,35 +575,40 @@
           href="https://www.goldlabelmusic.com/distribucion"
           class="nav-tab"
           target="_top">
-          <i class="fas fa-compact-disc" aria-hidden="true"></i> Distribución
+          <i class="fas fa-compact-disc" aria-hidden="true"></i>
+          Distribución
         </a>
 
         <a
           href="https://www.goldlabelmusic.com/promocion"
           class="nav-tab"
           target="_top">
-          <i class="fas fa-bullhorn" aria-hidden="true"></i> Promoción
+          <i class="fas fa-bullhorn" aria-hidden="true"></i>
+          Promoción
         </a>
 
         <a
           href="https://www.goldlabelmusic.com/branding"
           class="nav-tab"
           target="_top">
-          <i class="fas fa-gem" aria-hidden="true"></i> Branding
+          <i class="fas fa-gem" aria-hidden="true"></i>
+          Branding
         </a>
 
         <a
           href="https://www.goldlabelmusic.com/booking"
           class="nav-tab"
           target="_top">
-          <i class="fas fa-users" aria-hidden="true"></i> Booking
+          <i class="fas fa-users" aria-hidden="true"></i>
+          Booking
         </a>
 
         <a
           href="https://www.goldlabelmusic.com/radio"
           class="nav-tab"
           target="_top">
-          <i class="fas fa-podcast" aria-hidden="true"></i> Radio
+          <i class="fas fa-podcast" aria-hidden="true"></i>
+          Radio
         </a>
       </nav>
 
@@ -599,8 +617,6 @@
         role="status"
         aria-live="polite"
         hidden>
-        El navegador no ha permitido iniciar el sonido.
-        Pulsa reproducir o activa el volumen directamente en el vídeo.
       </p>
     </div>
 
@@ -608,8 +624,11 @@
       <section class="tv-header-block">
         <h1 class="main-title">glm On Air</h1>
         <h2 class="main-subtitle">Señal Internacional</h2>
+
         <p class="main-description">
-          Gold Label Music presenta una programación musical 24/7 con videoclips, reportajes, coberturas especiales y entrevistas a nuestros artistas.
+          Gold Label Music presenta una programación musical 24/7
+          con videoclips, reportajes, coberturas especiales y
+          entrevistas a nuestros artistas.
         </p>
       </section>
 
@@ -619,9 +638,13 @@
           href="https://www.spreaker.com/podcast/gold-label-radio--6910142"
           target="_blank"
           rel="noopener noreferrer">
+
           <i class="fas fa-microphone-alt" aria-hidden="true"></i>
           <h3>Entrevistas Exclusivas</h3>
-          <p>Conversaciones en plató con nuestros artistas estelares, lanzamientos y primicias discográficas.</p>
+          <p>
+            Conversaciones en plató con nuestros artistas estelares,
+            lanzamientos y primicias discográficas.
+          </p>
         </a>
 
         <a
@@ -629,9 +652,13 @@
           href="https://www.youtube.com/@goldlabelmusic"
           target="_blank"
           rel="noopener noreferrer">
+
           <i class="fas fa-film" aria-hidden="true"></i>
           <h3>Videoclips &amp; Estrenos</h3>
-          <p>La mejor selección audiovisual y las novedades más potentes del mercado internacional.</p>
+          <p>
+            La mejor selección audiovisual y las novedades más
+            potentes del mercado internacional.
+          </p>
         </a>
 
         <a
@@ -639,26 +666,50 @@
           href="https://genevalatina.ch/blog/"
           target="_blank"
           rel="noopener noreferrer">
+
           <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
           <h3>Reportajes &amp; Coberturas</h3>
-          <p>Especiales desde festivales, eventos y backstage de las giras más importantes.</p>
+          <p>
+            Especiales desde festivales, eventos y backstage
+            de las giras más importantes.
+          </p>
         </a>
       </section>
 
       <footer class="footer">
         <div class="social-icons">
-          <a href="https://www.facebook.com/GoldLabelSelloDigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <a
+            href="https://www.facebook.com/GoldLabelSelloDigital"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook">
             <i class="fab fa-facebook-f" aria-hidden="true"></i>
           </a>
-          <a href="https://www.instagram.com/goldlabelsellodigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+
+          <a
+            href="https://www.instagram.com/goldlabelsellodigital"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram">
             <i class="fab fa-instagram" aria-hidden="true"></i>
           </a>
-          <a href="https://www.tiktok.com/@goldlabelmusicdigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+
+          <a
+            href="https://www.tiktok.com/@goldlabelmusicdigital"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok">
             <i class="fab fa-tiktok" aria-hidden="true"></i>
           </a>
-          <a href="https://www.youtube.com/@goldlabelmusic" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+
+          <a
+            href="https://www.youtube.com/@goldlabelmusic"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube">
             <i class="fab fa-youtube" aria-hidden="true"></i>
           </a>
+
           <a
             href="https://www.goldlabelmusic.com/glm-on-air"
             target="_blank"
@@ -673,29 +724,56 @@
           type="button"
           onclick="openShareOverlay()"
           aria-label="Compartir todo">
+
           <i class="fas fa-share-alt" aria-hidden="true"></i>
           Compartir todo
         </button>
 
         <p>
-          <a href="mailto:info@goldlabelmusic.com" style="color:var(--muted);text-decoration:none;">
+          <a
+            href="mailto:info@goldlabelmusic.com"
+            style="color:var(--muted);text-decoration:none;">
             info@goldlabelmusic.com
           </a>
         </p>
+
         <p>© 2026 Gold Label Music</p>
 
         <div class="footer-links">
-          <a href="https://www.goldlabelmusic.com/privacidad" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>
-          <a href="https://www.goldlabelmusic.com/cookies" target="_blank" rel="noopener noreferrer">Política de Cookies</a>
+          <a
+            href="https://www.goldlabelmusic.com/privacidad"
+            target="_blank"
+            rel="noopener noreferrer">
+            Política de Privacidad
+          </a>
+
+          <a
+            href="https://www.goldlabelmusic.com/cookies"
+            target="_blank"
+            rel="noopener noreferrer">
+            Política de Cookies
+          </a>
         </div>
       </footer>
     </div>
   </main>
 
-  <div id="share-overlay" class="share-overlay" aria-hidden="true">
-    <div class="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-title">
+  <div
+    id="share-overlay"
+    class="share-overlay"
+    aria-hidden="true">
+
+    <div
+      class="share-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="share-title">
+
       <div class="share-header">
-        <div class="share-title" id="share-title">Compartir Gold Label Music</div>
+        <div class="share-title" id="share-title">
+          Compartir Gold Label Music
+        </div>
+
         <button
           class="share-close"
           type="button"
@@ -710,32 +788,38 @@
           href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air"
           target="_blank"
           rel="noopener noreferrer">
-          <i class="fab fa-facebook-f" aria-hidden="true"></i> Facebook
+          <i class="fab fa-facebook-f" aria-hidden="true"></i>
+          Facebook
         </a>
 
         <a
           href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air&amp;text=Descubre%20Gold%20Label%20Music"
           target="_blank"
           rel="noopener noreferrer">
-          <i class="fab fa-twitter" aria-hidden="true"></i> X (Twitter)
+          <i class="fab fa-twitter" aria-hidden="true"></i>
+          X (Twitter)
         </a>
 
         <a
           href="https://api.whatsapp.com/send?text=Descubre%20Gold%20Label%20Music%20https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air"
           target="_blank"
           rel="noopener noreferrer">
-          <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp
+          <i class="fab fa-whatsapp" aria-hidden="true"></i>
+          WhatsApp
         </a>
 
         <a
           href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air"
           target="_blank"
           rel="noopener noreferrer">
-          <i class="fab fa-linkedin-in" aria-hidden="true"></i> LinkedIn
+          <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+          LinkedIn
         </a>
 
-        <a href="mailto:?subject=Gold%20Label%20Music&amp;body=Descubre%20Gold%20Label%20Music%20en%20https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air">
-          <i class="fas fa-envelope" aria-hidden="true"></i> Email
+        <a
+          href="mailto:?subject=Gold%20Label%20Music&amp;body=Descubre%20Gold%20Label%20Music%20en%20https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air">
+          <i class="fas fa-envelope" aria-hidden="true"></i>
+          Email
         </a>
       </div>
     </div>
@@ -744,7 +828,6 @@
   <script>
     function openShareOverlay() {
       const overlay = document.getElementById("share-overlay");
-
       if (!overlay) return;
 
       overlay.style.display = "flex";
@@ -754,7 +837,6 @@
 
     function closeShareOverlay() {
       const overlay = document.getElementById("share-overlay");
-
       if (!overlay) return;
 
       overlay.style.display = "none";
@@ -782,53 +864,79 @@
   </script>
 
   <script>
-    /* PARRILLA EDITABLE
-       Añadir: copia una línea y cambia el enlace. Conserva la coma.
-       Quitar: elimina la línea. Desactivar temporalmente: activo: false.
-       Orden: mueve las líneas. El primer vídeo se elige al azar.
-       Publica los cambios y recarga la página para aplicarlos.
+    /*
+      PARRILLA EDITABLE
+
+      Añadir: copia una línea y cambia el enlace.
+      Quitar: elimina la línea.
+      Desactivar temporalmente: activo: false.
+      Orden: mueve las líneas.
+      El primer vídeo se elige al azar.
+
+      Publica los cambios y recarga la página.
     */
+
     const GLM_ON_AIR_PLAYLIST = [
       // Emisión - 1
       { url: "https://youtu.be/xZy7V70qJT8", activo: true },
+
       // Coffe King - Agónica
       { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
+
       // JL Fauli - Tabarca
       { url: "https://youtu.be/9_Dd8f368ns", activo: true },
-      // Donis Salvador - Especial Donis Salvador (programa especial)
+
+      // Donis Salvador - Especial Donis Salvador
       { url: "https://youtu.be/kCoJ_2a5lbU", activo: true },
+
       // Nuestra Música Entre Amigos - Concierto
       { url: "https://youtu.be/FQpflYKCcVE", activo: true },
+
       // Eva Miller - My Way
       { url: "https://youtu.be/FG3syYxDtm4", activo: true },
+
       // Angel en Secreto - More Than Words (cover)
       { url: "https://youtu.be/DRasy5O0Udg", activo: true },
+
       // Eddu Dai'z - Vive
       { url: "https://youtu.be/-Bt7Hi4d_wE", activo: true },
+
       // Bachata For Life - Esa Mujer
       { url: "https://youtu.be/9VP9TDbv8os", activo: true },
+
       // Ray Rosario - Solamente Lloraba
       { url: "https://youtu.be/T1tBMQEhj8U", activo: true },
+
       // Bachata For Life - Amarga Soledad
       { url: "https://youtu.be/kipbR1dVpOk", activo: true },
+
       // Ray Rosario - No Llegué a Conocerla
       { url: "https://youtu.be/H0T3cMhmBWI", activo: true },
+
       // Gold Label Music - Distribution
       { url: "https://youtu.be/FUu-XDkPtC0", activo: true },
+
       // René Eduardo - Striptease
       { url: "https://youtu.be/hIYNGLmcFf0", activo: true },
+
       // Eddu Dai'z - Ecuación Perfecta
       { url: "https://youtu.be/6K4NJle5gYk", activo: true },
-      // JL.Fauli - Especial JL.Fauli (programa especial)
+
+      // JL.Fauli - Especial JL.Fauli
       { url: "https://youtu.be/aTVhGKDzQVs", activo: true },
+
       // Rey More - Eres La Reina
       { url: "https://youtu.be/pa12immVyW8", activo: true },
+
       // Rey More - Vete al Infierno
       { url: "https://youtu.be/h8SURa8bg9k", activo: true },
-      // V Gastelu & JL.Fauli - (programa especial)
+
+      // V Gastelu & JL.Fauli - Programa especial
       { url: "https://youtu.be/ONL821m3l0k", activo: true },
-      // Sylvia Mund / YÛMA - Regresa (cover de Augusto Polo Campos)
+
+      // Sylvia Mund / YÛMA - Regresa
       { url: "https://youtu.be/ppRjkdg2lGU", activo: true },
+
       // PJ. Smith - Folsom Prison
       { url: "https://youtu.be/cfK1GDKlg5I", activo: true }
     ];
@@ -842,11 +950,19 @@
 
           if (host === "youtu.be") {
             id = url.pathname.split("/")[1];
-          } else if (host === "youtube.com" || host === "m.youtube.com") {
-            id = url.searchParams.get("v") || url.pathname.split("/")[2] || "";
+          } else if (
+            host === "youtube.com" ||
+            host === "m.youtube.com"
+          ) {
+            id =
+              url.searchParams.get("v") ||
+              url.pathname.split("/")[2] ||
+              "";
           }
 
-          return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
+          return /^[A-Za-z0-9_-]{11}$/.test(id)
+            ? id
+            : null;
         } catch (error) {
           return null;
         }
@@ -872,18 +988,23 @@
 
       const frame = document.getElementById("glmOnAirPlayer");
       const soundButton = document.getElementById("glmSoundToggle");
-      const playbackNotice = document.getElementById("glmPlaybackNotice");
+      const playbackNotice =
+        document.getElementById("glmPlaybackNotice");
 
       let index = Math.floor(Math.random() * videos.length);
-      let player = null;
-      let playerReady = false;
+      let player;
       let failures = 0;
+      let playerReady = false;
       let soundCheckTimer = null;
 
-      function showPlaybackNotice(show) {
-        if (playbackNotice) {
-          playbackNotice.hidden = !show;
+      function showPlaybackNotice(show, message) {
+        if (!playbackNotice) return;
+
+        if (message) {
+          playbackNotice.textContent = message;
         }
+
+        playbackNotice.hidden = !show;
       }
 
       function syncSoundButton() {
@@ -891,8 +1012,14 @@
           return;
         }
 
-        const audible = !player.isMuted() && player.getVolume() > 0;
-        const label = audible ? "Silenciar" : "Activar sonido";
+        const audible =
+          !player.isMuted() &&
+          player.getVolume() > 0;
+
+        const label = audible
+          ? "Silenciar"
+          : "Activar sonido";
+
         const text = soundButton.querySelector("span");
         const icon = soundButton.querySelector("i");
 
@@ -910,29 +1037,6 @@
         soundButton.title = label;
       }
 
-      function checkSoundRequest() {
-        window.clearTimeout(soundCheckTimer);
-        soundCheckTimer = null;
-
-        soundCheckTimer = window.setTimeout(function () {
-          soundCheckTimer = null;
-
-          if (!playerReady || !player) {
-            return;
-          }
-
-          syncSoundButton();
-
-          const state = player.getPlayerState();
-          const audible = !player.isMuted() && player.getVolume() > 0;
-          const isPlaying =
-            state === YT.PlayerState.PLAYING ||
-            state === YT.PlayerState.BUFFERING;
-
-          showPlaybackNotice(!audible || !isPlaying);
-        }, 1500);
-      }
-
       if (soundButton) {
         soundButton.addEventListener("click", function () {
           if (!playerReady || !player) {
@@ -943,26 +1047,47 @@
           soundCheckTimer = null;
           showPlaybackNotice(false);
 
-          const needsSound =
-            player.isMuted() || player.getVolume() === 0;
+          const muted = player.isMuted();
+          const volume = player.getVolume();
 
-          if (needsSound) {
-            if (player.getVolume() === 0) {
-              player.setVolume(100);
-            }
+          console.log("GLM / antes del clic", {
+            muted: muted,
+            volume: volume,
+            state: player.getPlayerState()
+          });
 
-            player.unMute();
-            player.playVideo();
+          if (muted) {
+            console.warn(
+              "GLM: la preparación sin mute y con " +
+              "volumen cero no se ha establecido."
+            );
 
-            checkSoundRequest();
-          } else {
-            player.mute();
+            showPlaybackNotice(
+              true,
+              "No se ha podido preparar la activación " +
+              "externa del sonido."
+            );
 
-            soundCheckTimer = window.setTimeout(function () {
-              soundCheckTimer = null;
-              syncSoundButton();
-            }, 200);
+            return;
           }
+
+          /*
+            Prueba de volumen cero:
+            el clic cambia exclusivamente el volumen.
+            No ejecuta unMute(), playVideo() ni recargas.
+          */
+          player.setVolume(volume > 0 ? 0 : 100);
+
+          soundCheckTimer = window.setTimeout(function () {
+            soundCheckTimer = null;
+            syncSoundButton();
+
+            console.log("GLM / después del clic", {
+              muted: player.isMuted(),
+              volume: player.getVolume(),
+              state: player.getPlayerState()
+            });
+          }, 400);
         });
       }
 
@@ -1006,7 +1131,12 @@
             onReady: function (event) {
               playerReady = true;
 
-              event.target.mute();
+              /*
+                Preparación experimental:
+                volumen cero antes de quitar el silencio.
+              */
+              event.target.setVolume(0);
+              event.target.unMute();
               event.target.playVideo();
 
               if (soundButton) {
@@ -1038,7 +1168,8 @@
 
               if (event.data === 153) {
                 console.warn(
-                  "Comprueba el Referer en la página HTTPS publicada."
+                  "Comprueba el Referer en la página " +
+                  "HTTPS publicada."
                 );
                 return;
               }
@@ -1054,12 +1185,16 @@
             },
 
             onAutoplayBlocked: function () {
-              showPlaybackNotice(true);
+              showPlaybackNotice(
+                true,
+                "El navegador ha bloqueado el inicio automático. " +
+                "Los controles del vídeo siguen disponibles."
+              );
+
               syncSoundButton();
 
               console.info(
-                "GLM On Air: reproducción bloqueada. " +
-                "Usa los controles del vídeo para iniciarla."
+                "El navegador ha bloqueado el inicio automático."
               );
             }
           }
@@ -1087,9 +1222,10 @@
   </script>
 
   <script>
-    /* CARTEL INICIAL: 6 segundos de permanencia y 0,9 segundos de fundido.
-       Se ejecuta una vez al cargar; no se repite entre videoclips.
-       No altera el funcionamiento del reproductor situado por debajo.
+    /*
+      CARTEL INICIAL:
+      6 segundos de permanencia y 0,9 segundos de fundido.
+      Solo se muestra al cargar la página.
     */
     (function () {
       const INTRO_DURATION_MS = 6000;
