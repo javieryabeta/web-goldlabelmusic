@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- GLM On Air | Versión 2.1 | Pantalla desbloqueada y controles activos | 25-11-2026 -->
+  <!-- GLM On Air | Versión 2.2 | Reactivación automática al activar sonido | 25-11-2026 -->
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1059,6 +1059,8 @@ const GLM_ON_AIR_PLAYLIST = [
   let index = Math.floor(Math.random() * videos.length);
   let player;
   let failures = 0;
+  let soundActivationPending = false;
+  let soundResumeAttempted = false;
   const soundButton = document.getElementById("glmSoundToggle");
   function syncSoundButton() {
     if (!soundButton || !player || typeof player.isMuted !== "function") return;
@@ -1072,7 +1074,22 @@ const GLM_ON_AIR_PLAYLIST = [
     soundButton.addEventListener("click", function () {
       if (!player || typeof player.isMuted !== "function") return;
       if (player.isMuted()) {
+        // En algunos navegadores el unMute del iframe deja el vídeo pausado.
+        // Enviar ambos comandos dentro del mismo clic conserva la activación del usuario.
+        soundActivationPending = true;
+        soundResumeAttempted = false;
         player.unMute();
+        player.playVideo();
+        window.setTimeout(function() {
+          if (!player || !soundActivationPending) return;
+          const state = player.getPlayerState();
+          if (!soundResumeAttempted && (state === YT.PlayerState.PAUSED || state === YT.PlayerState.CUED ||
+              state === YT.PlayerState.UNSTARTED)) {
+            soundResumeAttempted = true;
+            player.playVideo();
+          }
+          window.setTimeout(function() { soundActivationPending = false; }, 1800);
+        }, 300);
       } else {
         player.mute();
       }
@@ -1104,6 +1121,13 @@ const GLM_ON_AIR_PLAYLIST = [
       },
       onStateChange: function(e) {
         syncSoundButton();
+        if (soundActivationPending && e.data === YT.PlayerState.PAUSED &&
+            !soundResumeAttempted) {
+          soundResumeAttempted = true;
+          e.target.playVideo();
+        }
+        if (soundActivationPending && e.data === YT.PlayerState.PLAYING &&
+            !e.target.isMuted()) soundActivationPending = false;
         if (e.data === YT.PlayerState.PLAYING) failures = 0;
         if (e.data === YT.PlayerState.ENDED) next();
       },
