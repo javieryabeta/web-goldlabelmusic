@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- GLM On Air | Versión 2.3 | Sonido sin reiniciar el vídeo y código depurado | 25-11-2026 -->
   <meta charset="UTF-8">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,8 +33,6 @@
       color: var(--text);
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
-
-    body.fullscreen-lock { overflow: hidden; }
 
     #app-container {
       position: fixed;
@@ -83,73 +82,6 @@
       box-shadow: none;
     }
 
-    .tv-player-header {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      box-sizing: border-box;
-      min-height: 46px;
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(7, 18, 39, 0.95);
-    }
-
-    .tv-brand-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .tv-brand-badge i {
-      flex: 0 0 auto;
-      color: var(--gold);
-    }
-
-    .tv-player-header-right {
-      display: flex;
-      flex: 0 0 auto;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .live-indicator {
-      display: flex;
-      flex: 0 0 auto;
-      align-items: center;
-      gap: 7px;
-      padding: 4px 9px;
-      border: 1px solid var(--gold);
-      border-radius: 20px;
-      background: rgba(244, 184, 21, 0.14);
-      color: #fff;
-      font-size: 11px;
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 8px var(--gold);
-      animation: pulseLive 1.5s infinite;
-    }
-
-    @keyframes pulseLive {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
     .tv-iframe-wrapper {
       position: relative;
       width: 100%;
@@ -162,87 +94,17 @@
       :root { --player-height: min(56.25vw, calc(100dvh - var(--tabs-height) - 120px)); }
     }
 
-    .tv-fullscreen-button {
-      position: absolute;
-      top: max(12px, calc(env(safe-area-inset-top, 0px) + 8px));
-      left: max(12px, calc(env(safe-area-inset-left, 0px) + 8px));
-      z-index: 4;
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      padding: 0;
-      border: 1px solid rgba(244, 184, 21, 0.55);
-      border-radius: 8px;
-      background: rgba(7, 18, 39, 0.78);
-      color: var(--gold);
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
-    }
-
-    .tv-fullscreen-button:hover,
-    .tv-fullscreen-button:focus-visible {
-      background: rgba(7, 18, 39, 0.96);
-      border-color: var(--gold);
-    }
-
-    .tv-player-container:fullscreen .tv-fullscreen-button,
-    .tv-player-container:-webkit-full-screen .tv-fullscreen-button,
-    .tv-player-container.is-page-fullscreen .tv-fullscreen-button {
-      top: max(12px, calc(env(safe-area-inset-top, 0px) + 8px));
-      left: max(12px, calc(env(safe-area-inset-left, 0px) + 8px));
-      right: auto;
-      bottom: auto;
-    }
-
     .tv-iframe-wrapper iframe {
       position: absolute;
       inset: 0;
       z-index: 1;
+      display: block;
       width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-
-
-    /* Fullscreen de todo el reproductor */
-    .tv-player-container:fullscreen,
-    .tv-player-container:-webkit-full-screen,
-    .tv-player-container.is-page-fullscreen {
-      position: fixed;
-      inset: 0;
-      z-index: 2147483646;
-      display: flex;
-      flex-direction: column;
-      width: 100vw;
+      min-width: 100%;
       max-width: none;
-      height: 100vh;
-      height: 100dvh;
-      margin: 0;
-      overflow: hidden;
-      border: 0;
-      border-radius: 0;
-      background: #000;
-    }
-
-    .tv-player-container:fullscreen .tv-iframe-wrapper,
-    .tv-player-container:-webkit-full-screen .tv-iframe-wrapper,
-    .tv-player-container.is-page-fullscreen .tv-iframe-wrapper {
-      flex: 1 1 auto;
-      min-height: 0;
-      width: 100%;
-      padding-top: 0;
-    }
-
-    .tv-player-container:fullscreen .tv-iframe-wrapper iframe,
-    .tv-player-container:-webkit-full-screen .tv-iframe-wrapper iframe,
-    .tv-player-container.is-page-fullscreen .tv-iframe-wrapper iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
       height: 100%;
+      margin: 0;
+      border: 0;
     }
 
 
@@ -536,36 +398,6 @@
         padding: 8px 16px;
       }
 
-      .tv-player-header {
-        gap: 6px;
-        padding: 8px;
-      }
-
-      .tv-brand-badge {
-        gap: 5px;
-        font-size: 10px;
-      }
-
-      .tv-player-header-right {
-        gap: 5px;
-      }
-
-      .live-indicator {
-        gap: 4px;
-        padding: 3px 6px;
-        font-size: 8px;
-      }
-
-      .tv-fullscreen-button {
-        top: max(12px, calc(env(safe-area-inset-top, 0px) + 8px));
-        left: max(12px, calc(env(safe-area-inset-left, 0px) + 8px));
-        right: auto;
-        bottom: auto;
-        width: 30px;
-        height: 30px;
-        font-size: 12px;
-      }
-
       .tv-grid-info {
         grid-template-columns: 1fr;
       }
@@ -579,15 +411,6 @@
       }
     }
 
-    @media (max-width: 360px) {
-      .tv-fullscreen-button {
-        left: max(12px, calc(env(safe-area-inset-left, 0px) + 8px));
-        width: 28px;
-        height: 28px;
-        font-size: 11px;
-      }
-    }
-  
     /* Único ajuste visual: el reproductor llena el ancho del bloque incrustado.
        El ancho exterior de Google Sites se configura en su editor, no aquí. */
     .tv-fixed-shell, .tv-player-container, .tv-iframe-wrapper {
@@ -598,16 +421,6 @@
       margin-left: 0;
       margin-right: 0;
       box-sizing: border-box;
-    }
-    .tv-iframe-wrapper iframe {
-      display: block;
-      left: 0;
-      right: 0;
-      width: 100%;
-      min-width: 100%;
-      max-width: none;
-      margin: 0;
-      border: 0;
     }
   </style>
 
@@ -640,6 +453,11 @@
       letter-spacing: .035em;
       line-height: 1.2;
       text-align: center;
+      animation: glmOnAirZoom 6s linear 1 both;
+    }
+    @keyframes glmOnAirZoom {
+      from { transform: scale(.95); }
+      to { transform: scale(1.05); }
     }
     #glm-intro-card .glm-intro-subtitle {
       margin: 0;
@@ -862,73 +680,6 @@
   </div>
 
   <script>
-    async function togglePlayerFullscreen() {
-      const player = document.getElementById("tvPlayerBox");
-      if (!player) return;
-
-      const fullscreenElement =
-        document.fullscreenElement || document.webkitFullscreenElement;
-
-      if (fullscreenElement === player) {
-        if (document.exitFullscreen) {
-          await document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        }
-        return;
-      }
-
-      if (player.classList.contains("is-page-fullscreen")) {
-        player.classList.remove("is-page-fullscreen");
-        document.body.classList.remove("fullscreen-lock");
-        updateFullscreenButton();
-        return;
-      }
-
-      try {
-        if (player.requestFullscreen) {
-          await player.requestFullscreen({ navigationUI: "hide" });
-        } else if (player.webkitRequestFullscreen) {
-          player.webkitRequestFullscreen();
-        } else {
-          player.classList.add("is-page-fullscreen");
-          document.body.classList.add("fullscreen-lock");
-        }
-      } catch (error) {
-        player.classList.add("is-page-fullscreen");
-        document.body.classList.add("fullscreen-lock");
-      }
-
-      updateFullscreenButton();
-    }
-
-    function updateFullscreenButton() {
-      const player = document.getElementById("tvPlayerBox");
-      const button = document.getElementById("tvFullscreenButton");
-      if (!player || !button) return;
-
-      const isFullscreen =
-        document.fullscreenElement === player ||
-        document.webkitFullscreenElement === player ||
-        player.classList.contains("is-page-fullscreen");
-
-      const icon = button.querySelector("i");
-      if (icon) {
-        icon.className = isFullscreen ? "fas fa-compress" : "fas fa-expand";
-      }
-
-      button.setAttribute(
-        "aria-label",
-        isFullscreen ? "Salir de pantalla completa" : "Activar pantalla completa"
-      );
-
-      button.title = isFullscreen
-        ? "Salir de pantalla completa"
-        : "Activar pantalla completa";
-
-      document.body.classList.toggle("fullscreen-lock", isFullscreen);
-    }
-
     function openShareOverlay() {
       const overlay = document.getElementById("share-overlay");
       if (!overlay) return;
@@ -949,14 +700,6 @@
 
     document.addEventListener("DOMContentLoaded", function() {
       const overlay = document.getElementById("share-overlay");
-      const fullscreenButton = document.getElementById("tvFullscreenButton");
-
-      if (fullscreenButton) {
-        fullscreenButton.addEventListener("click", togglePlayerFullscreen);
-      }
-
-      document.addEventListener("fullscreenchange", updateFullscreenButton);
-      document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
 
       if (overlay) {
         overlay.addEventListener("click", function(event) {
@@ -968,17 +711,7 @@
     });
 
     document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") {
-        const player = document.getElementById("tvPlayerBox");
-
-        if (player && player.classList.contains("is-page-fullscreen")) {
-          player.classList.remove("is-page-fullscreen");
-          document.body.classList.remove("fullscreen-lock");
-          updateFullscreenButton();
-        }
-
-        closeShareOverlay();
-      }
+      if (event.key === "Escape") closeShareOverlay();
     });
   </script>
 
@@ -990,14 +723,8 @@
    Publica los cambios y recarga la página para aplicarlos.
 */
 const GLM_ON_AIR_PLAYLIST = [
-    // Gold Label Music - Identidad
-  { url: "https://youtu.be/zp7PVKkxTeU", activo: true },
-  // Drew - Hasta el final
-  { url: "https://youtu.be/msklOeoEv7o", activo: true },
-  // JL.Fauli - Clasic 96
-  { url: "https://youtu.be/MAd15qKQP7U", activo: true },
-  // JL.Fauli - Música, viaje y sueños (programa especial)
-  { url: "https://youtu.be/QwxmAUecoPs", activo: true },
+  // Emisión - 1
+  { url: "https://youtu.be/xZy7V70qJT8", activo: true },
   // Coffe King - Agónica
   { url: "https://youtu.be/N1Eh08myZ2Y", activo: true },
   // JL Fauli - Tabarca
@@ -1008,7 +735,7 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/FQpflYKCcVE", activo: true },
   // Eva Miller - My Way
   { url: "https://youtu.be/FG3syYxDtm4", activo: true },
-    // Angel en Secreto - More Than Words (cover)
+  // Angel en Secreto - More Than Words (cover)
   { url: "https://youtu.be/DRasy5O0Udg", activo: true },
   // Eddu Dai'z - Vive
   { url: "https://youtu.be/-Bt7Hi4d_wE", activo: true },
@@ -1020,15 +747,9 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/kipbR1dVpOk", activo: true },
   // Ray Rosario - No Llegué a Conocerla
   { url: "https://youtu.be/H0T3cMhmBWI", activo: true },
-    // Bachata For Life - Entrevista Gold Label Music
-  { url: "https://youtu.be/v948Hd2fIiw", activo: true },
-    // Ángel & Guisela Santa Cruz - La Maravilla de Hacerte el Amor
-  { url: "https://youtu.be/3Vjm6p9VYkU", activo: true },
-  // Eddu Dai'z - Muévelo
-  { url: "https://youtu.be/oghwg81mTX8", activo: true },
   // Gold Label Music - Distribution
   { url: "https://youtu.be/FUu-XDkPtC0", activo: true },
-    // René Eduardo - Striptease
+  // René Eduardo - Striptease
   { url: "https://youtu.be/hIYNGLmcFf0", activo: true },
   // Eddu Dai'z - Ecuación Perfecta
   { url: "https://youtu.be/6K4NJle5gYk", activo: true },
@@ -1036,20 +757,14 @@ const GLM_ON_AIR_PLAYLIST = [
   { url: "https://youtu.be/aTVhGKDzQVs", activo: true },
   // Rey More - Eres La Reina 
   { url: "https://youtu.be/pa12immVyW8", activo: true },
-  // René Eduardo - Ese Movimiento 
-  { url: "https://youtu.be/7AT0HSwWTj0", activo: true },
   // Rey More - Vete al Infierno 
   { url: "https://youtu.be/h8SURa8bg9k", activo: true },
-  // René Eduardo - Latinoamericano 
-  { url: "https://youtu.be/d0dZyGFvhiA", activo: true },
   // V Gastelu & JL.Fauli - (programa especial)
   { url: "https://youtu.be/ONL821m3l0k", activo: true },
   // Sylvia Mund / YÛMA - Regresa (cover de Augusto Polo Campos)
   { url: "https://youtu.be/ppRjkdg2lGU", activo: true },
   // PJ. Smith - Folsom Prison 
   { url: "https://youtu.be/cfK1GDKlg5I", activo: true },
-  // Roberto Sachun - Te extraño en la distancia
-  { url: "https://youtu.be/afiwQoYR6aE", activo: true },
 ];
 (function () {
   function extractId(value) {
@@ -1084,7 +799,7 @@ const GLM_ON_AIR_PLAYLIST = [
     soundButton.addEventListener("click", function () {
       if (!player || typeof player.isMuted !== "function") return;
       if (player.isMuted()) {
-        if (player.getVolume() === 0) player.setVolume(100);
+        // Cambia solo el audio: no vuelve a cargar ni a reiniciar el videoclip.
         player.unMute();
       } else {
         player.mute();
@@ -1094,9 +809,9 @@ const GLM_ON_AIR_PLAYLIST = [
     });
   }
   // Calidad automática de YouTube. No se solicita activar subtítulos.
-  // Controles nativos ocultos; sonido controlado desde la navegación.
+  // Controles nativos visibles; sonido controlado desde la navegación.
   const params = new URLSearchParams({enablejsapi:"1", autoplay:"1", mute:"1",
-    playsinline:"1", controls:"0", fs:"1", rel:"0"});
+    playsinline:"1", controls:"1", rel:"0", cc_load_policy:"0"});
   if (/^https?:$/.test(location.protocol) && location.origin !== "null") {
     params.set("origin", location.origin);
   }
@@ -1172,3 +887,4 @@ const GLM_ON_AIR_PLAYLIST = [
 
 </body>
 </html>
+
