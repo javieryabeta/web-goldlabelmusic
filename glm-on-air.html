@@ -769,7 +769,7 @@
 
       <div class="share-grid">
         <a
-          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air"
+          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fglm.goldlabelmusic.com%2Fglm-on-air.html"
           target="_blank"
           rel="noopener noreferrer">
           <i class="fab fa-facebook-f" aria-hidden="true"></i>
@@ -777,7 +777,7 @@
         </a>
 
         <a
-          href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air&amp;text=Descubre%20Gold%20Label%20Music"
+          href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fglm.goldlabelmusic.com%2Fglm-on-air.html&amp;text=Descubre%20Gold%20Label%20Music"
           target="_blank"
           rel="noopener noreferrer">
           <i class="fab fa-twitter" aria-hidden="true"></i>
@@ -785,7 +785,7 @@
         </a>
 
         <a
-          href="https://api.whatsapp.com/send?text=Descubre%20Gold%20Label%20Music%20https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air"
+          href="https://api.whatsapp.com/send?text=Descubre%20Gold%20Label%20Music%20https%3A%2F%2Fglm.goldlabelmusic.com%2Fglm-on-air.html"
           target="_blank"
           rel="noopener noreferrer">
           <i class="fab fa-whatsapp" aria-hidden="true"></i>
@@ -793,7 +793,7 @@
         </a>
 
         <a
-          href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air"
+          href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fglm.goldlabelmusic.com%2Fglm-on-air.html"
           target="_blank"
           rel="noopener noreferrer">
           <i class="fab fa-linkedin-in" aria-hidden="true"></i>
@@ -801,7 +801,7 @@
         </a>
 
         <a
-          href="mailto:?subject=Gold%20Label%20Music&amp;body=Descubre%20Gold%20Label%20Music%20en%20https%3A%2F%2Fwww.goldlabelmusic.com%2Fglm-on-air">
+          href="mailto:?subject=Gold%20Label%20Music&amp;body=Descubre%20Gold%20Label%20Music%20en%20https%3A%2F%2Fglm.goldlabelmusic.com%2Fglm-on-air.html">
           <i class="fas fa-envelope" aria-hidden="true"></i>
           Email
         </a>
@@ -1000,78 +1000,12 @@
         player.loadVideoById(videos[index]);
       }
 
-      function initialize() {
-        if (player) return;
+      let youTubeApiRequested = false;
 
-        player = new YT.Player("glmOnAirPlayer", {
-          events: {
-            onReady: function (event) {
-              playerReady = true;
+      function requestYouTubeApi() {
+        if (youTubeApiRequested) return;
+        youTubeApiRequested = true;
 
-              // Mantener el inicio automático silenciado.
-              event.target.mute();
-              event.target.setVolume(100);
-              event.target.playVideo();
-
-              syncSoundButton();
-            },
-
-            onStateChange: function (event) {
-              if (event.data === YT.PlayerState.PLAYING) {
-                failures = 0;
-                hasPlayed = true;
-
-                if (soundButton) {
-                  soundButton.disabled = false;
-                }
-              }
-
-              syncSoundButton();
-
-              if (event.data === YT.PlayerState.ENDED) {
-                next();
-              }
-            },
-
-            onError: function (event) {
-              console.warn(
-                "GLM On Air / YouTube:",
-                event.data,
-                videos[index]
-              );
-
-              if (event.data === 153) {
-                console.warn(
-                  "Comprueba el Referer en la página HTTPS publicada."
-                );
-                return;
-              }
-
-              failures++;
-
-              if (
-                failures < videos.length &&
-                [2, 5, 100, 101, 150].includes(event.data)
-              ) {
-                window.setTimeout(next, 1200);
-              }
-            },
-
-            onAutoplayBlocked: function () {
-              console.warn(
-                "GLM On Air: el navegador ha bloqueado " +
-                "una solicitud de reproducción."
-              );
-
-              scheduleSoundButtonSync();
-            }
-          }
-        });
-      }
-
-      if (window.YT && window.YT.Player) {
-        initialize();
-      } else {
         const previous = window.onYouTubeIframeAPIReady;
 
         window.onYouTubeIframeAPIReady = function () {
@@ -1079,33 +1013,82 @@
             previous();
           }
 
-          initialize();
+          player = new YT.Player("glmOnAirPlayer", {
+            events: {
+              onReady: onPlayerReady,
+              onStateChange: onPlayerStateChange,
+              onError: onPlayerError
+            }
+          });
         };
 
         const script = document.createElement("script");
         script.src = "https://www.youtube.com/iframe_api";
+        script.async = true;
         document.head.appendChild(script);
       }
-    })();
-  </script>
 
-  <script>
-    /*
-      Cartel inicial:
-      6 segundos de permanencia y 0,9 segundos de fundido.
-    */
-    (function () {
-      const card = document.getElementById("glm-intro-card");
-      if (!card) return;
+      function onPlayerReady() {
+        playerReady = true;
 
-      window.setTimeout(function () {
-        card.classList.add("is-fading");
-        card.setAttribute("aria-hidden", "true");
+        try {
+          player.mute();
+          player.setVolume(0);
+          player.playVideo();
+        } catch (error) {
+          console.warn("GLM On Air: reproducción inicial no disponible.", error);
+        }
 
-        window.setTimeout(function () {
-          card.remove();
-        }, 1000);
-      }, 6000);
+        if (soundButton) {
+          soundButton.disabled = false;
+        }
+
+        syncSoundButton();
+      }
+
+      function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.PLAYING) {
+          hasPlayed = true;
+          failures = 0;
+
+          const intro = document.getElementById("glm-intro-card");
+          if (intro) {
+            intro.classList.add("is-fading");
+            window.setTimeout(function () {
+              intro.style.display = "none";
+            }, 900);
+          }
+        }
+
+        if (event.data === YT.PlayerState.ENDED) {
+          next();
+        }
+
+        if (event.data === YT.PlayerState.UNSTARTED) {
+          if (hasPlayed) {
+            failures++;
+            if (failures >= 2) {
+              next();
+            }
+          }
+        }
+
+        scheduleSoundButtonSync();
+      }
+
+      function onPlayerError() {
+        failures++;
+
+        if (failures >= 2) {
+          next();
+        } else {
+          window.setTimeout(function () {
+            next();
+          }, 800);
+        }
+      }
+
+      requestYouTubeApi();
     })();
   </script>
 </body>
