@@ -469,6 +469,12 @@
       opacity: 1;
       transition: opacity 900ms ease-in-out;
       pointer-events: none;
+      isolation: isolate;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      will-change: opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
 
     /* Tres textos encadenados en el mismo lugar */
@@ -493,6 +499,8 @@
       white-space: nowrap;
       opacity: 0;
       animation: glmTitleStep 3.5s linear 1 both;
+      will-change: opacity, transform;
+      -webkit-backface-visibility: hidden;
     }
 
     #glm-intro-card .glm-intro-name:nth-child(1) {
