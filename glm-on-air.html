@@ -513,6 +513,54 @@
 </head>
 
 <body>
+  <script>
+    /*
+      Espera a que la página esté estable antes de iniciar YouTube.
+      Evita el arranque doble en móviles dentro de Google Sites.
+    */
+    (function () {
+      const STABLE_DELAY_MS = 5500;
+      const queue = [];
+      let started = false;
+
+      function start() {
+        if (started) return;
+        started = true;
+        queue.splice(0).forEach(function (fn) { fn(); });
+      }
+
+      function check() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        window.setTimeout(function () {
+          if (
+            document.visibilityState === "visible" &&
+            window.innerWidth === w &&
+            window.innerHeight === h
+          ) {
+            start();
+          } else {
+            check();
+          }
+        }, STABLE_DELAY_MS);
+      }
+
+      window.glmWhenStable = function (fn) {
+        if (started) { fn(); } else { queue.push(fn); }
+      };
+
+      if (document.readyState === "complete") {
+        check();
+      } else {
+        window.addEventListener("load", check, { once: true });
+      }
+
+      // Seguridad: arrancar siempre a los 8 segundos.
+      window.setTimeout(start, 8000);
+    })();
+  </script>
+
   <main id="app-container">
     <div class="tv-fixed-shell">
       <section
@@ -867,7 +915,7 @@
       { url: "https://www.youtube.com/live/064S1UeYN7Q", activo: false },
     ];
 
-    (function () {
+    glmWhenStable(function () {
       function extractId(value) {
         try {
           const url = new URL(value);
@@ -1092,10 +1140,10 @@
         script.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(script);
       }
-    })();
+    });
   </script>
 
-    <script>
+  <script>
     /*
       Cartel inicial:
       permanece como mínimo 6 segundos y, además, 4 segundos después
@@ -1155,7 +1203,6 @@
       */
       window.setTimeout(removeCard, MAX_VISIBLE_MS);
     })();
-  </script>
   </script>
 </body>
 </html>
