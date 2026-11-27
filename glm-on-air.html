@@ -560,10 +560,264 @@
         opacity: 1;
       }
     }
+
+    /* ===== CABECERA SUPERIOR (añadida) ===== */
+    :root {
+      --glm-header-h: 64px;
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --glm-header-h: 56px;
+      }
+    }
+
+    .glm-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 5000;
+      height: var(--glm-header-h);
+      box-sizing: border-box;
+      background: #000;
+      color: #fff;
+      font-family: Lato, Arial, sans-serif;
+    }
+
+    .glm-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 0 20px;
+    }
+
+    .glm-burger,
+    .glm-search-btn {
+      padding: 8px;
+      border: 0;
+      background: none;
+      color: #fff;
+      line-height: 0;
+      cursor: pointer;
+    }
+
+    .glm-burger {
+      display: none;
+    }
+
+    .glm-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .glm-logo img {
+      width: auto;
+      height: 44px;
+    }
+
+    .glm-logo span {
+      font-size: 22px;
+      font-weight: 300;
+    }
+
+    .glm-nav {
+      display: flex;
+      gap: 26px;
+      margin-left: auto;
+    }
+
+    .glm-nav a {
+      color: #cfcfe6;
+      font-size: 15px;
+      text-decoration: none;
+    }
+
+    .glm-nav a:hover {
+      color: #fff;
+    }
+
+    .glm-nav a.active {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .glm-search-btn {
+      margin-left: 8px;
+    }
+
+    .glm-searchbox {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      display: none;
+      box-sizing: border-box;
+      padding: 10px 20px;
+      background: #0b0b10;
+    }
+
+    .glm-searchbox.open {
+      display: block;
+    }
+
+    .glm-searchbox form {
+      display: flex;
+      gap: 8px;
+    }
+
+    .glm-searchbox input[type="search"] {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 14px;
+      border: 1px solid #333;
+      border-radius: 999px;
+      background: #15151c;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .glm-searchbox button {
+      padding: 10px 18px;
+      border: 0;
+      border-radius: 999px;
+      background: #f5b800;
+      color: #000;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .glm-bar {
+        gap: 10px;
+        padding: 0 12px;
+      }
+
+      .glm-burger {
+        display: block;
+      }
+
+      .glm-logo span {
+        display: none;
+      }
+
+      .glm-logo img {
+        height: 38px;
+      }
+
+      .glm-search-btn {
+        margin-left: auto;
+      }
+
+      .glm-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        display: none;
+        flex-direction: column;
+        gap: 0;
+        margin: 0;
+        border-top: 1px solid #222;
+        background: #000;
+      }
+
+      .glm-nav.open {
+        display: flex;
+      }
+
+      .glm-nav a {
+        padding: 16px 24px;
+        border-bottom: 1px solid #1a1a1a;
+        font-size: 17px;
+      }
+    }
+
+    /* Ajuste de la página por la cabecera (debe ir al final) */
+    :root {
+      --player-height: min(
+        56.25vw,
+        calc(100vh - var(--tabs-height) - var(--glm-header-h, 0px) - 120px)
+      );
+    }
+
+    @supports (height: 100dvh) {
+      :root {
+        --player-height: min(
+          56.25vw,
+          calc(100dvh - var(--tabs-height) - var(--glm-header-h, 0px) - 120px)
+        );
+      }
+    }
+
+    .tv-fixed-shell {
+      top: var(--glm-header-h, 0px);
+    }
+
+    .tv-content-scroll {
+      top: calc(
+        var(--glm-header-h, 0px) + var(--player-height) + var(--tabs-height)
+      );
+    }
   </style>
 </head>
 
 <body>
+  <!-- CABECERA SUPERIOR (añadida) -->
+  <header class="glm-header">
+    <div class="glm-bar">
+      <button
+        type="button"
+        class="glm-burger"
+        id="glmBurger"
+        aria-label="Menú"
+        aria-expanded="false"
+        aria-controls="glmNav">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
+      </button>
+
+      <a class="glm-logo" href="https://glm.goldlabelmusic.com/" target="_top">
+        <img
+          src="https://i.postimg.cc/J7drPcSV/Gold-Label-Music-transp.png"
+          alt="Gold Label Music">
+        <span>Gold Label Music</span>
+      </a>
+
+      <nav class="glm-nav" id="glmNav" aria-label="Menú del sitio">
+        <a href="https://glm.goldlabelmusic.com/" target="_top">Inicio</a>
+        <a href="https://glm.goldlabelmusic.com/booking.html" target="_top">Booking</a>
+        <a href="https://glm.goldlabelmusic.com/radio.html" target="_top">Radio</a>
+        <a href="https://glm.goldlabelmusic.com/glm-on-air.html" target="_top" class="active">glm On Air</a>
+      </nav>
+
+      <button
+        type="button"
+        class="glm-search-btn"
+        id="glmSearchBtn"
+        aria-label="Buscar">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M20 20l-4-4"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="glm-searchbox" id="glmSearchBox">
+      <form action="https://www.google.com/search" method="get" target="_blank" id="glmSearchForm">
+        <input type="hidden" name="q" value="">
+        <input type="search" id="glmQuery" placeholder="Buscar en Gold Label Music" aria-label="Buscar">
+        <button type="submit">Buscar</button>
+      </form>
+    </div>
+  </header>
+
   <script>
     /*
       Espera a que la página esté estable antes de iniciar YouTube.
@@ -664,7 +918,7 @@
         </button>
 
         <a
-          href="https://www.goldlabelmusic.com/distribucion"
+          href="https://glm.goldlabelmusic.com/distribucion.html"
           class="nav-tab"
           target="_top">
           <i class="fas fa-compact-disc" aria-hidden="true"></i>
@@ -672,7 +926,7 @@
         </a>
 
         <a
-          href="https://www.goldlabelmusic.com/promocion"
+          href="https://glm.goldlabelmusic.com/promocion.html"
           class="nav-tab"
           target="_top">
           <i class="fas fa-bullhorn" aria-hidden="true"></i>
@@ -680,7 +934,7 @@
         </a>
 
         <a
-          href="https://www.goldlabelmusic.com/branding"
+          href="https://glm.goldlabelmusic.com/branding.html"
           class="nav-tab"
           target="_top">
           <i class="fas fa-gem" aria-hidden="true"></i>
@@ -688,7 +942,7 @@
         </a>
 
         <a
-          href="https://www.goldlabelmusic.com/booking"
+          href="https://glm.goldlabelmusic.com/booking.html"
           class="nav-tab"
           target="_top">
           <i class="fas fa-users" aria-hidden="true"></i>
@@ -696,11 +950,19 @@
         </a>
 
         <a
-          href="https://www.goldlabelmusic.com/radio"
+          href="https://glm.goldlabelmusic.com/radio.html"
           class="nav-tab"
           target="_top">
           <i class="fas fa-podcast" aria-hidden="true"></i>
           Radio
+        </a>
+
+        <a
+          href="https://glm.goldlabelmusic.com/download.html"
+          class="nav-tab"
+          target="_top">
+          <i class="fas fa-download" aria-hidden="true"></i>
+          Download
         </a>
       </nav>
     </div>
@@ -799,7 +1061,7 @@
           </a>
 
           <a
-            href="https://www.goldlabelmusic.com/glm-on-air"
+            href="https://glm.goldlabelmusic.com/glm-on-air.html"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Televisión Gold Label Music">
@@ -1257,6 +1519,39 @@
         se retira a los 15 segundos.
       */
       window.setTimeout(removeCard, MAX_VISIBLE_MS);
+    })();
+  </script>
+
+  <script>
+    /* Comportamiento de la cabecera superior (añadido) */
+    (function () {
+      const burger = document.getElementById("glmBurger");
+      const nav = document.getElementById("glmNav");
+      const searchBtn = document.getElementById("glmSearchBtn");
+      const searchBox = document.getElementById("glmSearchBox");
+      const searchForm = document.getElementById("glmSearchForm");
+      const query = document.getElementById("glmQuery");
+
+      if (burger && nav) {
+        burger.addEventListener("click", function () {
+          const open = nav.classList.toggle("open");
+          burger.setAttribute("aria-expanded", String(open));
+        });
+      }
+
+      if (searchBtn && searchBox) {
+        searchBtn.addEventListener("click", function () {
+          const open = searchBox.classList.toggle("open");
+          if (open && query) query.focus();
+        });
+      }
+
+      if (searchForm && query) {
+        searchForm.addEventListener("submit", function () {
+          searchForm.elements["q"].value =
+            "site:goldlabelmusic.com " + query.value;
+        });
+      }
     })();
   </script>
 </body>
