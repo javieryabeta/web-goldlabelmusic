@@ -1095,24 +1095,28 @@
     })();
   </script>
 
-  <script>
+    <script>
     /*
       Cartel inicial:
-      permanece como mínimo 6 segundos y se retira cuando el vídeo
-      de YouTube está realmente reproduciéndose. Fundido: 0,9 segundos.
+      permanece como mínimo 6 segundos y, además, 4 segundos después
+      de que el vídeo empiece a reproducirse, para que los controles
+      de YouTube se oculten. Fundido: 0,9 segundos.
     */
     (function () {
       const card = document.getElementById("glm-intro-card");
       if (!card) return;
 
+      const MIN_VISIBLE_MS = 6000;
+      const AFTER_PLAY_MS = 4000;
+      const MAX_VISIBLE_MS = 15000;
+
       let minimumTimeCompleted = false;
-      let videoIsPlaying = false;
+      let playStarted = false;
+      let afterPlayCompleted = false;
       let cardRemoved = false;
 
-      function hideCard() {
+      function removeCard() {
         if (cardRemoved) return;
-
-        if (!minimumTimeCompleted || !videoIsPlaying) return;
 
         cardRemoved = true;
         card.classList.add("is-fading");
@@ -1123,32 +1127,35 @@
         }, 1000);
       }
 
+      function hideCardWhenReady() {
+        if (minimumTimeCompleted && afterPlayCompleted) {
+          removeCard();
+        }
+      }
+
       window.glmHideIntroCard = function () {
-        videoIsPlaying = true;
-        hideCard();
+        if (playStarted) return;
+
+        playStarted = true;
+
+        window.setTimeout(function () {
+          afterPlayCompleted = true;
+          hideCardWhenReady();
+        }, AFTER_PLAY_MS);
       };
 
       window.setTimeout(function () {
         minimumTimeCompleted = true;
-        hideCard();
-      }, 6000);
+        hideCardWhenReady();
+      }, MIN_VISIBLE_MS);
 
       /*
         Protección: si YouTube no llega a reproducirse, el cartel
-        se retira tras 15 segundos para no dejar la pantalla cubierta.
+        se retira a los 15 segundos.
       */
-      window.setTimeout(function () {
-        if (cardRemoved) return;
-
-        cardRemoved = true;
-        card.classList.add("is-fading");
-        card.setAttribute("aria-hidden", "true");
-
-        window.setTimeout(function () {
-          card.remove();
-        }, 1000);
-      }, 15000);
+      window.setTimeout(removeCard, MAX_VISIBLE_MS);
     })();
+  </script>
   </script>
 </body>
 </html>
