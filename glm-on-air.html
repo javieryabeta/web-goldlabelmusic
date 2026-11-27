@@ -471,7 +471,16 @@
       pointer-events: none;
     }
 
+    /* Tres textos encadenados en el mismo lugar */
+    #glm-intro-card .glm-intro-titles {
+      display: grid;
+      width: 100%;
+      align-items: center;
+      justify-items: center;
+    }
+
     #glm-intro-card .glm-intro-name {
+      grid-area: 1 / 1;
       margin: 0;
       padding: 20px;
       color: #f4b815;
@@ -481,12 +490,37 @@
       letter-spacing: .035em;
       line-height: 1.2;
       text-align: center;
-      animation: glmOnAirZoom 6s linear 1 both;
+      white-space: nowrap;
+      opacity: 0;
+      animation: glmTitleStep 3.5s linear 1 both;
     }
 
-    @keyframes glmOnAirZoom {
-      from { transform: scale(.95); }
-      to { transform: scale(1.05); }
+    #glm-intro-card .glm-intro-name:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    #glm-intro-card .glm-intro-name:nth-child(2) {
+      animation-delay: 3.1s;
+    }
+
+    #glm-intro-card .glm-intro-name:nth-child(3) {
+      animation-name: glmTitleLast;
+      animation-delay: 6.2s;
+    }
+
+    /* Textos 1 y 2: entran, hacen zoom suave y salen con fundido */
+    @keyframes glmTitleStep {
+      0%   { opacity: 0; transform: scale(.95); }
+      12%  { opacity: 1; }
+      88%  { opacity: 1; }
+      100% { opacity: 0; transform: scale(1.05); }
+    }
+
+    /* Texto 3: entra, hace zoom suave y se mantiene */
+    @keyframes glmTitleLast {
+      0%   { opacity: 0; transform: scale(.95); }
+      12%  { opacity: 1; }
+      100% { opacity: 1; transform: scale(1.05); }
     }
 
     #glm-intro-card .glm-intro-subtitle {
@@ -507,6 +541,15 @@
     @media (prefers-reduced-motion: reduce) {
       #glm-intro-card {
         transition-duration: 1ms;
+      }
+
+      #glm-intro-card .glm-intro-name {
+        animation: none;
+        opacity: 0;
+      }
+
+      #glm-intro-card .glm-intro-name:nth-child(1) {
+        opacity: 1;
       }
     }
   </style>
@@ -572,9 +615,13 @@
           <div
             id="glm-intro-card"
             role="status"
-            aria-label="En emisión. Videoclips, estrenos y artistas.">
+            aria-label="En directo. glm On Air. Música viva. Videoclips, estrenos y artistas.">
 
-            <p class="glm-intro-name">EN EMISIÓN</p>
+            <div class="glm-intro-titles">
+              <p class="glm-intro-name">En Directo</p>
+              <p class="glm-intro-name">glm On Air</p>
+              <p class="glm-intro-name">Música Viva</p>
+            </div>
 
             <p class="glm-intro-subtitle">
               Videoclips · Estrenos · Artistas
