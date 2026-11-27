@@ -1000,12 +1000,84 @@
         player.loadVideoById(videos[index]);
       }
 
-      let youTubeApiRequested = false;
+      function initialize() {
+        if (player) return;
 
-      function requestYouTubeApi() {
-        if (youTubeApiRequested) return;
-        youTubeApiRequested = true;
+        player = new YT.Player("glmOnAirPlayer", {
+          events: {
+            onReady: function (event) {
+              playerReady = true;
 
+              // Mantener el inicio automático silenciado.
+              event.target.mute();
+              event.target.setVolume(100);
+              event.target.playVideo();
+
+              syncSoundButton();
+            },
+
+            onStateChange: function (event) {
+              if (event.data === YT.PlayerState.PLAYING) {
+                failures = 0;
+                hasPlayed = true;
+
+                if (soundButton) {
+                  soundButton.disabled = false;
+                }
+
+                if (
+                  typeof window.glmHideIntroCard === "function"
+                ) {
+                  window.glmHideIntroCard();
+                }
+              }
+
+              syncSoundButton();
+
+              if (event.data === YT.PlayerState.ENDED) {
+                next();
+              }
+            },
+
+            onError: function (event) {
+              console.warn(
+                "GLM On Air / YouTube:",
+                event.data,
+                videos[index]
+              );
+
+              if (event.data === 153) {
+                console.warn(
+                  "Comprueba el Referer en la página HTTPS publicada."
+                );
+                return;
+              }
+
+              failures++;
+
+              if (
+                failures < videos.length &&
+                [2, 5, 100, 101, 150].includes(event.data)
+              ) {
+                window.setTimeout(next, 1200);
+              }
+            },
+
+            onAutoplayBlocked: function () {
+              console.warn(
+                "GLM On Air: el navegador ha bloqueado " +
+                "una solicitud de reproducción."
+              );
+
+              scheduleSoundButtonSync();
+            }
+          }
+        });
+      }
+
+      if (window.YT && window.YT.Player) {
+        initialize();
+      } else {
         const previous = window.onYouTubeIframeAPIReady;
 
         window.onYouTubeIframeAPIReady = function () {
@@ -1013,82 +1085,69 @@
             previous();
           }
 
-          player = new YT.Player("glmOnAirPlayer", {
-            events: {
-              onReady: onPlayerReady,
-              onStateChange: onPlayerStateChange,
-              onError: onPlayerError
-            }
-          });
+          initialize();
         };
 
         const script = document.createElement("script");
         script.src = "https://www.youtube.com/iframe_api";
-        script.async = true;
         document.head.appendChild(script);
       }
+    })();
+  </script>
 
-      function onPlayerReady() {
-        playerReady = true;
+  <script>
+    /*
+      Cartel inicial:
+      permanece como mínimo 6 segundos y se retira cuando el vídeo
+      de YouTube está realmente reproduciéndose. Fundido: 0,9 segundos.
+    */
+    (function () {
+      const card = document.getElementById("glm-intro-card");
+      if (!card) return;
 
-        try {
-          player.mute();
-          player.setVolume(0);
-          player.playVideo();
-        } catch (error) {
-          console.warn("GLM On Air: reproducción inicial no disponible.", error);
-        }
+      let minimumTimeCompleted = false;
+      let videoIsPlaying = false;
+      let cardRemoved = false;
 
-        if (soundButton) {
-          soundButton.disabled = false;
-        }
+      function hideCard() {
+        if (cardRemoved) return;
 
-        syncSoundButton();
+        if (!minimumTimeCompleted || !videoIsPlaying) return;
+
+        cardRemoved = true;
+        card.classList.add("is-fading");
+        card.setAttribute("aria-hidden", "true");
+
+        window.setTimeout(function () {
+          card.remove();
+        }, 1000);
       }
 
-      function onPlayerStateChange(event) {
-        if (event.data === YT.PlayerState.PLAYING) {
-          hasPlayed = true;
-          failures = 0;
+      window.glmHideIntroCard = function () {
+        videoIsPlaying = true;
+        hideCard();
+      };
 
-          const intro = document.getElementById("glm-intro-card");
-          if (intro) {
-            intro.classList.add("is-fading");
-            window.setTimeout(function () {
-              intro.style.display = "none";
-            }, 900);
-          }
-        }
+      window.setTimeout(function () {
+        minimumTimeCompleted = true;
+        hideCard();
+      }, 6000);
 
-        if (event.data === YT.PlayerState.ENDED) {
-          next();
-        }
+      /*
+        Protección: si YouTube no llega a reproducirse, el cartel
+        se retira tras 15 segundos para no dejar la pantalla cubierta.
+      */
+      window.setTimeout(function () {
+        if (cardRemoved) return;
 
-        if (event.data === YT.PlayerState.UNSTARTED) {
-          if (hasPlayed) {
-            failures++;
-            if (failures >= 2) {
-              next();
-            }
-          }
-        }
+        cardRemoved = true;
+        card.classList.add("is-fading");
+        card.setAttribute("aria-hidden", "true");
 
-        scheduleSoundButtonSync();
-      }
-
-      function onPlayerError() {
-        failures++;
-
-        if (failures >= 2) {
-          next();
-        } else {
-          window.setTimeout(function () {
-            next();
-          }, 800);
-        }
-      }
-
-      requestYouTubeApi();
+        window.setTimeout(function () {
+          card.remove();
+        }, 1000);
+      }, 15000);
     })();
   </script>
 </body>
